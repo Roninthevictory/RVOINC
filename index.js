@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVO Inc. | Elite Development and Coding Services</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Custom styles for a modern, tech-focused look */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Dark background */
+            color: #c9d1d9; /* Light text */
+        }
+        /* UPDATED: Red/Crimson Gradient */
+        .text-gradient {
+            background-image: linear-gradient(45deg, #dc143c, #ff6347); /* Crimson to Tomato Red */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-bg {
+            background-color: #161b22; /* Slightly lighter dark background for cards */
+            border: 1px solid #30363d;
+        }
+        /* UPDATED: Red hover color */
+        .nav-link:hover {
+            color: #ff6347; /* Tomato Red for hover */
+            text-shadow: 0 0 5px rgba(255, 99, 71, 0.5);
+        }
+        /* New: Style for the active navigation link */
+        .nav-link.active {
+            color: #ff6347; /* Tomato Red for active state */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 card-bg shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <span class="text-2xl font-bold text-gradient">RVO Inc.</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <!-- Buttons now use data-target for page switching -->
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="home">Home</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="services">Services</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="subscriptions">Subscriptions</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="affiliates">Affiliates</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="partners">Partners</button>
+                </div>
+                <!-- Logout Button (Hidden by default) -->
+                <button id="logout-btn" class="hidden p-2 rounded-lg hover:bg-gray-700 transition duration-150" aria-label="Logout">
+                    <i data-lucide="log-out" class="w-6 h-6 text-white"></i>
+                </button>
+                <!-- Mobile Menu Button (Lucide Menu Icon) -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-700 transition duration-150" aria-label="Toggle menu">
+                    <i data-lucide="menu" class="w-6 h-6 text-white"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden card-bg shadow-xl">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="home">Home</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="services">Services</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="subscriptions">Subscriptions</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="affiliates">Affiliates</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="partners">Partners</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Sections Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+        <!-- 1. Home Section - Initially shown -->
+        <section id="home" class="pt-8 pb-20 text-center content-section">
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4 leading-snug">
+                Building <span class="text-gradient">Tomorrow's Systems</span>, Today.
+            </h1>
+            <p class="mt-4 text-xl text-gray-400 max-w-3xl mx-auto">
+                RVO Inc. specializes in cutting-edge development services. From static websites and robust backend systems to complex game clients and multilingual coding solutions, we are your comprehensive development partner.
+            </p>
+            <div class="mt-10 flex justify-center space-x-4">
+                <!-- Buttons now use data-target for switching -->
+                <button class="navigate-link px-8 py-3 text-lg font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300 shadow-xl shadow-red-900/50" data-target="services">Explore Services</button>
+                <button class="navigate-link px-8 py-3 text-lg font-semibold rounded-xl card-bg hover:bg-gray-700 transition duration-300" data-target="subscriptions">View Plans</button>
+            </div>
+        </section>
+
+        <!-- 2. Subscriptions Section - Initially hidden -->
+        <section id="subscriptions" class="py-20 content-section hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Flexible <span class="text-gradient">Development Subscriptions</span></h2>
+            <div id="subscription-plans" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Content generated by JS -->
+            </div>
+        </section>
+
+        <!-- 3. Services Section - Initially hidden -->
+        <section id="services" class="py-20 content-section hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our Comprehensive <span class="text-gradient">Coding Capabilities</span></h2>
+
+            <!-- Service Search and Filter -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-10 card-bg p-6 rounded-xl shadow-lg">
+                <!-- UPDATED: Focus ring/border to red-500 -->
+                <input type="text" id="service-search" placeholder="Search services (e.g., React, Python, Unity)" class="flex-grow p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500">
+                <select id="service-filter" class="p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                    <option value="all">Filter by Category</option>
+                    <!-- Options populated by JS -->
+                </select>
+            </div>
+
+            <!-- Service List -->
+            <div id="service-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Content generated by JS -->
+            </div>
+            
+            <p id="no-results" class="hidden text-center text-xl text-gray-400 mt-10">No development services found matching your criteria.</p>
+
+        </section>
+
+        <!-- 4. Affiliates Section - Initially hidden -->
+        <section id="affiliates" class="py-20 content-section hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Join Our <span class="text-gradient">Affiliate Network</span></h2>
+            <div class="card-bg p-8 rounded-xl shadow-lg max-w-4xl mx-auto text-center">
+                <p class="text-lg text-gray-300 mb-6">
+                    Refer clients to RVO Inc. and earn a commission on every successful development project or subscription sign-up. We provide detailed tracking and competitive payouts for referring top-tier coding work.
+                </p>
+                <!-- Retaining green for 'Sign Up' button for contrast -->
+                <a href="javascript:void(0)" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition duration-300">
+                    <i data-lucide="zap" class="w-5 h-5 mr-2"></i> Sign Up Today
+                </a>
+            </div>
+        </section>
+
+        <!-- 5. Partners Section - Initially hidden -->
+        <section id="partners" class="py-20 content-section hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our <span class="text-gradient">Technology Partners</span></h2>
+            <div class="flex flex-wrap justify-center items-center gap-8 card-bg p-8 rounded-xl shadow-lg">
+                <div class="w-24 h-10 flex justify-center items-center text-xl font-bold text-white opacity-80 hover:opacity-100 transition duration-300">
+                    <i data-lucide="cloud" class="w-6 h-6 mr-1 text-blue-500"></i> AWS
+                </div>
+                <div class="w-24 h-10 flex justify-center items-center text-xl font-bold text-white opacity-80 hover:opacity-100 transition duration-300">
+                    <i data-lucide="database" class="w-6 h-6 mr-1 text-orange-500"></i> Firebase
+                </div>
+                <div class="w-24 h-10 flex justify-center items-center text-xl font-bold text-white opacity-80 hover:opacity-100 transition duration-300">
+                    <i data-lucide="code" class="w-6 h-6 mr-1 text-green-500"></i> GitHub
+                </div>
+                <!-- UPDATED: React icon color to red-500 -->
+                <div class="w-24 h-10 flex justify-center items-center text-xl font-bold text-white opacity-80 hover:opacity-100 transition duration-300">
+                    <i data-lucide="layout-grid" class="w-6 h-6 mr-1 text-red-500"></i> React
+                </div>
+                <div class="w-24 h-10 flex justify-center items-center text-xl font-bold text-white opacity-80 hover:opacity-100 transition duration-300">
+                    <i data-lucide="gamepad" class="w-6 h-6 mr-1 text-purple-500"></i> Unity
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">Sign In</h3>
+                <button id="close-modal" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                    <input type="email" id="auth-email" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                    <input type="password" id="auth-password" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                </div>
+                <button id="auth-submit" class="w-full py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">Sign In</button>
+                <button id="auth-toggle" class="w-full py-2 text-sm text-gray-400 hover:text-white">Don't have an account? Sign Up</button>
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-600"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-gray-800 text-gray-400">Or</span>
+                    </div>
+                </div>
+                <!-- Google Sign-in Button -->
+                <button id="google-signin" class="w-full py-3 font-semibold rounded-xl bg-white hover:bg-gray-100 text-gray-900 transition duration-300 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </div>
+            <div id="auth-error" class="mt-4 text-red-500 text-sm hidden"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="card-bg mt-16 py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+            <p>&copy; 2025 RVO Inc. All Rights Reserved. Specializing in High-Quality Software Development.</p>
+        </div>
+    </footer>
+
+    <!-- REFACTORED SCRIPT using Firebase V11 Modular SDK and Canvas Globals -->
+    <script type="module">
+        // Firebase V11 Modular Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            GoogleAuthProvider,
+            signInWithPopup, // Import signInWithPopup
+            getRedirectResult, // Keep getRedirectResult for robustness
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+
+        // ----------------------------------------------------------------------
+        // CRITICAL FIX: HARDCODING FIREBASE CONFIG FOR GOOGLE SITES EMBEDS
+        // ----------------------------------------------------------------------
+        /**
+         * The __firebase_config global variable is often unavailable when embedding
+         * in platforms like Google Sites. We must explicitly define the config here.
+         */
+        const FIREBASE_CONFIG = {
+            // FIREBASE CONFIGURATION PROVIDED BY USER:
+            apiKey: "AIzaSyATMtyx9nuwIcv-OWODFIQA4NOtDzqTqJc",
+            authDomain: "rvoincwebsite.firebaseapp.com",
+            projectId: "rvoincwebsite",
+            storageBucket: "rvoincwebsite.firebasestorage.app",
+            messagingSenderId: "675340459793",
+            appId: "1:675340459793:web:89dd0ecce1f1c3ee1336b0"
+        };
+        
+        // This logic ensures we use the canvas global if available, but falls back to the hardcoded config
+        const firebaseConfig = (() => {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                try {
+                    // This block is used in the Canvas environment
+                    return JSON.parse(__firebase_config);
+                } catch (e) {
+                    console.error("Failed to parse __firebase_config, using hardcoded config.");
+                }
+            }
+            // This block is used when embedded outside of Canvas (like Google Sites)
+            if (FIREBASE_CONFIG.apiKey.startsWith("PASTE_YOUR")) {
+                 console.error("CRITICAL: Using placeholder Firebase config. Authentication will FAIL until you replace the values in the FIREBASE_CONFIG variable.");
+            }
+            return FIREBASE_CONFIG;
+        })();
+        
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // ----------------------------------------------------------------------
+
+        let app = null;
+        let auth = null;
+        let isLoggedIn = false;
+        let currentUser = null;
+        let isFirebaseReady = false; // Flag to check if Firebase auth has completed its initial check
+
+        // Function to set up Firebase and perform initial authentication
+        async function setupFirebase() {
+            if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("PAzaSyA")) {
+                console.error("CRITICAL ERROR: Firebase configuration is missing or incomplete. Please update the FIREBASE_CONFIG variable in the script.");
+                isFirebaseReady = true;
+                return;
+            }
+
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                
+                // --- 1. HANDLE REDIRECT RESULT ---
+                // Keep this check for users who might still need redirect on other platforms
+                const result = await getRedirectResult(auth);
+                if (result) {
+                    console.log("SUCCESS: User returned after Google redirect sign-in:", result.user.email);
+                    hideAuthModal();
+                }
+
+                // Initial sign-in with custom token or anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken).catch(e => console.error("Custom token sign-in failed:", e));
+                } else {
+                    await signInAnonymously(auth).catch(e => console.error("Anonymous sign-in failed:", e));
+                }
+                
+                // Set up Auth State Listener (Modular V11 syntax)
+                onAuthStateChanged(auth, (user) => {
+                    isLoggedIn = !!user;
+                    currentUser = user;
+                    isFirebaseReady = true; // Auth check completed
+                    updateUIForAuthState();
+                    console.log("Firebase initialized successfully. Auth Ready.");
+                });
+
+            } catch (error) {
+                console.error("CRITICAL ERROR: Firebase initialization failed. Check your config and authorized domains:", error);
+                isFirebaseReady = true;
+            }
+        }
+
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // --------------------------------------------------------------------------------
+        // VIEW SWITCHING LOGIC (Multipage Simulation)
+        // --------------------------------------------------------------------------------
+
+        /**
+         * Switches the displayed content section and updates the active navigation link.
+         * @param {string} targetId - The ID of the section to display (e.g., 'home', 'services').
+         */
+        function navigateTo(targetId) {
+            // 1. Hide all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // 2. Show the target section
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                // Scroll to the top of the main container for a "fresh page" feel
+                document.querySelector('main').scrollTo(0, 0);
+            } else {
+                console.error(`Attempted to navigate to unknown page ID: ${targetId}`);
+            }
+
+            // 3. Update active state of navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('data-target') === targetId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+
+        // --------------------------------------------------------------------------------
+        // DATA STRUCTURES (EXPANDED CODING SERVICES)
+        // --------------------------------------------------------------------------------
+
+        const allServices = [
+            // --- Web Development (Frontend) - 13 Services
+            { id: 1, name: "Responsive Static Website", category: "Web Frontend", description: "Full implementation of a modern, fast static site using HTML/CSS/JS.", icon: "monitor", price: 299 },
+            { id: 2, name: "React Component Development", category: "Web Frontend", description: "Building reusable, optimized components with React and functional hooks.", icon: "layout-grid", price: 199 },
+            { id: 3, name: "Angular Module Development", category: "Web Frontend", description: "Developing structured modules and components using the Angular framework.", icon: "git-fork", price: 249 },
+            { id: 4, name: "Tailwind CSS Integration", category: "Web Frontend", description: "Implementing utility-first styling for rapid, responsive UI design.", icon: "palette", price: 149 },
+            { id: 5, name: "State Management Implementation (Redux/Zustand)", category: "Web Frontend", description: "Setting up efficient, predictable state management solutions.", icon: "pocket", price: 179 },
+            { id: 6, name: "Progressive Web App (PWA) Setup", category: "Web Frontend", description: "Enabling offline capabilities and installability for web applications.", icon: "smartphone", price: 349 },
+            { id: 7, name: "Custom JavaScript Utility Libraries", category: "Web Frontend", description: "Writing modular, highly optimized vanilla JavaScript functions.", icon: "activity", price: 129 },
+            { id: 8, name: "Web Accessibility (A11y) Audit & Fixes", category: "Web Frontend", description: "Ensuring WCAG compliance for an inclusive user experience.", icon: "eye", price: 199 },
+            { id: 53, name: "Next.js/Gatsby Static Site Generation (SSG)", category: "Web Frontend", description: "Building highly performant, SEO-friendly static sites using modern frameworks.", icon: "cpu", price: 399 },
+            { id: 54, name: "Web Performance Optimization (Core Web Vitals)", category: "Web Frontend", description: "Improving loading speed, interactivity, and visual stability for high scores.", icon: "zap", price: 249 },
+            { id: 55, name: "Advanced CSS/SVG Animation (GSAP/Framer)", category: "Web Frontend", description: "Creating smooth, complex motion graphics and interactive UI elements.", icon: "sparkles", price: 299 },
+            { id: 56, name: "Cross-Browser Compatibility Testing", category: "Web Frontend", description: "Ensuring consistent functionality and display across all major browsers.", icon: "globe", price: 149 },
+            { id: 57, name: "Component Library Development (Storybook)", category: "Web Frontend", description: "Creating a centralized, documented system for UI component design.", icon: "book-open", price: 349 },
+
+
+            // --- Web Development (Backend & API) - 17 Services
+            { id: 9, name: "Node.js/Express API Development", category: "Web Backend", description: "Building fast and scalable RESTful APIs using the Node.js ecosystem.", icon: "server", price: 399 },
+            { id: 10, name: "Python/Django Backend Development", category: "Web Backend", description: "Creating robust, secure web backends with Django or Flask.", icon: "terminal", price: 449 }, // Using 'terminal' as 'python' is not in Lucide
+            { id: 11, name: "Microservice Architecture Design", category: "Web Backend", description: "Breaking down monolithic applications into scalable, independent services.", icon: "hexagon", price: 599 },
+            { id: 12, name: "GraphQL Endpoint Implementation", category: "Web Backend", description: "Developing efficient data querying layers with GraphQL.", icon: "link", price: 349 },
+            { id: 13, name: "Serverless Function Deployment (AWS Lambda/Firebase)", category: "Web Backend", description: "Setting up event-driven serverless backends for cost efficiency.", icon: "cloud", price: 299 },
+            { id: 14, name: "Authentication and Authorization Setup (OAuth/JWT)", category: "Web Backend", description: "Implementing secure user login and role-based access control.", icon: "lock", price: 249 },
+            { id: 15, name: "Third-Party API Integration", category: "Web Backend", description: "Connecting your system to external services (e.g., payment, weather, map APIs).", icon: "plug", price: 199 },
+            { id: 16, name: "Real-time Communication (WebSockets)", category: "Web Backend", description: "Implementing live updates and chat functionality.", icon: "message-square", price: 349 },
+            { id: 17, name: "API Documentation (Swagger/OpenAPI)", category: "Web Backend", description: "Creating clear, interactive documentation for your endpoints.", icon: "book-open", price: 149 },
+            { id: 18, name: "Legacy Code Migration Strategy", category: "Web Backend", description: "Planning and executing migration from old systems to modern architecture.", icon: "move-horizontal", price: 499 },
+            { id: 58, name: "GoLang API Development (High Concurrency)", category: "Web Backend", description: "Building highly efficient, concurrent services using Go.", icon: "terminal", price: 499 },
+            { id: 59, name: "Java/Spring Boot Enterprise Backend", category: "Web Backend", description: "Developing large, maintainable enterprise applications with Spring.", icon: "leaf", price: 599 },
+            { id: 60, name: "Redis/Memcached Caching Implementation", category: "Web Backend", description: "Adding in-memory caching layers to significantly speed up read operations.", icon: "disc-3", price: 249 },
+            { id: 61, name: "Message Queue Integration (RabbitMQ/Kafka)", category: "Web Backend", description: "Decoupling services and handling asynchronous tasks with queuing systems.", icon: "list-ordered", price: 349 },
+            { id: 62, name: "Search Indexing Implementation (Elasticsearch)", category: "Web Backend", description: "Setting up powerful, fast, and scalable full-text search capabilities.", icon: "search", price: 399 },
+            { id: 63, name: "Payment Gateway Integration (Stripe/PayPal)", category: "Web Backend", description: "Securely integrating e-commerce and billing systems.", icon: "credit-card", price: 299 },
+            { id: 64, name: "Content Management System (CMS) Customization", category: "Web Backend", description: "Extending functionality of platforms like WordPress, Strapi, or Drupal.", icon: "layout-template", price: 249 },
+
+
+            // --- Database & Data Management - 11 Services
+            { id: 19, name: "SQL Database Design & Normalization", category: "Database", description: "Designing optimal schemas for PostgreSQL, MySQL, or SQL Server.", icon: "database", price: 299 },
+            { id: 20, name: "NoSQL Schema Design (MongoDB/Firebase)", category: "Database", description: "Structuring flexible and performant NoSQL data models.", icon: "layers", price: 249 },
+            { id: 21, name: "Complex SQL Query Optimization", category: "Database", description: "Improving the speed and efficiency of slow database queries.", icon: "gauge", price: 199 },
+            { id: 22, name: "ETL Pipeline Development", category: "Database", description: "Building data extraction, transformation, and loading processes.", icon: "box", price: 399 },
+            { id: 23, name: "Database Backup and Recovery Setup", category: "Database", description: "Implementing automated resilience and disaster recovery procedures.", icon: "rotate-cw", price: 349 },
+            { id: 24, name: "Firestore/Realtime DB Rules Setup", category: "Database", description: "Securing and structuring real-time database access rules.", icon: "shield", price: 199 },
+            { id: 25, name: "Data Seeding and Migration Scripts", category: "Database", description: "Writing scripts to populate or update database environments.", icon: "chevrons-up-down", price: 149 },
+            { id: 65, name: "Data Warehousing Solutions (Snowflake/BigQuery)", category: "Database", description: "Designing and implementing solutions for large-scale data analysis and reporting.", icon: "trending-up", price: 499 },
+            { id: 66, name: "Time-Series Database Implementation (InfluxDB)", category: "Database", description: "Setting up databases optimized for metrics, events, and time-stamped data.", icon: "clock", price: 349 },
+            { id: 67, name: "Stored Procedure and Trigger Development", category: "Database", description: "Writing efficient server-side logic within the SQL environment.", icon: "file-cog", price: 249 },
+            { id: 68, name: "Geospatial Data Modeling (PostGIS)", category: "Database", description: "Handling location-based data, queries, and spatial indexing.", icon: "map", price: 299 },
+
+
+            // --- Mobile Development - 10 Services
+            { id: 26, name: "React Native Feature Implementation", category: "Mobile Dev", description: "Adding cross-platform features to existing or new React Native apps.", icon: "app-window", price: 349 },
+            { id: 27, name: "Flutter UI/Logic Development", category: "Mobile Dev", description: "Building beautiful and performant mobile UIs with Flutter (Dart).", icon: "tablet", price: 399 },
+            { id: 28, name: "Native Feature Bridging (iOS/Android)", category: "Mobile Dev", description: "Creating bridges to access platform-specific native capabilities.", icon: "globe", price: 299 },
+            { id: 29, name: "Mobile Push Notification Setup", category: "Mobile Dev", description: "Integrating Firebase Cloud Messaging (FCM) or similar services.", icon: "bell", price: 199 },
+            { id: 30, name: "Local Storage Implementation (Realm/SQLite)", category: "Mobile Dev", description: "Setting up reliable offline data persistence.", icon: "archive", price: 249 },
+            { id: 31, name: "App Store Submission Preparation", category: "Mobile Dev", description: "Preparing build artifacts, metadata, and screenshots for App Store/Play Store.", icon: "upload", price: 149 },
+            { id: 69, name: "Swift/Kotlin Native Module Development", category: "Mobile Dev", description: "Developing custom high-performance modules in native iOS/Android languages.", icon: "code", price: 499 },
+            { id: 70, name: "Mobile CI/CD Setup (Fastlane)", category: "Mobile Dev", description: "Automating mobile build, testing, and deployment workflows.", icon: "zap", price: 349 },
+            { id: 71, name: "Deep Linking Implementation", category: "Mobile Dev", description: "Enabling direct navigation to specific content within the app from external links.", icon: "link-2", price: 199 },
+            { id: 72, name: "Biometric Authentication Integration (Face ID/Fingerprint)", category: "Mobile Dev", description: "Implementing secure, modern authentication methods.", icon: "fingerprint", price: 299 },
+
+
+            // --- Game Development - 6 Services
+            // Note: We do not provide 3D graphics rendering, 3D models, textures, or other visual assets. You must have these or find someone willing to work with us to provide them.
+            { id: 32, name: "Unity Engine 2D/3D Scene Setup", category: "Game Dev", description: "Initial scene, camera, and asset integration in the Unity environment. (Note: 3D assets must be provided by client.)", icon: "gamepad-2", price: 399 },
+            { id: 33, name: "C# Game Logic Scripting", category: "Game Dev", description: "Writing core game mechanics and systems in optimized C# scripts.", icon: "code", price: 299 },
+            { id: 34, name: "Unreal Engine Blueprint Development", category: "Game Dev", description: "Implementing complex interactivity and visual scripting with Blueprints. (Note: 3D assets must be provided by client.)", icon: "mouse-pointer", price: 449 },
+            { id: 35, name: "Basic Multiplayer Networking Setup", category: "Game Dev", description: "Implementing simple peer-to-peer or server-authoritative connections.", icon: "users", price: 499 },
+            { id: 36, name: "Shader/VFX Implementation", category: "Game Dev", description: "Creating custom visual effects and material shaders. (Note: Base assets must be provided by client.)", icon: "sparkles", price: 349 },
+            { id: 37, name: "Performance Profiling and Optimization", category: "Game Dev", description: "Identifying and resolving bottlenecks in frame rate and memory usage.", icon: "activity", price: 249 },
+
+            // --- DevOps and Deployment - 11 Services
+            { id: 38, name: "CI/CD Pipeline Setup (GitHub Actions/GitLab)", category: "DevOps", description: "Automating testing, building, and deployment workflows.", icon: "zap", price: 349 },
+            { id: 39, name: "Docker Containerization", category: "DevOps", description: "Creating Dockerfiles and managing images for consistent environments.", icon: "box", price: 299 },
+            { id: 40, name: "Kubernetes/K8s Manifests", category: "DevOps", description: "Writing basic deployment, service, and ingress definitions.", icon: "box-select", price: 399 },
+            { id: 41, name: "Cloud Infrastructure as Code (Terraform/CloudFormation)", category: "DevOps", description: "Defining and provisioning infrastructure resources.", icon: "layout", price: 499 },
+            { id: 42, name: "Load Balancer and Scaling Setup", category: "DevOps", description: "Ensuring high availability and horizontal scaling for web services.", icon: "scale", price: 349 },
+            { id: 43, name: "Monitoring and Alerting Setup (Prometheus/Grafana)", category: "DevOps", description: "Configuring system health monitoring and notification rules.", icon: "bell-ring", price: 299 },
+            { id: 44, name: "Domain and DNS Configuration", category: "DevOps", description: "Handling custom domain, SSL, and DNS record setup.", icon: "globe", price: 199 },
+            { id: 73, name: "Security Hardening (WAF/Firewall)", category: "DevOps", description: "Configuring Web Application Firewalls and cloud security groups.", icon: "shield-alert", price: 399 },
+            { id: 74, name: "GitOps Implementation (Flux/ArgoCD)", category: "DevOps", description: "Setting up continuous deployment driven by Git repository state.", icon: "git-merge", price: 449 },
+            { id: 75, name: "Automated Penetration Testing Setup", category: "DevOps", description: "Integrating automated security scanning tools into the CI/CD pipeline.", icon: "bug", price: 499 },
+            { id: 76, name: "Vault/Secret Management Integration", category: "DevOps", description: "Securely managing sensitive environment variables and API keys.", icon: "key", price: 249 },
+
+
+            // --- General Coding & Consulting - 9 Services
+            { id: 45, name: "Technical Consulting Session", category: "Consulting", description: "One-on-one session for technical roadmap planning and architecture guidance.", icon: "brain", price: 199 },
+            { id: 46, name: "In-Depth Code Review & Refactoring", category: "Consulting", description: "Thorough review for best practices, security, and performance improvements.", icon: "file-check", price: 299 },
+            { id: 47, name: "Algorithm Implementation (C++, Java, Python)", category: "Consulting", description: "Writing efficient solutions for complex computational problems.", icon: "cpu", price: 349 },
+            { id: 48, name: "Unit and Integration Testing", category: "Consulting", description: "Developing comprehensive tests with frameworks like Jest, Mocha, or JUnit.", icon: "vial", price: 249 }, // Using 'vial' as the requested icon name
+            { id: 49, name: "TypeScript Conversion/Adoption", category: "Consulting", description: "Migrating JavaScript projects to TypeScript for type safety.", icon: "type", price: 399 },
+            { id: 50, name: "Version Control Strategy (Gitflow/Trunk-based)", category: "Consulting", description: "Setting up collaborative and effective Git workflows.", icon: "git-branch", price: 149 },
+            { id: 51, name: "Technical Document Writing", category: "Consulting", description: "Creating clear, professional documentation for APIs or internal systems.", icon: "pencil-line", price: 199 },
+            { id: 52, name: "Security Vulnerability Patching", category: "Consulting", description: "Addressing common security issues like XSS, CSRF, and SQL injection.", icon: "bug", price: 299 },
+            { id: 77, name: "Performance Testing and Load Simulation", category: "Consulting", description: "Testing system capacity with tools like JMeter to prevent outages.", icon: "trending-up", price: 349 },
+        ];
+
+
+        const allSubscriptions = [
+            {
+                name: "The Starter Code",
+                price: "$1,500",
+                billing: "Per Month",
+                description: "Perfect for MVPs or small project maintenance. Ideal for fixed, small development tasks.",
+                features: [
+                    "Up to 10 development items per month.",
+                    "Focus on static website and front-end tasks.",
+                    "48-hour typical turn-around time.",
+                    "Basic code review and consultation.",
+                    "Dedicated Slack channel access.",
+                ],
+                tag: "Best for Startups"
+            },
+            {
+                name: "The Full Stack Builder",
+                price: "$4,500",
+                billing: "Per Month",
+                description: "Our most popular plan, covering front-end, backend, and database work. Full system support.",
+                features: [
+                    "Unlimited development items in queue.",
+                    "Priority task handling (24-hour typical turn-around).",
+                    "Includes complex feature implementation (API, DB, serverless).",
+                    "Bi-weekly technical planning calls.",
+                    "DevOps and CI/CD maintenance included.",
+                ],
+                tag: "Recommended"
+            },
+            {
+                name: "The Enterprise System",
+                price: "$8,000",
+                billing: "Per Month",
+                description: "Comprehensive support for large-scale systems, including mobile and game development.",
+                features: [
+                    "Unlimited, highest-priority support.",
+                    "Dedicated Senior Developer assigned.",
+                    "Covers all services, including Mobile and Game Client Dev.",
+                    "Daily stand-up meetings and performance profiling.",
+                    "Guaranteed compliance and security patching.",
+                ],
+                tag: "For Corporations"
+            }
+        ];
+
+        // --------------------------------------------------------------------------------
+        // HELPER FUNCTIONS
+        // --------------------------------------------------------------------------------
+
+        /**
+         * Renders the subscription plans onto the page.
+         */
+        function renderSubscriptions() {
+            const container = document.getElementById('subscription-plans');
+            container.innerHTML = allSubscriptions.map(plan => `
+                <div class="card-bg p-8 rounded-2xl shadow-2xl transition duration-300 hover:shadow-red-700/50 flex flex-col h-full ${plan.tag === 'Recommended' ? 'ring-4 ring-red-600' : ''}">
+                    <div class="mb-4">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-green-400 bg-green-900/50 px-3 py-1 rounded-full">${plan.tag}</span>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-2 text-white">${plan.name}</h3>
+                    <p class="text-5xl font-extrabold text-white mb-2">
+                        ${plan.price}
+                        <span class="text-xl font-medium text-gray-500">/${plan.billing.toLowerCase().replace('per ', '')}</span>
+                    </p>
+                    <p class="text-gray-400 mb-6">${plan.description}</p>
+                    
+                    <ul class="space-y-3 flex-grow mb-6">
+                        ${plan.features.map(feature => `
+                            <li class="flex items-start text-gray-300">
+                                <!-- UPDATED: Checkmark icon color to red-500 -->
+                                <i data-lucide="check-circle" class="w-5 h-5 text-red-500 mr-3 mt-1 flex-shrink-0"></i>
+                                <span>${feature}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <!-- UPDATED: Button color to red-700 -->
+                    <a href="javascript:void(0)" class="mt-auto block w-full text-center py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
+                        Start Building
+                    </a>
+                </div>
+            `).join('');
+
+            // Re-initialize lucide icons for newly added elements
+            lucide.createIcons();
+        }
+
+
+
+        /**
+         * Populates the category filter dropdown.
+         */
+        function populateFilter() {
+            const categories = [...new Set(allServices.map(service => service.category))];
+            const filterSelect = document.getElementById('service-filter');
+            
+            // Clear existing options, keeping the default 'Filter by Category'
+            filterSelect.innerHTML = '<option value="all">Filter by Category</option>';
+
+            // Sort categories alphabetically
+            categories.sort();
+
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                filterSelect.appendChild(option);
+            });
+        }
+
+        /**
+         * Handles service filtering and searching.
+         */
+        function filterAndSearchServices() {
+            const searchText = document.getElementById('service-search').value.toLowerCase();
+            const selectedCategory = document.getElementById('service-filter').value;
+
+            const filteredServices = allServices.filter(service => {
+                const matchesSearch = service.name.toLowerCase().includes(searchText) || service.description.toLowerCase().includes(searchText);
+                const matchesCategory = selectedCategory === 'all' || service.category === selectedCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+
+            renderServices(filteredServices);
+        }
+
+        // --------------------------------------------------------------------------------
+        // AUTH FUNCTIONS
+        // --------------------------------------------------------------------------------
+
+        // Update UI based on auth state
+        function updateUIForAuthState() {
+            const logoutBtn = document.getElementById('logout-btn');
+            if (isLoggedIn) {
+                logoutBtn.classList.remove('hidden');
+            } else {
+                logoutBtn.classList.add('hidden');
+            }
+            // Minor fix: Check if currentUser exists and has email before logging it
+            const userEmail = currentUser ? (currentUser.email || 'Google User') : 'Anonymous User';
+            console.log('Auth state changed:', isLoggedIn ? `Logged in as ${userEmail}` : 'Logged out');
+        }
+
+        function showAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            // Ensure icons are created when the modal is shown
+            lucide.createIcons(); 
+        }
+
+        function hideAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('auth-error').classList.add('hidden');
+            document.getElementById('auth-email').value = '';
+            document.getElementById('auth-password').value = '';
+        }
+
+        function toggleAuthMode() {
+            const modalTitle = document.querySelector('#auth-modal h3');
+            const submitBtn = document.getElementById('auth-submit');
+            const toggleBtn = document.getElementById('auth-toggle');
+
+            if (modalTitle.textContent === 'Sign In') {
+                modalTitle.textContent = 'Sign Up';
+                submitBtn.textContent = 'Sign Up';
+                toggleBtn.textContent = 'Already have an account? Sign In';
+            } else {
+                modalTitle.textContent = 'Sign In';
+                submitBtn.textContent = 'Sign In';
+                toggleBtn.textContent = "Don't have an account? Sign Up";
+            }
+            document.getElementById('auth-error').classList.add('hidden'); // Clear error on toggle
+        }
+
+        /**
+         * Handles Email/Password Sign-in or Sign-up based on modal state (Modular V11).
+         */
+        async function handleAuthSubmit() {
+            if (!auth) {
+                document.getElementById('auth-error').textContent = "Authentication system not initialized. Check Firebase config.";
+                document.getElementById('auth-error').classList.remove('hidden');
+                return;
+            }
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const isSignUp = document.querySelector('#auth-modal h3').textContent === 'Sign Up';
+            const errorElement = document.getElementById('auth-error');
+
+            try {
+                if (isSignUp) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+                hideAuthModal();
+            } catch (error) {
+                errorElement.textContent = error.message;
+                errorElement.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Handles Google Sign-in using a popup (Modular V11).
+         * Switching to popup resolves many unauthorized-domain errors in iframe environments.
+         */
+        async function handleGoogleSignIn() {
+            console.log("Clicked Google Sign-in button. Checking Firebase readiness..."); // DEBUG LOG
+            const errorElement = document.getElementById('auth-error');
+
+            if (!isFirebaseReady) {
+                 console.error("Firebase Auth not yet ready. Please wait a moment.");
+                 errorElement.textContent = "Authentication system is initializing. Please try again in a few seconds.";
+                 errorElement.classList.remove('hidden');
+                 return;
+            }
+            if (!auth) {
+                 console.error("Firebase Auth object is null. Configuration failure is suspected.");
+                 errorElement.textContent = "A critical error occurred during Firebase setup. Ensure your FIREBASE_CONFIG is correct.";
+                 errorElement.classList.remove('hidden');
+                 return;
+            }
+
+            const provider = new GoogleAuthProvider();
+            
+            try {
+                // *** FIX: Switched from signInWithRedirect to signInWithPopup ***
+                // The popup method generally works better within sandboxed iframe environments
+                // like this Canvas, as the authentication flow happens in a new, authorized window.
+                const result = await signInWithPopup(auth, provider);
+                console.log("Google Sign-in successful:", result.user);
+                hideAuthModal(); // Close the modal on successful sign-in
+            } catch (error) {
+                // This error typically happens if the redirect fails or is blocked immediately.
+                console.error("Google Sign-in Failed:", error);
+                errorElement.textContent = error.message;
+                errorElement.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Handles user logout (Modular V11).
+         */
+        async function handleLogout() {
+            if (!auth) return;
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // --------------------------------------------------------------------------------
+        // PAYMENT FUNCTIONS
+        // --------------------------------------------------------------------------------
+
+        // Stripe configuration (replace with your publishable key)
+        const stripe = Stripe('pk_test_your-stripe-publishable-key');
+
+        function initiatePayment(service) {
+            // In a real implementation, this would call a backend API to create the Stripe Checkout session
+            console.log('Initiating payment for service:', service.name, 'Price:', service.price);
+            
+            // Replaced alert() with a console log + custom message box suggestion
+            const modal = document.getElementById('auth-modal').querySelector('.card-bg');
+            // Store a copy of the original modal content
+            const originalContent = modal.innerHTML;
+
+            // Display a temporary payment message
+            modal.innerHTML = `
+                <div class="text-center p-6">
+                    <i data-lucide="credit-card" class="w-10 h-10 text-red-500 mx-auto mb-4"></i>
+                    <h4 class="text-xl font-bold text-white mb-2">Payment Initiated (Demo)</h4>
+                    <p class="text-gray-400 mb-6">Redirecting for Stripe checkout for: ${service.name}. (Placeholder functionality)</p>
+                    <button id="close-message" class="py-2 px-4 bg-red-700 hover:bg-red-600 text-white rounded-lg transition duration-300">Close</button>
+                </div>
+            `;
+            document.getElementById('auth-modal').classList.remove('hidden');
+            lucide.createIcons();
+            
+            // Function to restore the modal content and listeners
+            function restoreAuthModal() {
+                 document.getElementById('auth-modal').classList.add('hidden');
+                 modal.innerHTML = originalContent; // Restore original modal content
+                 // Re-attach listeners to restored elements
+                 document.getElementById('close-modal').addEventListener('click', hideAuthModal);
+                 document.getElementById('auth-submit').addEventListener('click', handleAuthSubmit);
+                 document.getElementById('auth-toggle').addEventListener('click', toggleAuthMode);
+                 document.getElementById('google-signin').addEventListener('click', handleGoogleSignIn);
+            }
+
+            document.getElementById('close-message').addEventListener('click', restoreAuthModal);
+        }
+
+        // --------------------------------------------------------------------------------
+        // UPDATED RENDER FUNCTIONS
+        // --------------------------------------------------------------------------------
+
+        /**
+         * Renders the list of services based on current search and filter.
+         */
+        function renderServices(services) {
+            const container = document.getElementById('service-list');
+            const noResults = document.getElementById('no-results');
+
+            if (services.length === 0) {
+                container.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            container.innerHTML = services.map(service => `
+                <!-- UPDATED: Card hover shadow to red-700 -->
+                <div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-700/30 transition duration-200 transform hover:-translate-y-1">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <!-- NOTE: Using standard Lucide icon as 'python' and 'vial' are custom/missing -->
+                            <i data-lucide="${service.icon}" class="w-6 h-6 text-red-500 mr-3 flex-shrink-0"></i>
+                            <h4 class="text-lg font-semibold text-white">${service.name}</h4>
+                        </div>
+                        <span class="text-lg font-bold text-green-400">$${service.price}</span>
+                    </div>
+                    <!-- UPDATED: Category text color to red-600 -->
+                    <p class="text-sm font-medium text-red-600 mb-2">${service.category}</p>
+                    <p class="text-gray-400 text-sm mb-4">${service.description}</p>
+                    <button class="buy-now-btn w-full py-2 px-4 bg-red-700 hover:bg-red-600 text-white rounded-lg transition duration-300" data-service-id="${service.id}">
+                        Buy Now
+                    </button>
+                </div>
+            `).join('');
+
+            // Re-initialize lucide icons
+            lucide.createIcons();
+
+            // Add event listeners for Buy Now buttons
+            document.querySelectorAll('.buy-now-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const serviceId = parseInt(e.target.getAttribute('data-service-id'));
+                    const service = allServices.find(s => s.id === serviceId);
+                    if (!isLoggedIn) {
+                        showAuthModal();
+                    } else {
+                        initiatePayment(service);
+                    }
+                });
+            });
+        }
+
+        // --------------------------------------------------------------------------------
+        // INITIALIZATION AND EVENT LISTENERS
+        // --------------------------------------------------------------------------------
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Firebase setup (authentication happens here)
+            await setupFirebase();
+
+            renderSubscriptions();
+            populateFilter();
+            renderServices(allServices); // Initial render
+
+            // Service filter/search listeners
+            document.getElementById('service-search').addEventListener('input', filterAndSearchServices);
+            document.getElementById('service-filter').addEventListener('change', filterAndSearchServices);
+
+            // ------------------------------------
+            // Navigation Listeners (Multipage Logic)
+            // ------------------------------------
+
+            // Set up click listeners for all navigation links
+            document.querySelectorAll('[data-target]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent default anchor link scrolling behavior
+                    const targetId = link.getAttribute('data-target');
+                    navigateTo(targetId);
+                });
+            });
+
+            // Initial page load: show 'home' and set active link
+            navigateTo('home');
+
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Auth modal listeners
+            document.getElementById('close-modal').addEventListener('click', hideAuthModal);
+            document.getElementById('auth-submit').addEventListener('click', handleAuthSubmit);
+            document.getElementById('auth-toggle').addEventListener('click', toggleAuthMode);
+            
+            // Google Sign-in Listener (Now uses popup)
+            document.getElementById('google-signin').addEventListener('click', handleGoogleSignIn);
+
+            // Logout button listener
+            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+            // Close modal on outside click
+            document.getElementById('auth-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'auth-modal') {
+                    hideAuthModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
