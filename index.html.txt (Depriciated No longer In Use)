@@ -369,12 +369,12 @@
          */
         const FIREBASE_CONFIG = {
             // FIREBASE CONFIGURATION PROVIDED BY USER:
-            apiKey: "AIzaSyATMtyx9nuwIcv-OWODFIQA4NOtDzqTqJc",
-            authDomain: "rvoincwebsite.firebaseapp.com",
-            projectId: "rvoincwebsite",
-            storageBucket: "rvoincwebsite.firebasestorage.app",
-            messagingSenderId: "675340459793",
-            appId: "1:675340459793:web:89dd0ecce1f1c3ee1336b0"
+            apiKey: ",
+            authDomain: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: ""
         };
         
         // This logic ensures we use the canvas global if available, but falls back to the hardcoded config
