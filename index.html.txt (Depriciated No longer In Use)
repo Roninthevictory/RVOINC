@@ -1,3 +1,60 @@
+Update index.html.txt (Depriciated No longer In Use) | Removed Firebase Data
+⚠️ DEPRECATED FILE NOTICE
+───────────────────────────────────────────────
+File: index.html
+Status: Deprecated
+Effective Date: October 2025
+
+This file represents the previous version of the website’s core landing page.
+It has been officially deprecated due to the release of a new, redesigned version
+of the site featuring modern visuals, improved performance, and enhanced responsiveness.
+
+Reason for Deprecation:
+- Outdated design and inconsistent UI elements
+- Limited mobile and cross-device compatibility
+- Inefficient HTML/CSS structure affecting maintainability
+- Superseded by a modular, modernized design system
+
+Maintenance Status:
+This file is no longer maintained, updated, or supported.
+It remains in the repository solely for archival and historical reference.
+Any reported issues, visual bugs, or broken assets related to this file will not be addressed.
+
+New Design Information:
+The updated version of the site can be found in the /new-design/ directory (or main branch).
+All future changes, commits, and improvements should target the new design implementation.
+
+Developers are encouraged to reference this file only when comparing legacy layout structures,
+visual elements, or markup conventions from the previous generation of the website.
+
+───────────────────────────────────────────────
+LICENSE & USAGE RESTRICTIONS
+───────────────────────────────────────────────
+Copyright © 2025 RVO INC. All Rights Reserved.
+Effective Date: October 15, 2025
+
+This file and all associated code, design assets, and written content are the exclusive
+intellectual property of RVO INC and its authorized contributors. Unauthorized use,
+reproduction, modification, redistribution, or public display of this file or any portion
+thereof is strictly prohibited without prior written consent from RVO INC.
+
+The following actions are explicitly forbidden:
+- Copying or cloning this file for personal, commercial, or educational use
+- Redistributing or re-uploading this file or its derivatives on any platform
+- Using this file as a base or template for other projects
+- Claiming ownership, credit, or authorship of this material in any form
+
+Violations of this license will be treated as copyright infringement and may result in
+legal proceedings, including but not limited to DMCA takedown actions, cease-and-desist
+orders, and claims for damages.
+
+This restriction remains in effect indefinitely unless explicitly revoked in writing
+by an authorized representative of RVO INC.
+
+───────────────────────────────────────────────
+End of Notice
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
