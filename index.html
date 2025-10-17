@@ -785,120 +785,70 @@ End of License
         // --------------------------------------------------------------------------------
         // DYNAMIC CONTENT RENDERING AND PURCHASE LOGIC
         // --------------------------------------------------------------------------------
-        // === Global Discount Settings ===
-const DISCOUNT_PERCENT = 50; // 🧮 Change this number to set discount (e.g. 25, 40, 75)
+// ---------- Simple, robust discount applicator (no colors) ----------
+const DISCOUNT_PERCENT = 50; // change this value to edit the discount
 
-// === Apply Discount to Services ===
-allServices.forEach(service => {
-    if (typeof service.price === "string" && service.price.includes("$")) {
-        const original = parseFloat(service.price.replace(/[^0-9.]/g, ""));
-        if (!isNaN(original)) {
-            const discounted = (original * (1 - DISCOUNT_PERCENT / 100)).toFixed(2);
-            service.displayPrice = `
-                <span style="text-decoration: line-through; opacity: 0.6;">$${original.toFixed(2)}</span>
-                <span style="font-weight: 600; margin-left: 6px;">
-                    ${DISCOUNT_PERCENT}% OFF → $${discounted}
-                </span>
-            `;
-        } else {
-            service.displayPrice = service.price; // Keep "FREE" or "Not Available"
-        }
+function applyDiscountToServices(services) {
+  services.forEach(s => {
+    const p = s.price;
+
+    // If price is a string that contains a dollar sign, try parse a number
+    if (typeof p === "string" && p.includes("$")) {
+      const num = parseFloat(p.replace(/[^0-9.]/g, ""));
+      if (!isNaN(num)) {
+        const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
+        s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
+                           <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+      } else {
+        // preserve text like "FREE" or unexpected formats
+        s.displayPrice = p;
+      }
+
+    } else if (typeof p === "number") {
+      // If someone used a number (assume dollars)
+      const discounted = +(p * (1 - DISCOUNT_PERCENT / 100));
+      s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${p.toFixed(2)}</span>
+                         <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
     } else {
-        service.displayPrice = service.price;
+      // fallback for NOT available, null, or other types
+      s.displayPrice = p ?? "N/A";
     }
-});
+  });
+}
 
-// === Apply Discount to Subscription Plans ===
-subscriptionPlans.forEach(plan => {
-    if (typeof plan.price === "number") {
-        const original = plan.price / 100;
-        const discounted = (original * (1 - DISCOUNT_PERCENT / 100)).toFixed(2);
-        plan.displayPrice = `
-            <span style="text-decoration: line-through; opacity: 0.6;">$${original.toFixed(2)}</span>
-            <span style="font-weight: 600; margin-left: 6px;">
-                ${DISCOUNT_PERCENT}% OFF → $${discounted}
-            </span>
-        `;
+function applyDiscountToPlans(plans) {
+  plans.forEach(plan => {
+    const p = plan.price;
+
+    // Your plans use cents (e.g. 15000 = $150.00). Only treat numeric plan.price as cents.
+    if (typeof p === "number") {
+      const originalDollars = p / 100;
+      const discounted = +(originalDollars * (1 - DISCOUNT_PERCENT / 100));
+      plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${originalDollars.toFixed(2)}</span>
+                           <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+    } else if (typeof p === "string" && p.includes("$")) {
+      // In case any plan used a dollar string instead of cents
+      const num = parseFloat(p.replace(/[^0-9.]/g, ""));
+      if (!isNaN(num)) {
+        const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
+        plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
+                             <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+      } else {
+        plan.displayPrice = p;
+      }
     } else {
-        plan.displayPrice = plan.price;
+      plan.displayPrice = p ?? "N/A";
     }
-});
+  });
+}
 
+// Run the functions (make sure this runs after arrays are defined)
+applyDiscountToServices(allServices);
+applyDiscountToPlans(subscriptionPlans);
 
-      
-        /**
-         * Handler for all purchase attempts (Subscriptions). Checks login status.
-         */
-        function handleSubscriptionAttempt(event) {
-            const button = event.currentTarget;
-            const stripeLink = button.getAttribute('data-link');
-            const planName = button.getAttribute('data-plan-name');
-            
-            if (isLoggedIn) {
-                console.log(`User is logged in. Redirecting to Stripe for ${planName}: ${stripeLink}`);
-                window.open(stripeLink, '_blank');
-                
-                button.textContent = 'Redirecting...';
-                setTimeout(() => {
-                    button.textContent = `Start ${planName} Plan`;
-                }, 1500);
-                
-            } else {
-                console.log("User is not logged in. Showing Auth Modal.");
-                showAuthModal(`Please sign in to subscribe to the ${planName} plan.`);
-            }
-        }
-        
-        /**
-         * UPDATED: Unified handler for 'Buy Now' and 'Get Quote' service buttons.
-         */
-        function handleServiceActionUnified(event) {
-            const button = event.currentTarget;
-            const serviceName = button.getAttribute('data-service-name');
-            const actionType = button.getAttribute('data-action-type'); // 'purchase' or 'quote'
-            
-            // 1. Check Login Status
-            if (!isLoggedIn) {
-                const message = actionType === 'purchase' 
-                    ? `Please sign in to purchase ${serviceName}.` 
-                    : `Please sign in to request a quote for ${serviceName}.`;
-                showAuthModal(message);
-                return;
-            }
-
-            // 2. Handle Action (Purchase or Quote)
-            if (actionType === 'purchase') {
-                const stripeLink = button.getAttribute('data-link');
-                console.log(`User is logged in. Redirecting to Stripe for ${serviceName}: ${stripeLink}`);
-                window.open(stripeLink, '_blank');
-                
-                // Temporary feedback on button
-                button.textContent = 'Redirecting...';
-                button.classList.add('bg-green-600');
-                button.classList.remove('bg-red-700');
-                setTimeout(() => {
-                    button.textContent = 'Buy Now';
-                    button.classList.remove('bg-green-600');
-                    button.classList.add('bg-red-700');
-                }, 1500);
-
-            } else if (actionType === 'quote') {
-                // Quote logic (simulated request success)
-                button.textContent = 'Quote Request Sent!';
-                button.classList.add('bg-green-600');
-                button.classList.remove('bg-red-700');
-                setTimeout(() => {
-                    button.textContent = 'Get Quote';
-                    button.classList.remove('bg-green-600');
-                    button.classList.add('bg-red-700');
-                }, 3000);
-                
-                // Show success message in the error div area (temporarily styled green)
-                authErrorDiv.classList.remove('text-red-500');
-                authErrorDiv.classList.add('text-green-500');
-                showAuthError(`Quote request for ${serviceName} sent successfully! We will contact you soon.`);
-            }
-        }
+// Optional quick debug to confirm values (open browser console)
+console.log("example service displayPrice:", allServices[0]?.displayPrice);
+console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
 
 
         /**
