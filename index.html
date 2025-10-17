@@ -785,7 +785,47 @@ End of License
         // --------------------------------------------------------------------------------
         // DYNAMIC CONTENT RENDERING AND PURCHASE LOGIC
         // --------------------------------------------------------------------------------
-        
+        // === Global Discount Settings ===
+const DISCOUNT_PERCENT = 50; // 🧮 Change this number to set discount (e.g. 25, 40, 75)
+
+// === Apply Discount to Services ===
+allServices.forEach(service => {
+    if (typeof service.price === "string" && service.price.includes("$")) {
+        const original = parseFloat(service.price.replace(/[^0-9.]/g, ""));
+        if (!isNaN(original)) {
+            const discounted = (original * (1 - DISCOUNT_PERCENT / 100)).toFixed(2);
+            service.displayPrice = `
+                <span style="text-decoration: line-through; opacity: 0.6;">$${original.toFixed(2)}</span>
+                <span style="font-weight: 600; margin-left: 6px;">
+                    ${DISCOUNT_PERCENT}% OFF → $${discounted}
+                </span>
+            `;
+        } else {
+            service.displayPrice = service.price; // Keep "FREE" or "Not Available"
+        }
+    } else {
+        service.displayPrice = service.price;
+    }
+});
+
+// === Apply Discount to Subscription Plans ===
+subscriptionPlans.forEach(plan => {
+    if (typeof plan.price === "number") {
+        const original = plan.price / 100;
+        const discounted = (original * (1 - DISCOUNT_PERCENT / 100)).toFixed(2);
+        plan.displayPrice = `
+            <span style="text-decoration: line-through; opacity: 0.6;">$${original.toFixed(2)}</span>
+            <span style="font-weight: 600; margin-left: 6px;">
+                ${DISCOUNT_PERCENT}% OFF → $${discounted}
+            </span>
+        `;
+    } else {
+        plan.displayPrice = plan.price;
+    }
+});
+
+
+      
         /**
          * Handler for all purchase attempts (Subscriptions). Checks login status.
          */
