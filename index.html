@@ -210,9 +210,9 @@ End of License
                     Refer clients to RVO Inc. and earn a commission on every successful development project or subscription sign-up. We provide detailed tracking and competitive payouts for referring top-tier coding work.
                 </p>
                 <!-- Retaining green for 'Sign Up' button for contrast -->
-                <a href="javascript:void(0)" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition duration-300">
+                <button id="open-affiliate-modal" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition duration-300">
                     <i data-lucide="zap" class="w-5 h-5 mr-2"></i> Sign Up Today
-                </a>
+                </button>
             </div>
         </section>
 
@@ -406,6 +406,207 @@ End of License
                 </button>
             </div>
             <div id="auth-error" class="mt-4 text-red-500 text-sm hidden"></div>
+        </div>
+    </div>
+
+    <!-- Affiliate Registration Modal -->
+    <div id="affiliate-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">Join Our Affiliate Program</h3>
+                <button id="close-affiliate-modal" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <form id="affiliate-form" class="space-y-4">
+                <!-- Preferred Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Preferred Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="affiliate-name" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Your preferred name">
+                </div>
+
+                <!-- Discord Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Discord Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="affiliate-discord-name" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="username#0000 or @username">
+                </div>
+
+                <!-- Discord ID -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Discord ID <span class="text-red-500">*</span></label>
+                    <details class="mb-2 text-xs text-gray-400">
+                        <summary class="cursor-pointer hover:text-gray-300 inline-flex items-center gap-1">
+                            <i data-lucide="help-circle" class="w-3 h-3"></i> How to find your Discord ID
+                        </summary>
+                        <div class="mt-2 p-3 bg-gray-800 rounded-lg space-y-2">
+                            <p><strong class="text-white">On Desktop/PC:</strong></p>
+                            <ol class="list-decimal ml-4 space-y-1">
+                                <li>Open Discord and go to User Settings (gear icon)</li>
+                                <li>Go to Advanced and enable "Developer Mode"</li>
+                                <li>Right-click your username anywhere and select "Copy User ID"</li>
+                            </ol>
+                            <p class="mt-2"><strong class="text-white">On Mobile:</strong></p>
+                            <ol class="list-decimal ml-4 space-y-1">
+                                <li>Tap your profile picture in the bottom right</li>
+                                <li>Tap the three dots menu and select "Settings"</li>
+                                <li>Go to Behavior > Enable "Developer Mode"</li>
+                                <li>Go back, tap your profile again, and select "Copy User ID"</li>
+                            </ol>
+                            <p class="mt-2"><strong class="text-white">On Browser:</strong></p>
+                            <ol class="list-decimal ml-4 space-y-1">
+                                <li>Log into Discord via browser</li>
+                                <li>Click the gear icon for User Settings</li>
+                                <li>Go to Advanced and enable "Developer Mode"</li>
+                                <li>Right-click your username and select "Copy User ID"</li>
+                            </ol>
+                            <p class="mt-2 text-yellow-400">Your Discord ID is a long number (e.g., 123456789012345678)</p>
+                        </div>
+                    </details>
+                    <input type="text" id="affiliate-discord-id" required pattern="[0-9]{17,19}" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="123456789012345678">
+                    <small class="text-gray-500">Numbers only, 17-19 digits</small>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Email Address <span class="text-red-500">*</span></label>
+                    <input type="email" id="affiliate-email" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="your@email.com">
+                </div>
+
+                <!-- Phone (Optional) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Phone Number <span class="text-gray-500">(Optional)</span></label>
+                    <input type="tel" id="affiliate-phone" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="+1 (555) 123-4567">
+                </div>
+
+                <!-- Company Name (Optional) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Company Name <span class="text-gray-500">(Optional)</span></label>
+                    <input type="text" id="affiliate-company" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Your Company Inc.">
+                </div>
+
+                <!-- Custom Code -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Desired Affiliate Code <span class="text-red-500">*</span></label>
+                    <input type="text" id="affiliate-code" required pattern="[a-z\-]{1,14}" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="my-awesome-code" maxlength="14">
+                    <small class="text-gray-500">Lowercase letters and hyphens (-) only. Max 14 characters. No underscores, dots, or other special characters.</small>
+                </div>
+
+                <!-- Social Followers -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Main Social Media Followers <span class="text-red-500">*</span></label>
+                    <select id="affiliate-followers" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                        <option value="">Select follower range</option>
+                        <option value="0-1000">0 - 1,000</option>
+                        <option value="1000-5000">1,000 - 5,000</option>
+                        <option value="5000-10000">5,000 - 10,000</option>
+                        <option value="10000-50000">10,000 - 50,000</option>
+                        <option value="50000-100000">50,000 - 100,000</option>
+                        <option value="100000+">100,000+</option>
+                    </select>
+                </div>
+
+                <!-- Primary Platform -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Primary Promotion Platform <span class="text-red-500">*</span></label>
+                    <select id="affiliate-platform" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                        <option value="">Select platform</option>
+                        <option value="YouTube">YouTube</option>
+                        <option value="Twitter/X">Twitter/X</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="TikTok">TikTok</option>
+                        <option value="Discord">Discord Community</option>
+                        <option value="Twitch">Twitch</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                        <option value="Blog/Website">Blog/Website</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Social Profile Link -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Link to Main Social Profile <span class="text-red-500">*</span></label>
+                    <input type="url" id="affiliate-profile-link" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="https://youtube.com/@yourchannel">
+                </div>
+
+                <!-- Expected Monthly Referrals -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Expected Monthly Referrals <span class="text-red-500">*</span></label>
+                    <select id="affiliate-referrals" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                        <option value="">Select expected referrals</option>
+                        <option value="1-5">1 - 5</option>
+                        <option value="5-10">5 - 10</option>
+                        <option value="10-25">10 - 25</option>
+                        <option value="25-50">25 - 50</option>
+                        <option value="50+">50+</option>
+                    </select>
+                </div>
+
+                <!-- Notification Preference -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Where should we notify you about updates? <span class="text-red-500">*</span></label>
+                    <select id="affiliate-notification" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                        <option value="">Select notification preference</option>
+                        <option value="Email">Email</option>
+                        <option value="Discord">Discord</option>
+                        <option value="Both">Both Email & Discord</option>
+                    </select>
+                </div>
+
+                <!-- Geographic Focus -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Primary Geographic Focus <span class="text-red-500">*</span></label>
+                    <input type="text" id="affiliate-geo" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="e.g., North America, Europe, Global">
+                </div>
+
+                <!-- Experience Level -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Your Experience with Affiliate Marketing <span class="text-red-500">*</span></label>
+                    <select id="affiliate-experience" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                        <option value="">Select your experience level</option>
+                        <option value="Beginner">Beginner (New to affiliate marketing)</option>
+                        <option value="Intermediate">Intermediate (Some experience)</option>
+                        <option value="Advanced">Advanced (Professional affiliate marketer)</option>
+                    </select>
+                </div>
+
+                <!-- Compliance Checkbox -->
+                <div class="flex items-start">
+                    <input type="checkbox" id="affiliate-compliance" required class="mt-1 mr-2 h-4 w-4 rounded border-gray-600 bg-gray-700 text-red-600 focus:ring-red-500">
+                    <label for="affiliate-compliance" class="text-sm text-gray-300">
+                        I confirm that I will comply with all RVO Inc. affiliate program guidelines and accurately represent our services. <span class="text-red-500">*</span>
+                    </label>
+                </div>
+
+                <!-- Error Message -->
+                <div id="affiliate-error" class="hidden text-red-500 text-sm p-3 bg-red-900/20 rounded-lg"></div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="affiliate-submit" class="w-full py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
+                    Submit Application
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="success-popup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-md mx-4 text-center">
+            <div class="mb-4 flex justify-center">
+                <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <i data-lucide="check-circle" class="w-10 h-10 text-green-500"></i>
+                </div>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">Application Submitted!</h3>
+            <p class="text-gray-300 mb-6">
+                Thank you for applying to our affiliate program. Your application has been received and is under review.
+            </p>
+            <p class="text-sm text-gray-400 mb-6">
+                It can take about <span class="text-red-400 font-semibold">12-48 hours</span> for us to register your code. You will receive an email confirmation once your application is approved.
+            </p>
+            <button id="close-success-popup" class="px-6 py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
+                Got it!
+            </button>
         </div>
     </div>
 
@@ -652,6 +853,54 @@ End of License
         function showAuthError(message) {
             authErrorDiv.textContent = message;
             authErrorDiv.classList.remove('hidden');
+        }
+
+        // --------------------------------------------------------------------------------
+        // PURCHASE & SUBSCRIPTION HANDLERS
+        // --------------------------------------------------------------------------------
+
+        /**
+         * Unified handler for service action buttons (Buy Now or Get Quote)
+         */
+        function handleServiceActionUnified(event) {
+            const button = event.currentTarget;
+            const actionType = button.getAttribute('data-action-type');
+            const serviceName = button.getAttribute('data-service-name');
+            const stripeLink = button.getAttribute('data-link');
+
+            if (!isLoggedIn) {
+                showAuthModal("Please sign in to proceed with this service.");
+                return;
+            }
+
+            if (actionType === 'purchase' && stripeLink) {
+                // Redirect to Stripe checkout
+                window.open(stripeLink, '_blank');
+            } else if (actionType === 'quote') {
+                // Handle quote request (could open a contact form or modal)
+                alert(`Quote requested for: ${serviceName}\n\nPlease contact us via email or our contact form to discuss your project requirements.`);
+            }
+        }
+
+        /**
+         * Handler for subscription plan purchase buttons
+         */
+        function handleSubscriptionAttempt(event) {
+            const button = event.currentTarget;
+            const planName = button.getAttribute('data-plan-name');
+            const stripeLink = button.getAttribute('data-link');
+
+            if (!isLoggedIn) {
+                showAuthModal("Please sign in to subscribe to a plan.");
+                return;
+            }
+
+            if (stripeLink) {
+                // Redirect to Stripe checkout
+                window.open(stripeLink, '_blank');
+            } else {
+                alert(`Starting ${planName} subscription...\n\nPlease contact us to complete your subscription setup.`);
+            }
         }
 
         // --------------------------------------------------------------------------------
@@ -1024,6 +1273,160 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
             lucide.createIcons();
         }
 
+        // --------------------------------------------------------------------------------
+        // AFFILIATE MODAL & DISCORD WEBHOOK FUNCTIONS
+        // --------------------------------------------------------------------------------
+
+        // Discord Webhook URL - Replace with your actual webhook URL
+        const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+
+        const affiliateModal = document.getElementById('affiliate-modal');
+        const affiliateForm = document.getElementById('affiliate-form');
+        const affiliateError = document.getElementById('affiliate-error');
+        const successPopup = document.getElementById('success-popup');
+
+        function showAffiliateModal() {
+            // Check if user is logged in
+            if (!isLoggedIn) {
+                showAuthModal("Please sign in to join our affiliate program.");
+                return;
+            }
+            
+            affiliateModal.classList.remove('hidden');
+            lucide.createIcons(); // Refresh icons for the help-circle icon
+        }
+
+        function hideAffiliateModal() {
+            affiliateModal.classList.add('hidden');
+            affiliateForm.reset();
+            affiliateError.classList.add('hidden');
+        }
+
+        function showSuccessPopup() {
+            successPopup.classList.remove('hidden');
+            lucide.createIcons(); // Refresh icons for the check-circle icon
+        }
+
+        function hideSuccessPopup() {
+            successPopup.classList.add('hidden');
+        }
+
+        function showAffiliateError(message) {
+            affiliateError.textContent = message;
+            affiliateError.classList.remove('hidden');
+        }
+
+        function validateAffiliateCode(code) {
+            // Must be lowercase alphabetical with optional hyphens, no other special chars, max 14 chars
+            const regex = /^[a-z\-]{1,14}$/;
+            if (!regex.test(code)) {
+                return false;
+            }
+            // Additional check: no underscores, dots, or other special characters
+            if (code.includes('_') || code.includes('.')) {
+                return false;
+            }
+            return true;
+        }
+
+        async function submitAffiliateForm(event) {
+            event.preventDefault();
+            affiliateError.classList.add('hidden');
+
+            // Collect form data
+            const formData = {
+                preferredName: document.getElementById('affiliate-name').value.trim(),
+                discordName: document.getElementById('affiliate-discord-name').value.trim(),
+                discordId: document.getElementById('affiliate-discord-id').value.trim(),
+                email: document.getElementById('affiliate-email').value.trim(),
+                phone: document.getElementById('affiliate-phone').value.trim() || 'Not provided',
+                company: document.getElementById('affiliate-company').value.trim() || 'Not provided',
+                affiliateCode: document.getElementById('affiliate-code').value.trim().toLowerCase(),
+                followers: document.getElementById('affiliate-followers').value,
+                platform: document.getElementById('affiliate-platform').value,
+                profileLink: document.getElementById('affiliate-profile-link').value.trim(),
+                expectedReferrals: document.getElementById('affiliate-referrals').value,
+                notificationPreference: document.getElementById('affiliate-notification').value,
+                geographic: document.getElementById('affiliate-geo').value.trim(),
+                experience: document.getElementById('affiliate-experience').value,
+                compliance: document.getElementById('affiliate-compliance').checked
+            };
+
+            // Validate affiliate code
+            if (!validateAffiliateCode(formData.affiliateCode)) {
+                showAffiliateError('Invalid affiliate code format. Use only lowercase letters and hyphens (-). No underscores, dots, or other special characters. Max 14 characters.');
+                return;
+            }
+
+            // Validate Discord ID format
+            if (!/^[0-9]{17,19}$/.test(formData.discordId)) {
+                showAffiliateError('Invalid Discord ID format. Please enter a valid Discord ID (17-19 digits).');
+                return;
+            }
+
+            // Disable submit button during submission
+            const submitBtn = document.getElementById('affiliate-submit');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                // Create Discord embed message
+                const discordPayload = {
+                    embeds: [{
+                        title: '🎉 New Affiliate Application',
+                        color: 0xDC143C, // Crimson red
+                        fields: [
+                            { name: '👤 Preferred Name', value: formData.preferredName, inline: true },
+                            { name: '💬 Discord Name', value: formData.discordName, inline: true },
+                            { name: '🆔 Discord ID', value: formData.discordId, inline: true },
+                            { name: '📧 Email', value: formData.email, inline: true },
+                            { name: '📱 Phone', value: formData.phone, inline: true },
+                            { name: '🏢 Company', value: formData.company, inline: true },
+                            { name: '🔖 Desired Code', value: `\`${formData.affiliateCode}\``, inline: false },
+                            { name: '👥 Followers', value: formData.followers, inline: true },
+                            { name: '📱 Platform', value: formData.platform, inline: true },
+                            { name: '🔗 Profile Link', value: formData.profileLink, inline: false },
+                            { name: '📊 Expected Referrals/Mo', value: formData.expectedReferrals, inline: true },
+                            { name: '🔔 Notification Pref', value: formData.notificationPreference, inline: true },
+                            { name: '🌍 Geographic Focus', value: formData.geographic, inline: true },
+                            { name: '⭐ Experience Level', value: formData.experience, inline: true },
+                            { name: '✅ Guidelines Accepted', value: formData.compliance ? 'Yes' : 'No', inline: true }
+                        ],
+                        timestamp: new Date().toISOString(),
+                        footer: {
+                            text: 'RVO Inc. Affiliate System'
+                        }
+                    }]
+                };
+
+                // Send to Discord webhook
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(discordPayload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit application');
+                }
+
+                // Success!
+                hideAffiliateModal();
+                showSuccessPopup();
+
+            } catch (error) {
+                console.error('Error submitting affiliate form:', error);
+                showAffiliateError('Failed to submit application. Please check that the Discord webhook is configured correctly, or try again later.');
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        }
+
 
         // --------------------------------------------------------------------------------
         // EVENT LISTENERS AND INITIALIZATION
@@ -1067,6 +1470,12 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
 
             // Google Sign In
             document.getElementById('google-signin').addEventListener('click', handleGoogleSignIn);
+
+            // Affiliate modal event listeners
+            document.getElementById('open-affiliate-modal').addEventListener('click', showAffiliateModal);
+            document.getElementById('close-affiliate-modal').addEventListener('click', hideAffiliateModal);
+            affiliateForm.addEventListener('submit', submitAffiliateForm);
+            document.getElementById('close-success-popup').addEventListener('click', hideSuccessPopup);
         });
 
         // Re-initialize Lucide on window load to catch static elements
