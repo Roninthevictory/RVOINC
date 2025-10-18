@@ -124,8 +124,8 @@ End of License
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="services">Services</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="subscriptions">Subscriptions</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="affiliates">Affiliates</button>
-                    <button class="nav-link text-sm font-medium transition duration-150" data-target="partners">Tech Partners</button>
-                    <button class="nav-link text-sm font-medium transition duration-150" data-target="home">Our Partners (Coming Soon)</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="tech-partners">Tech Partners</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="business-partners">Business Partners</button>
                 </div>
                 <!-- Auth/Logout Button Placeholder -->
                 <div class="flex items-center space-x-4">
@@ -149,7 +149,8 @@ End of License
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="services">Services</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="subscriptions">Subscriptions</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="affiliates">Affiliates</button>
-                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="partners">Partners</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="tech-partners">Tech Partners</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150" data-target="business-partners">Business Partners</button>
             </div>
         </div>
     </nav>
@@ -217,9 +218,9 @@ End of License
             </div>
         </section>
 
-        <!-- 5. Partners Section - Initially hidden -->
-        <section id="partners" class="py-20 content-section hidden">
-            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our <span class="text-gradient">Technology Partners</span></h2>
+        <!-- 5. Tech Partners Section - Initially hidden -->
+        <section id="tech-partners" class="py-20 content-section hidden">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our <span class="text-gradient">Tech Partners</span></h2>
             <div class="flex flex-wrap justify-center items-center gap-8 card-bg p-8 rounded-xl shadow-lg">
                 <div class="w-24 h-10 flex justify-center items-center text-xl font-bold text-white opacity-80 hover:opacity-100 transition duration-300">
                     <i data-lucide="cloud" class="w-6 h-6 mr-1 text-blue-500"></i> AWS
@@ -364,7 +365,126 @@ End of License
                 </div>
             </div>
         </section>
-        
+
+        <!-- 6. Business Partners Section - Initially hidden -->
+        <section id="business-partners" class="py-20 content-section hidden">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold">Our <span class="text-gradient">Business Partners</span></h2>
+                <button id="open-partnership-modal" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition duration-300">
+                    <i data-lucide="plus" class="w-5 h-5 mr-2"></i> Become a Partner
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Partner Card 1 -->
+                <div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="briefcase" class="w-8 h-8 text-blue-500 mr-3"></i>
+                        <h3 class="text-xl font-bold text-white">Global Enterprises Inc.</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Leading provider of enterprise solutions and business consulting services worldwide.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Consulting</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Enterprise</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Global</span>
+                    </div>
+                    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2" onclick="window.open('https://example.com/global-enterprises', '_blank')">
+                        Visit Partner
+                    </button>
+                    <small class="text-gray-500 block text-center">Leads to Global Enterprises website</small>
+                </div>
+
+                <!-- Partner Card 2 -->
+                <div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="building" class="w-8 h-8 text-green-500 mr-3"></i>
+                        <h3 class="text-xl font-bold text-white">TechCorp Solutions</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Innovative business technology solutions for modern enterprises and startups.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Technology</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Innovation</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Startups</span>
+                    </div>
+                    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2" onclick="window.open('https://example.com/techcorp', '_blank')">
+                        Visit Partner
+                    </button>
+                    <small class="text-gray-500 block text-center">Leads to TechCorp Solutions website</small>
+                </div>
+
+                <!-- Partner Card 3 -->
+                <div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="users" class="w-8 h-8 text-purple-500 mr-3"></i>
+                        <h3 class="text-xl font-bold text-white">BizConnect Network</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Professional networking platform connecting businesses and entrepreneurs globally.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Networking</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Entrepreneurship</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Community</span>
+                    </div>
+                    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2" onclick="window.open('https://example.com/bizconnect', '_blank')">
+                        Visit Partner
+                    </button>
+                    <small class="text-gray-500 block text-center">Leads to BizConnect Network platform</small>
+                </div>
+
+                <!-- Partner Card 4 -->
+                <div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="trending-up" class="w-8 h-8 text-orange-500 mr-3"></i>
+                        <h3 class="text-xl font-bold text-white">Growth Partners LLC</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Strategic business growth consultants helping companies scale and succeed.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Growth</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Strategy</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Scaling</span>
+                    </div>
+                    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2" onclick="window.open('https://example.com/growth-partners', '_blank')">
+                        Visit Partner
+                    </button>
+                    <small class="text-gray-500 block text-center">Leads to Growth Partners website</small>
+                </div>
+
+                <!-- Partner Card 5 -->
+                <div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="globe" class="w-8 h-8 text-cyan-500 mr-3"></i>
+                        <h3 class="text-xl font-bold text-white">International Trade Co.</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Facilitating international business connections and trade partnerships across continents.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">International</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Trade</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Global</span>
+                    </div>
+                    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2" onclick="window.open('https://example.com/international-trade', '_blank')">
+                        Visit Partner
+                    </button>
+                    <small class="text-gray-500 block text-center">Leads to International Trade Co. website</small>
+                </div>
+
+                <!-- Partner Card 6 -->
+                <div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+                    <div class="flex items-center mb-4">
+                        <i data-lucide="shield" class="w-8 h-8 text-red-500 mr-3"></i>
+                        <h3 class="text-xl font-bold text-white">SecureBiz Systems</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">Advanced cybersecurity solutions for businesses protecting against modern threats.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Security</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Cybersecurity</span>
+                        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Protection</span>
+                    </div>
+                    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2" onclick="window.open('https://example.com/securebiz', '_blank')">
+                        Visit Partner
+                    </button>
+                    <small class="text-gray-500 block text-center">Leads to SecureBiz Systems website</small>
+                </div>
+            </div>
+        </section>
+
     </main>
     
     <!-- Auth Modal -->
