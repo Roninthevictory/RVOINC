@@ -651,14 +651,598 @@ End of License
             </div>
             <h3 class="text-2xl font-bold text-white mb-4">Application Submitted!</h3>
             <p class="text-gray-300 mb-6">
-                Thank you for applying to our affiliate program. Your application has been received and is under review.
+                Thank you for your partnership application. Your submission has been received and is under review.
             </p>
             <p class="text-sm text-gray-400 mb-6">
-                It can take about <span class="text-red-400 font-semibold">12-48 hours</span> for us to register your code. You will receive an email confirmation once your application is approved.
+                Our team will review your application and get back to you within <span class="text-red-400 font-semibold">3-5 business days</span>.
             </p>
             <button id="close-success-popup" class="px-6 py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
                 Got it!
             </button>
+        </div>
+    </div>
+
+    <!-- Partnership Application Modal -->
+    <div id="partnership-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-white">Become a Business Partner</h3>
+                <button id="close-partnership-modal" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <form id="partnership-form" class="space-y-6">
+                <!-- BASIC INFORMATION -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">🧾 Basic Information</h4>
+                    
+                    <!-- 1. Full Name / Organization Name -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Full Name / Organization Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="partner-name" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Your name or organization">
+                    </div>
+
+                    <!-- 2. Contact Information -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Contact Information (Email or Discord Tag) <span class="text-red-500">*</span></label>
+                        <input type="text" id="partner-contact" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="email@example.com or @username">
+                    </div>
+
+                    <!-- 3. Location / Timezone -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Location / Timezone <span class="text-red-500">*</span></label>
+                        <input type="text" id="partner-location" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="e.g., New York, USA (EST)">
+                    </div>
+
+                    <!-- 4. Website or Social Link -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Website or Social Link <span class="text-red-500">*</span></label>
+                        <input type="url" id="partner-website" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="https://yourwebsite.com">
+                    </div>
+
+                    <!-- 5. How did you hear about us? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How did you hear about us? <span class="text-red-500">*</span></label>
+                        <select id="partner-source" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select an option</option>
+                            <option value="Discord Server">Discord Server</option>
+                            <option value="Friend / Word of Mouth">Friend / Word of Mouth</option>
+                            <option value="Twitter / X">Twitter / X</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="TikTok">TikTok</option>
+                            <option value="Our Website">Our Website</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- BACKGROUND & EXPERIENCE -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">🧠 Background & Experience</h4>
+                    
+                    <!-- 6. What does your brand or service specialize in? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What does your brand or service specialize in? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-specialization" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your specialization..."></textarea>
+                    </div>
+
+                    <!-- 7. How long have you been operating? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How long have you been operating your brand/business? <span class="text-red-500">*</span></label>
+                        <select id="partner-duration" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select duration</option>
+                            <option value="Less than 1 month">Less than 1 month</option>
+                            <option value="1–3 months">1–3 months</option>
+                            <option value="3–6 months">3–6 months</option>
+                            <option value="6–12 months">6–12 months</option>
+                            <option value="1–2 years">1–2 years</option>
+                            <option value="2+ years">2+ years</option>
+                        </select>
+                    </div>
+
+                    <!-- 8. What audience or community do you primarily serve? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What audience or community do you primarily serve? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-audience" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your target audience..."></textarea>
+                    </div>
+
+                    <!-- 9. Have you partnered with other companies before? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Have you partnered with other companies before? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-previous" value="Yes" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-previous" value="No" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">No</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 10. If yes, please list partners (conditional) -->
+                    <div class="mb-4" id="partner-list-container" style="display:none;">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">If yes, please list a few of your past or current partners</label>
+                        <textarea id="partner-list" rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="List your partners..."></textarea>
+                    </div>
+                </div>
+
+                <!-- GOALS & INTENTIONS -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">🎯 Goals & Intentions</h4>
+                    
+                    <!-- 11. What are you hoping to gain from this partnership? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What are you hoping to gain from this partnership? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-goals" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your goals..."></textarea>
+                    </div>
+
+                    <!-- 12. What do you expect from us as a partner? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What do you expect from us as a partner? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-expectations" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your expectations..."></textarea>
+                    </div>
+
+                    <!-- 13. What value or resources can you offer in return? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What value or resources can you offer in return? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-value" value="Marketing / Promotion" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Marketing / Promotion</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-value" value="Financial / Investment" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Financial / Investment</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-value" value="Technical Development" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Technical Development</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-value" value="Branding / Design" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Branding / Design</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-value" value="Traffic or Leads" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Traffic or Leads</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-value" value="Networking / Exposure" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Networking / Exposure</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-value" value="Other" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Other</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 14. Short-term or long-term collaboration? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Are you looking for short-term or long-term collaboration? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-term" value="Short-term (specific event or project)" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Short-term (specific event or project)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-term" value="Long-term (ongoing partnership)" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Long-term (ongoing partnership)</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-term" value="Undecided / Open to both" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Undecided / Open to both</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 15. What kind of partnership are you interested in? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What kind of partnership are you interested in? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-type" value="Affiliate / Referral" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Affiliate / Referral</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-type" value="Co-branded Project" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Co-branded Project</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-type" value="Event / Giveaway Collaboration" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Event / Giveaway Collaboration</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-type" value="Product Integration" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Product Integration</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-type" value="Reseller / Distributor" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Reseller / Distributor</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-type" value="Sponsorship" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Sponsorship</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-type" value="Other" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Other</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROFESSIONALISM & RELIABILITY -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">💼 Professionalism & Reliability</h4>
+                    
+                    <!-- 16. How active is your team or community? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How active is your team or community? <span class="text-red-500">*</span></label>
+                        <select id="partner-activity" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select activity level</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Several times a week">Several times a week</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Occasionally / On-demand">Occasionally / On-demand</option>
+                        </select>
+                    </div>
+
+                    <!-- 17. Do you have a proven track record? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Do you have a proven track record of collaborations? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-track-record" value="Yes, with strong results" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, with strong results</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-track-record" value="Yes, but limited experience" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, but limited experience</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-track-record" value="No, this will be our first" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">No, this will be our first</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-track-record" value="Not sure" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Not sure</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 18. How do you handle disputes? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How do you handle disputes or disagreements? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-disputes" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your approach..."></textarea>
+                    </div>
+
+                    <!-- 19. Preferred communication platform -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Preferred communication platform for updates: <span class="text-red-500">*</span></label>
+                        <select id="partner-comm-platform" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select platform</option>
+                            <option value="Discord">Discord</option>
+                            <option value="Email">Email</option>
+                            <option value="Telegram">Telegram</option>
+                            <option value="Slack">Slack</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- 20. Typical response time -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Typical response time: <span class="text-red-500">*</span></label>
+                        <select id="partner-response-time" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select response time</option>
+                            <option value="Within 1 hour">Within 1 hour</option>
+                            <option value="Within 6 hours">Within 6 hours</option>
+                            <option value="Within 12 hours">Within 12 hours</option>
+                            <option value="Within 24 hours">Within 24 hours</option>
+                            <option value="1–2 days">1–2 days</option>
+                            <option value="3+ days">3+ days</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- MARKETING & REACH -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">📈 Marketing & Reach</h4>
+                    
+                    <!-- 21. Estimated audience size -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Estimated audience size (followers / members / clients) <span class="text-red-500">*</span></label>
+                        <input type="text" id="partner-audience-size" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="e.g., 10,000">
+                    </div>
+
+                    <!-- 22. Primary platforms used -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Primary platforms used <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="Discord" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Discord</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="Twitter / X" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Twitter / X</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="Instagram" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Instagram</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="TikTok" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">TikTok</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="YouTube" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">YouTube</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="Twitch" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Twitch</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="Website / Blog" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Website / Blog</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="partner-platforms" value="Other" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Other</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 23. Able to promote our services? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Are you able to promote our services or products? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-promote" value="Yes, regularly" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, regularly</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-promote" value="Yes, occasionally" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, occasionally</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-promote" value="No, not at this time" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">No, not at this time</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 24. How often do you post promotional content? -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How often do you post promotional or partnership content? <span class="text-red-500">*</span></label>
+                        <select id="partner-promo-frequency" required class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                            <option value="">Select frequency</option>
+                            <option value="Daily">Daily</option>
+                            <option value="2–3 times per week">2–3 times per week</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Bi-weekly">Bi-weekly</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Rarely">Rarely</option>
+                        </select>
+                    </div>
+
+                    <!-- 25. Average engagement rate (optional) -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What's your average engagement rate or activity level? <span class="text-gray-500">(Optional)</span></label>
+                        <input type="text" id="partner-engagement" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="e.g., 5% engagement rate">
+                    </div>
+                </div>
+
+                <!-- ETHICS & BRAND ALIGNMENT -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">💬 Ethics & Brand Alignment</h4>
+                    
+                    <!-- 26. Brand's mission or theme -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What's your brand's mission or theme? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-mission" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your brand's mission..."></textarea>
+                    </div>
+
+                    <!-- 27. Topics you avoid -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Are there any topics or industries you avoid working with? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-avoid" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="List any topics you avoid..."></textarea>
+                    </div>
+
+                    <!-- 28. Community standards -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How do you ensure your community maintains good standards? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-standards" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your community standards..."></textarea>
+                    </div>
+
+                    <!-- 29. Brand alignment -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Why do you think our brands align well? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-alignment" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Explain brand alignment..."></textarea>
+                    </div>
+
+                    <!-- 30. What makes brand unique -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What makes your brand unique? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-unique" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="What makes your brand stand out..."></textarea>
+                    </div>
+                </div>
+
+                <!-- TECHNICAL / OPERATIONAL (OPTIONAL) -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">⚙️ Technical / Operational <span class="text-gray-500">(Optional)</span></h4>
+
+                    <!-- 31. Internal resources -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Do you have internal technical or marketing resources available?</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-resources" value="Yes, technical team" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, technical team</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-resources" value="Yes, marketing team" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, marketing team</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-resources" value="Yes, both" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, both</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-resources" value="No, external only" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">No, external only</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 32. API integration capability -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Can you integrate APIs, bots, or systems with us if needed?</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-api" value="Yes" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-api" value="Possibly / Limited" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Possibly / Limited</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-api" value="No" class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">No</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 33. Special support needs -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Do you require special support or integration help?</label>
+                        <textarea id="partner-support" rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe any special support needs..."></textarea>
+                    </div>
+
+                    <!-- 34. Security/privacy standards -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Are there any security or privacy standards we should know about?</label>
+                        <textarea id="partner-security" rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe security/privacy standards..."></textarea>
+                    </div>
+                </div>
+
+                <!-- FUTURE VISION -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">🔮 Future Vision</h4>
+
+                    <!-- 35. Brand in next 6-12 months -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Where do you see your brand or project in the next 6–12 months? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-future" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your future vision..."></textarea>
+                    </div>
+
+                    <!-- 36. Partnership evolution -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How do you see this partnership evolving over time? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-evolution" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe partnership evolution..."></textarea>
+                    </div>
+
+                    <!-- 37. Upcoming projects/events -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Any upcoming projects, events, or launches we could join in on? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-projects" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe upcoming projects..."></textarea>
+                    </div>
+
+                    <!-- 38. Successful partnership definition -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What would a "successful partnership" look like to you? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-success" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Define success..."></textarea>
+                    </div>
+                </div>
+
+                <!-- CREATIVE & PERSONALITY -->
+                <div class="border-b border-gray-700 pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">🧩 Creative & Personality</h4>
+
+                    <!-- 39. Brand as character -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">If your brand was a character, how would you describe it? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-character" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your brand as a character..."></textarea>
+                    </div>
+
+                    <!-- 40. Motivation -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What motivates you to build and collaborate? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-motivation" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your motivation..."></textarea>
+                    </div>
+
+                    <!-- 41. Unknown fact -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What's something most people don't know about your brand? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-secret" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Share something unknown..."></textarea>
+                    </div>
+
+                    <!-- 42. Creative differences -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">How do you handle creative differences within your team? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-differences" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe handling creative differences..."></textarea>
+                    </div>
+
+                    <!-- 43. Favorite project -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">What's your favorite project you've worked on? <span class="text-red-500">*</span></label>
+                        <textarea id="partner-favorite" required rows="3" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500" placeholder="Describe your favorite project..."></textarea>
+                    </div>
+                </div>
+
+                <!-- FINAL CONFIRMATION -->
+                <div class="pb-4">
+                    <h4 class="text-lg font-bold text-white mb-4">✅ Final Confirmation</h4>
+
+                    <!-- 44. Honest information -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Do you agree to provide honest and accurate information in this form? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-honest" value="Yes, I agree" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, I agree</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-honest" value="No" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">No</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 45. Future contact -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Would you like to be contacted for future collaborations or opportunities? <span class="text-red-500">*</span></label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-contact-future" value="Yes, definitely" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Yes, definitely</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-contact-future" value="Maybe later" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">Maybe later</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="partner-contact-future" value="No thanks" required class="mr-2 text-red-600 focus:ring-red-500">
+                                <span class="text-gray-300">No thanks</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="partnership-error" class="hidden text-red-500 text-sm p-3 bg-red-900/20 rounded-lg"></div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="partnership-submit" class="w-full py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
+                        Submit Partnership Application
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1326,16 +1910,21 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
         }
 
         // --------------------------------------------------------------------------------
-        // AFFILIATE MODAL & DISCORD WEBHOOK FUNCTIONS
+        // AFFILIATE & PARTNERSHIP MODAL & DISCORD WEBHOOK FUNCTIONS
         // --------------------------------------------------------------------------------
 
         // Discord Webhook URL - Replace with your actual webhook URL
         const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+        const PARTNERSHIP_DISCORD_WEBHOOK_URL = 'YOUR_PARTNERSHIP_DISCORD_WEBHOOK_URL_HERE';
 
         const affiliateModal = document.getElementById('affiliate-modal');
         const affiliateForm = document.getElementById('affiliate-form');
         const affiliateError = document.getElementById('affiliate-error');
         const successPopup = document.getElementById('success-popup');
+
+        const partnershipModal = document.getElementById('partnership-modal');
+        const partnershipForm = document.getElementById('partnership-form');
+        const partnershipError = document.getElementById('partnership-error');
 
         function showAffiliateModal() {
             // Check if user is logged in
@@ -1366,6 +1955,290 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
         function showAffiliateError(message) {
             affiliateError.textContent = message;
             affiliateError.classList.remove('hidden');
+        }
+
+        // --------------------------------------------------------------------------------
+        // PARTNERSHIP MODAL FUNCTIONS
+        // --------------------------------------------------------------------------------
+
+        function showPartnershipModal() {
+            // Check if user is logged in
+            if (!isLoggedIn) {
+                showAuthModal("Please sign in to apply for a business partnership.");
+                return;
+            }
+            
+            partnershipModal.classList.remove('hidden');
+            partnershipError.classList.add('hidden');
+            lucide.createIcons(); // Refresh icons
+        }
+
+        function hidePartnershipModal() {
+            partnershipModal.classList.add('hidden');
+            partnershipForm.reset();
+            partnershipError.classList.add('hidden');
+            // Hide conditional field
+            document.getElementById('partner-list-container').style.display = 'none';
+        }
+
+        function showPartnershipError(message) {
+            partnershipError.textContent = message;
+            partnershipError.classList.remove('hidden');
+        }
+
+        function hidePartnershipSuccessPopup() {
+            hideSuccessPopup(); // Reuse the same success popup
+        }
+
+        /**
+         * Handles the conditional display of the partner list field
+         */
+        function handlePreviousPartnershipsChange(event) {
+            const partnerListContainer = document.getElementById('partner-list-container');
+            const selectedValue = event.target.value;
+            
+            if (selectedValue === 'Yes') {
+                partnerListContainer.style.display = 'block';
+            } else {
+                partnerListContainer.style.display = 'none';
+                // Clear the textarea if hiding
+                document.getElementById('partner-list').value = '';
+            }
+        }
+
+        /**
+         * Collects all checkbox values for a given name
+         */
+        function getCheckboxValues(name) {
+            const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        /**
+         * Gets the selected radio button value for a given name
+         */
+        function getRadioValue(name) {
+            const radio = document.querySelector(`input[name="${name}"]:checked`);
+            return radio ? radio.value : '';
+        }
+
+        /**
+         * Submits the partnership application form
+         */
+        async function submitPartnershipForm(event) {
+            event.preventDefault();
+            partnershipError.classList.add('hidden');
+
+            // Collect all form data
+            const formData = {
+                // Basic Information
+                name: document.getElementById('partner-name').value.trim(),
+                contact: document.getElementById('partner-contact').value.trim(),
+                location: document.getElementById('partner-location').value.trim(),
+                website: document.getElementById('partner-website').value.trim(),
+                source: document.getElementById('partner-source').value,
+
+                // Background & Experience
+                specialization: document.getElementById('partner-specialization').value.trim(),
+                duration: document.getElementById('partner-duration').value,
+                audience: document.getElementById('partner-audience').value.trim(),
+                previousPartnerships: getRadioValue('partner-previous'),
+                partnerList: document.getElementById('partner-list').value.trim() || 'N/A',
+
+                // Goals & Intentions
+                goals: document.getElementById('partner-goals').value.trim(),
+                expectations: document.getElementById('partner-expectations').value.trim(),
+                valueOffered: getCheckboxValues('partner-value'),
+                collaborationTerm: getRadioValue('partner-term'),
+                partnershipType: getCheckboxValues('partner-type'),
+
+                // Professionalism & Reliability
+                activity: document.getElementById('partner-activity').value,
+                trackRecord: getRadioValue('partner-track-record'),
+                disputes: document.getElementById('partner-disputes').value.trim(),
+                commPlatform: document.getElementById('partner-comm-platform').value,
+                responseTime: document.getElementById('partner-response-time').value,
+
+                // Marketing & Reach
+                audienceSize: document.getElementById('partner-audience-size').value.trim(),
+                platforms: getCheckboxValues('partner-platforms'),
+                canPromote: getRadioValue('partner-promote'),
+                promoFrequency: document.getElementById('partner-promo-frequency').value,
+                engagement: document.getElementById('partner-engagement').value.trim() || 'Not provided',
+
+                // Ethics & Brand Alignment
+                mission: document.getElementById('partner-mission').value.trim(),
+                topicsToAvoid: document.getElementById('partner-avoid').value.trim(),
+                communityStandards: document.getElementById('partner-standards').value.trim(),
+                brandAlignment: document.getElementById('partner-alignment').value.trim(),
+                uniqueness: document.getElementById('partner-unique').value.trim(),
+
+                // Technical / Operational (Optional)
+                resources: getRadioValue('partner-resources') || 'Not provided',
+                apiCapability: getRadioValue('partner-api') || 'Not provided',
+                supportNeeds: document.getElementById('partner-support').value.trim() || 'Not provided',
+                securityStandards: document.getElementById('partner-security').value.trim() || 'Not provided',
+
+                // Future Vision
+                futureVision: document.getElementById('partner-future').value.trim(),
+                partnershipEvolution: document.getElementById('partner-evolution').value.trim(),
+                upcomingProjects: document.getElementById('partner-projects').value.trim(),
+                successDefinition: document.getElementById('partner-success').value.trim(),
+
+                // Creative & Personality
+                brandCharacter: document.getElementById('partner-character').value.trim(),
+                motivation: document.getElementById('partner-motivation').value.trim(),
+                unknownFact: document.getElementById('partner-secret').value.trim(),
+                creativeDifferences: document.getElementById('partner-differences').value.trim(),
+                favoriteProject: document.getElementById('partner-favorite').value.trim(),
+
+                // Final Confirmation
+                honestInfo: getRadioValue('partner-honest'),
+                futureContact: getRadioValue('partner-contact-future')
+            };
+
+            // Validate required multi-select fields have at least one selection
+            if (formData.valueOffered.length === 0) {
+                showPartnershipError('Please select at least one value or resource you can offer.');
+                return;
+            }
+
+            if (formData.partnershipType.length === 0) {
+                showPartnershipError('Please select at least one type of partnership you are interested in.');
+                return;
+            }
+
+            if (formData.platforms.length === 0) {
+                showPartnershipError('Please select at least one primary platform you use.');
+                return;
+            }
+
+            // Validate honest information agreement
+            if (formData.honestInfo !== 'Yes, I agree') {
+                showPartnershipError('You must agree to provide honest and accurate information to proceed.');
+                return;
+            }
+
+            // Disable submit button during submission
+            const submitBtn = document.getElementById('partnership-submit');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting Application...';
+
+            try {
+                // Create comprehensive Discord embed message
+                const discordPayload = {
+                    embeds: [{
+                        title: '🤝 New Business Partnership Application',
+                        color: 0xDC143C, // Crimson red
+                        fields: [
+                            // Basic Information
+                            { name: '📋 BASIC INFORMATION', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '👤 Name/Organization', value: formData.name, inline: true },
+                            { name: '📞 Contact', value: formData.contact, inline: true },
+                            { name: '🌍 Location/Timezone', value: formData.location, inline: true },
+                            { name: '🔗 Website', value: formData.website, inline: false },
+                            { name: '📢 How They Found Us', value: formData.source, inline: true },
+
+                            // Background & Experience
+                            { name: '🧠 BACKGROUND & EXPERIENCE', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '🎯 Specialization', value: formData.specialization.substring(0, 1024), inline: false },
+                            { name: '⏱️ Operating Duration', value: formData.duration, inline: true },
+                            { name: '👥 Target Audience', value: formData.audience.substring(0, 1024), inline: false },
+                            { name: '🤝 Previous Partnerships', value: formData.previousPartnerships, inline: true },
+                            { name: '📝 Past Partners', value: formData.partnerList.substring(0, 1024), inline: false },
+
+                            // Goals & Intentions
+                            { name: '🎯 GOALS & INTENTIONS', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '🎁 Partnership Goals', value: formData.goals.substring(0, 1024), inline: false },
+                            { name: '💭 Expectations from Us', value: formData.expectations.substring(0, 1024), inline: false },
+                            { name: '💼 Value Offered', value: formData.valueOffered.join(', ') || 'None selected', inline: false },
+                            { name: '📅 Collaboration Term', value: formData.collaborationTerm, inline: true },
+                            { name: '🔖 Partnership Type', value: formData.partnershipType.join(', ') || 'None selected', inline: false },
+
+                            // Professionalism & Reliability
+                            { name: '💼 PROFESSIONALISM & RELIABILITY', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '⚡ Activity Level', value: formData.activity, inline: true },
+                            { name: '🏆 Track Record', value: formData.trackRecord, inline: true },
+                            { name: '⚖️ Dispute Handling', value: formData.disputes.substring(0, 1024), inline: false },
+                            { name: '💬 Preferred Platform', value: formData.commPlatform, inline: true },
+                            { name: '⏰ Response Time', value: formData.responseTime, inline: true },
+
+                            // Marketing & Reach
+                            { name: '📈 MARKETING & REACH', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '👥 Audience Size', value: formData.audienceSize, inline: true },
+                            { name: '📱 Platforms Used', value: formData.platforms.join(', ') || 'None selected', inline: false },
+                            { name: '📣 Can Promote', value: formData.canPromote, inline: true },
+                            { name: '📊 Promo Frequency', value: formData.promoFrequency, inline: true },
+                            { name: '💹 Engagement Rate', value: formData.engagement, inline: true },
+
+                            // Ethics & Brand Alignment
+                            { name: '💬 ETHICS & BRAND ALIGNMENT', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '🎯 Brand Mission', value: formData.mission.substring(0, 1024), inline: false },
+                            { name: '🚫 Topics to Avoid', value: formData.topicsToAvoid.substring(0, 1024), inline: false },
+                            { name: '✅ Community Standards', value: formData.communityStandards.substring(0, 1024), inline: false },
+                            { name: '🤝 Brand Alignment', value: formData.brandAlignment.substring(0, 1024), inline: false },
+                            { name: '⭐ What Makes Them Unique', value: formData.uniqueness.substring(0, 1024), inline: false },
+
+                            // Technical / Operational
+                            { name: '⚙️ TECHNICAL / OPERATIONAL', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '👨‍💻 Internal Resources', value: formData.resources, inline: true },
+                            { name: '🔌 API Capability', value: formData.apiCapability, inline: true },
+                            { name: '🆘 Support Needs', value: formData.supportNeeds.substring(0, 1024), inline: false },
+                            { name: '🔒 Security Standards', value: formData.securityStandards.substring(0, 1024), inline: false },
+
+                            // Future Vision
+                            { name: '🔮 FUTURE VISION', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '🚀 6-12 Month Vision', value: formData.futureVision.substring(0, 1024), inline: false },
+                            { name: '📈 Partnership Evolution', value: formData.partnershipEvolution.substring(0, 1024), inline: false },
+                            { name: '🎉 Upcoming Projects', value: formData.upcomingProjects.substring(0, 1024), inline: false },
+                            { name: '🏆 Success Definition', value: formData.successDefinition.substring(0, 1024), inline: false },
+
+                            // Creative & Personality
+                            { name: '🧩 CREATIVE & PERSONALITY', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '🎭 Brand as Character', value: formData.brandCharacter.substring(0, 1024), inline: false },
+                            { name: '💪 Motivation', value: formData.motivation.substring(0, 1024), inline: false },
+                            { name: '🤫 Unknown Fact', value: formData.unknownFact.substring(0, 1024), inline: false },
+                            { name: '🎨 Creative Differences', value: formData.creativeDifferences.substring(0, 1024), inline: false },
+                            { name: '❤️ Favorite Project', value: formData.favoriteProject.substring(0, 1024), inline: false },
+
+                            // Final Confirmation
+                            { name: '✅ FINAL CONFIRMATION', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+                            { name: '📝 Honest Information', value: formData.honestInfo, inline: true },
+                            { name: '📞 Future Contact', value: formData.futureContact, inline: true }
+                        ],
+                        timestamp: new Date().toISOString(),
+                        footer: {
+                            text: 'RVO Inc. Business Partnership System'
+                        }
+                    }]
+                };
+
+                // Send to Discord webhook
+                const response = await fetch(PARTNERSHIP_DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(discordPayload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit partnership application');
+                }
+
+                // Success!
+                hidePartnershipModal();
+                showSuccessPopup();
+
+            } catch (error) {
+                console.error('Error submitting partnership form:', error);
+                showPartnershipError('Failed to submit application. Please check that the Discord webhook is configured correctly, or try again later.');
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
         }
 
         function validateAffiliateCode(code) {
@@ -1523,11 +2396,22 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
             // Google Sign In
             document.getElementById('google-signin').addEventListener('click', handleGoogleSignIn);
 
-            // Affiliate modal event listeners
-            document.getElementById('open-affiliate-modal').addEventListener('click', showAffiliateModal);
-            document.getElementById('close-affiliate-modal').addEventListener('click', hideAffiliateModal);
-            affiliateForm.addEventListener('submit', submitAffiliateForm);
-            document.getElementById('close-success-popup').addEventListener('click', hideSuccessPopup);
+        // Affiliate modal event listeners
+        document.getElementById('open-affiliate-modal').addEventListener('click', showAffiliateModal);
+        document.getElementById('close-affiliate-modal').addEventListener('click', hideAffiliateModal);
+        affiliateForm.addEventListener('submit', submitAffiliateForm);
+        document.getElementById('close-success-popup').addEventListener('click', hideSuccessPopup);
+
+        // Partnership modal event listeners
+        document.getElementById('open-partnership-modal').addEventListener('click', showPartnershipModal);
+        document.getElementById('close-partnership-modal').addEventListener('click', hidePartnershipModal);
+        partnershipForm.addEventListener('submit', submitPartnershipForm);
+        document.getElementById('close-partnership-success-popup').addEventListener('click', hidePartnershipSuccessPopup);
+
+        // Handle previous partnerships radio buttons
+        document.querySelectorAll('input[name="previous-partnerships"]').forEach(radio => {
+            radio.addEventListener('change', handlePreviousPartnershipsChange);
+        });
         });
 
         // Re-initialize Lucide on window load to catch static elements
