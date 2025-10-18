@@ -1633,99 +1633,103 @@ End of License
     { id: 34, name: "Security Vulnerability Patching", description: "Addressing common security issues like XSS, CSRF, and SQL injection.", category: "Consulting", tags: ["Security", "Vulnerability", "Fix"], icon: "bug", price: "$50 / hour", stripeLink: "https://mock-stripe.com/buy/rvo-security-299" }
 ];
 
-        
-        const subscriptionPlans = [
-            { 
-                name: "Silver VIP (Starter)", 
-                price: 15000, 
-                description: "Perfect for MVPs and small projects. Includes 40 hours of development per month.", 
-                features: ["40 Dev Hours/Mo", "Basic Code Review", "Email Support", "1 Active Project"], 
-                icon: "zap", 
-                color: "text-green-400", 
-                tagline: "Minimum Viable Product",
-                stripeLink: "https://buy.stripe.com/4gMaEXbhwc1q9AjfXo9EI16"
-            },
-            { 
-                name: "Gold VIP (Professional)", 
-                price: 40000, 
-                description: "Our most popular plan. Ideal for growing businesses needing dedicated support.", 
-                features: ["160 Dev Hours/Mo", "Dedicated Team Lead", "Priority Support (Slack)", "2 Active Projects", "CI/CD Setup"], 
-                icon: "trending-up", 
-                color: "text-red-400", 
-                isFeatured: true,
-                tagline: "Dedicated Support Team",
-                stripeLink: "https://buy.stripe.com/5kQfZh99o9Ti8wf7qS9EI15"
-            },
-            { 
-                name: "Platinum VIP (Enterprise)", 
-                price: 105000, 
-                description: "Full-scale solution for complex, mission-critical projects and large teams.", 
-                features: ["320 Dev Hours/Mo", "Vary Fast Premium Support (Less then 5 Hours During Off Hours)", "On-demand Scaling", "Unlimited Projects"], 
-                icon: "shield", 
-                color: "text-blue-400", 
-                tagline: "Scalable Mission-Critical",
-                stripeLink: "https://buy.stripe.com/bJeeVd0CS1mM8wffXo9EI14"
-            },
-        ];
+const subscriptionPlans = [
+    {
+        name: "Silver VIP (Starter)",
+        price: 15000,
+        description: "Perfect for MVPs and small projects. Includes 40 hours of development per month.",
+        features: ["40 Dev Hours/Mo", "Basic Code Review", "Email Support", "1 Active Project"],
+        icon: "zap",
+        color: "text-green-400",
+        tagline: "Minimum Viable Product",
+        stripeLink: "https://buy.stripe.com/4gMaEXbhwc1q9AjfXo9EI16"
+    },
+    {
+        name: "Gold VIP (Professional)",
+        price: 40000,
+        description: "Our most popular plan. Ideal for growing businesses needing dedicated support.",
+        features: ["160 Dev Hours/Mo", "Dedicated Team Lead", "Priority Support (Slack)", "2 Active Projects", "CI/CD Setup"],
+        icon: "trending-up",
+        color: "text-red-400",
+        isFeatured: true,
+        tagline: "Dedicated Support Team",
+        stripeLink: "https://buy.stripe.com/5kQfZh99o9Ti8wf7qS9EI15"
+    },
+    {
+        name: "Platinum VIP (Enterprise)",
+        price: 105000,
+        description: "Full-scale solution for complex, mission-critical projects and large teams.",
+        features: ["320 Dev Hours/Mo", "Vary Fast Premium Support (Less then 5 Hours During Off Hours)", "On-demand Scaling", "Unlimited Projects"],
+        icon: "shield",
+        color: "text-blue-400",
+        tagline: "Scalable Mission-Critical",
+        stripeLink: "https://buy.stripe.com/bJeeVd0CS1mM8wffXo9EI14"
+    },
+];
 
-        // --------------------------------------------------------------------------------
-        // DYNAMIC CONTENT RENDERING AND PURCHASE LOGIC
-        // --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
+// DYNAMIC CONTENT RENDERING AND PURCHASE LOGIC
+// --------------------------------------------------------------------------------
 // ---------- Simple, robust discount applicator (no colors) ----------
 const DISCOUNT_PERCENT = 50; // change this value to edit the discount
 
 function applyDiscountToServices(services) {
-  services.forEach(s => {
-    const p = s.price;
+    services.forEach(s => {
+        const p = s.price;
 
-    // If price is a string that contains a dollar sign, try parse a number
-    if (typeof p === "string" && p.includes("$")) {
-      const num = parseFloat(p.replace(/[^0-9.]/g, ""));
-      if (!isNaN(num)) {
-        const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
-        s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
-                           <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
-      } else {
-        // preserve text like "FREE" or unexpected formats
-        s.displayPrice = p;
-      }
+        // If price is a string that contains a dollar sign, try parse a number
+        if (typeof p === "string" && p.includes("$")) {
+            const num = parseFloat(p.replace(/[^0-9.]/g, ""));
+            if (!isNaN(num)) {
+                const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
+                // **FIX: Store the HTML string for the discounted price**
+                s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
+                            <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+            } else {
+                // preserve text like "FREE" or unexpected formats
+                s.displayPrice = p;
+            }
 
-    } else if (typeof p === "number") {
-      // If someone used a number (assume dollars)
-      const discounted = +(p * (1 - DISCOUNT_PERCENT / 100));
-      s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${p.toFixed(2)}</span>
-                         <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
-    } else {
-      // fallback for NOT available, null, or other types
-      s.displayPrice = p ?? "N/A";
-    }
-  });
+        } else if (typeof p === "number") {
+            // If someone used a number (assume dollars)
+            const discounted = +(p * (1 - DISCOUNT_PERCENT / 100));
+            // **FIX: Store the HTML string for the discounted price**
+            s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${p.toFixed(2)}</span>
+                          <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+        } else {
+            // fallback for NOT available, null, or other types
+            s.displayPrice = p ?? "N/A";
+        }
+    });
 }
 
 function applyDiscountToPlans(plans) {
-  plans.forEach(plan => {
-    const p = plan.price;
+    plans.forEach(plan => {
+        const p = plan.price;
 
-    // Your plans use cents (e.g. 15000 = $150.00). Only treat numeric plan.price as cents.
-    if (typeof p === "number") {
-      const originalDollars = p / 100;
-      const discounted = +(originalDollars * (1 - DISCOUNT_PERCENT / 100));
-      plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${originalDollars.toFixed(2)}</span>
-                           <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
-    } else if (typeof p === "string" && p.includes("$")) {
-      // In case any plan used a dollar string instead of cents
-      const num = parseFloat(p.replace(/[^0-9.]/g, ""));
-      if (!isNaN(num)) {
-        const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
-        plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
-                             <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
-      } else {
-        plan.displayPrice = p;
-      }
-    } else {
-      plan.displayPrice = p ?? "N/A";
-    }
-  });
+        // Your plans use cents (e.g. 15000 = $150.00). Only treat numeric plan.price as cents.
+        if (typeof p === "number") {
+            const originalDollars = p / 100;
+            const discounted = +(originalDollars * (1 - DISCOUNT_PERCENT / 100));
+            // **FIX: Store the HTML string for the discounted price**
+            plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${originalDollars.toFixed(2)}</span>
+                            <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+            plan.discountedDollars = discounted; // Store the numerical discounted price for the primary display
+        } else if (typeof p === "string" && p.includes("$")) {
+            // In case any plan used a dollar string instead of cents
+            const num = parseFloat(p.replace(/[^0-9.]/g, ""));
+            if (!isNaN(num)) {
+                const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
+                plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
+                                 <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+                plan.discountedDollars = discounted; // Store the numerical discounted price for the primary display
+            } else {
+                plan.displayPrice = p;
+            }
+        } else {
+            plan.displayPrice = p ?? "N/A";
+        }
+    });
 }
 
 // Run the functions (make sure this runs after arrays are defined)
@@ -1737,44 +1741,45 @@ console.log("example service displayPrice:", allServices[0]?.displayPrice);
 console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
 
 
-        /**
-         * Renders the list of services based on current search and filter criteria.
-         */
-        function renderServices(servicesToRender) {
-            const serviceList = document.getElementById('service-list');
-            const noResults = document.getElementById('no-results');
-            serviceList.innerHTML = '';
-            
-            if (servicesToRender.length === 0) {
-                noResults.classList.remove('hidden');
-            } else {
-                noResults.classList.add('hidden');
-            }
+/**
+ * Renders the list of services based on current search and filter criteria.
+ */
+function renderServices(servicesToRender) {
+    const serviceList = document.getElementById('service-list');
+    const noResults = document.getElementById('no-results');
+    serviceList.innerHTML = '';
 
-            servicesToRender.forEach(service => {
-                
-                const isFixedPrice = service.price && !service.price.toLowerCase().includes('quote') && !service.price.toLowerCase().includes('hour');
-                
-                // Determine button properties
-                const actionType = isFixedPrice ? 'purchase' : 'quote';
-                const baseButtonText = isFixedPrice ? 'Buy Now' : 'Get Quote';
-                const loginPrefix = isFixedPrice ? 'Buy' : 'Quote';
+    if (servicesToRender.length === 0) {
+        noResults.classList.remove('hidden');
+    } else {
+        noResults.classList.add('hidden');
+    }
 
-                const buttonText = isLoggedIn ? baseButtonText : `Log In to ${loginPrefix}`;
-                const buttonClasses = isLoggedIn 
-                    ? 'bg-red-700 hover:bg-red-600'
-                    : 'bg-gray-700 text-gray-400 cursor-not-allowed';
+    servicesToRender.forEach(service => {
 
-                const buttonAttributes = isFixedPrice 
-                    ? `data-link="${service.stripeLink}" data-service-name="${service.name}"` 
-                    : `data-service-name="${service.name}"`;
+        // Use original price only to determine if it's a fixed price
+        const isFixedPrice = service.price && !service.price.toLowerCase().includes('quote') && !service.price.toLowerCase().includes('hour');
+
+        // Determine button properties
+        const actionType = isFixedPrice ? 'purchase' : 'quote';
+        const baseButtonText = isFixedPrice ? 'Buy Now' : 'Get Quote';
+        const loginPrefix = isFixedPrice ? 'Buy' : 'Quote';
+
+        const buttonText = isLoggedIn ? baseButtonText : `Log In to ${loginPrefix}`;
+        const buttonClasses = isLoggedIn
+            ? 'bg-red-700 hover:bg-red-600'
+            : 'bg-gray-700 text-gray-400 cursor-not-allowed';
+
+        const buttonAttributes = isFixedPrice
+            ? `data-link="${service.stripeLink}" data-service-name="${service.name}"`
+            : `data-service-name="${service.name}"`;
 
 
-                const tagsHtml = service.tags.map(tag => 
-                    `<span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">${tag}</span>`
-                ).join('');
+        const tagsHtml = service.tags.map(tag =>
+            `<span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">${tag}</span>`
+        ).join('');
 
-                const cardHtml = `
+        const cardHtml = `
                     <div class="card-bg p-6 rounded-xl shadow-xl transition duration-300 hover:shadow-red-900/50 hover:border-red-500 flex flex-col">
                         <div class="flex items-center mb-4">
                             <i data-lucide="${service.icon}" class="w-8 h-8 ${service.color || 'text-red-500'} mr-3"></i>
@@ -1785,8 +1790,7 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
                             ${tagsHtml}
                         </div>
                         <div class="mt-auto pt-4 border-t border-gray-700 flex justify-between items-center">
-                            <span class="text-lg font-semibold text-red-400">${service.price}</span>
-                            <button class="service-action-btn px-4 py-2 text-sm font-semibold rounded-lg ${buttonClasses} text-white transition duration-300"
+                            <span class="text-lg font-semibold text-red-400">${service.displayPrice || service.price}</span> <button class="service-action-btn px-4 py-2 text-sm font-semibold rounded-lg ${buttonClasses} text-white transition duration-300"
                                 data-action-type="${actionType}"
                                 ${buttonAttributes}
                                 ${isLoggedIn ? '' : 'title="You must sign in to proceed"'}
@@ -1796,19 +1800,130 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
                         </div>
                     </div>
                 `;
-                serviceList.insertAdjacentHTML('beforeend', cardHtml);
-            });
-            
-            // Attach unified event listener for all service action buttons
-            document.querySelectorAll('.service-action-btn').forEach(button => {
-                // Clear old listeners before adding new ones
-                button.removeEventListener('click', handleServiceActionUnified); 
-                button.addEventListener('click', handleServiceActionUnified);
-            });
-            
-            // Re-initialize Lucide icons for newly added elements
-            lucide.createIcons();
-        }
+        serviceList.insertAdjacentHTML('beforeend', cardHtml);
+    });
+
+    // Attach unified event listener for all service action buttons
+    document.querySelectorAll('.service-action-btn').forEach(button => {
+        // Clear old listeners before adding new ones
+        button.removeEventListener('click', handleServiceActionUnified);
+        button.addEventListener('click', handleServiceActionUnified);
+    });
+
+    // Re-initialize Lucide icons for newly added elements
+    lucide.createIcons();
+}
+
+/**
+ * Filters the allServices array based on search text and selected category.
+ */
+function filterServices() {
+    const searchText = document.getElementById('service-search').value.toLowerCase();
+    const filterCategory = document.getElementById('service-filter').value;
+
+    const filteredServices = allServices.filter(service => {
+        const matchesSearch = service.name.toLowerCase().includes(searchText) ||
+            service.description.toLowerCase().includes(searchText) ||
+            service.tags.some(tag => tag.toLowerCase().includes(searchText));
+
+        const matchesCategory = filterCategory === 'all' || service.category === filterCategory;
+
+        return matchesSearch && matchesCategory;
+    });
+
+    renderServices(filteredServices);
+}
+
+/**
+ * Populates the filter dropdown with unique categories.
+ */
+function populateCategoryFilter() {
+    const filterSelect = document.getElementById('service-filter');
+    const categories = [...new Set(allServices.map(service => service.category))];
+
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        filterSelect.appendChild(option);
+    });
+
+    // Add event listeners for filtering
+    document.getElementById('service-search').addEventListener('input', filterServices);
+    document.getElementById('service-filter').addEventListener('change', filterServices);
+}
+
+/**
+ * Renders the subscription plans grid.
+ */
+function renderSubscriptions(plans) {
+    const subscriptionPlansDiv = document.getElementById('subscription-plans');
+    subscriptionPlansDiv.innerHTML = '';
+
+    plans.forEach(plan => {
+        const isFeatured = plan.isFeatured ? 'border-red-500 ring-4 ring-red-900/50' : 'border-gray-700';
+
+        // Determine button state based on current auth status
+        const buttonText = isLoggedIn ? `Start ${plan.name} Plan` : 'Log In to Subscribe';
+        const buttonColor = isLoggedIn
+            ? (plan.isFeatured ? 'bg-red-700 hover:bg-red-600' : 'card-bg hover:bg-gray-700 border border-red-700 text-red-400')
+            : 'bg-gray-700 text-gray-400 cursor-not-allowed'; // Grayed out if not logged in
+
+        const featuresHtml = plan.features.map(feature =>
+            `<li class="flex items-center text-gray-300 mb-2">
+                        <i data-lucide="check" class="w-4 h-4 mr-2 text-green-500 flex-shrink-0"></i>
+                        ${feature}
+                    </li>`
+        ).join('');
+
+        const priceDisplay = plan.displayPrice
+            ? plan.displayPrice
+            : `$${(plan.price / 100).toFixed(plan.price % 100 === 0 ? 0 : 2)}`; // Fallback to original if no displayPrice
+
+        // Use the discounted numerical price for the main plan price display
+        const primaryPrice = plan.discountedDollars
+            ? `$${plan.discountedDollars.toFixed( plan.discountedDollars % 1 === 0 ? 0 : 2)}`
+            : `$${(plan.price / 100).toFixed( plan.price % 100 === 0 ? 0 : 2)}`; // Fallback to original
+
+        const planHtml = `
+                    <div class="card-bg p-8 rounded-xl shadow-2xl transition duration-300 hover:shadow-red-900/70 border-2 ${isFeatured} flex flex-col">
+                        <div class="mb-6">
+                            <p class="text-sm font-semibold uppercase ${plan.color}">${plan.tagline}</p>
+                            <h3 class="text-3xl font-bold text-white mt-1">${plan.name}</h3>
+                            <p class="text-gray-400 mt-2">${plan.description}</p>
+                        </div>
+                        <div class="text-4xl font-extrabold text-white mb-6">
+                            ${primaryPrice} <span class="text-lg font-medium text-gray-500">/mo</span>
+                        </div>
+                        
+                        <div class="text-sm text-red-400 mb-4 font-normal">
+                             ${plan.displayPrice || ''} </div>
+
+                        <ul class="flex-grow mb-8">
+                            ${featuresHtml}
+                        </ul>
+                        
+                        <button
+                            class="purchase-btn w-full py-3 font-semibold rounded-xl ${buttonColor} text-white transition duration-300"
+                            data-link="${plan.stripeLink}"
+                            data-plan-name="${plan.name}"
+                            ${isLoggedIn ? '' : 'title="You must sign in to subscribe"'}
+                        >
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+        subscriptionPlansDiv.insertAdjacentHTML('beforeend', planHtml);
+    });
+
+    // Attach event listeners to the new buttons
+    document.querySelectorAll('.purchase-btn').forEach(button => {
+        button.removeEventListener('click', handleSubscriptionAttempt);
+        button.addEventListener('click', handleSubscriptionAttempt);
+    });
+
+    lucide.createIcons();
+}
 
         /**
          * Filters the allServices array based on search text and selected category.
