@@ -13,43 +13,324 @@
     <!-- Stripe SDK (Included in original, keeping it) -->
     <script src="https://js.stripe.com/v3/"></script>
     <style>
-        /* Custom styles for a modern, tech-focused look */
+        :root {
+            --bg-primary: #040013;
+            --bg-secondary: #0d0126;
+            --bg-card: rgba(17, 12, 41, 0.85);
+            --bg-card-border: rgba(255, 0, 0, 0.18);
+            --accent-primary: #ff0000;
+            --accent-secondary: #ff4e4e;
+            --accent-tertiary: #ff6b6b;
+            --text-primary: #e6f7ff;
+            --text-muted: #b58787;
+            --shadow-neon: 0 0 25px rgba(255, 0, 0, 0.3);
+            --shadow-pink: 0 0 25px rgba(255, 78, 78, 0.25);
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0d1117; /* Dark background */
-            color: #c9d1d9; /* Light text */
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 0, 0, 0.08), transparent 40%),
+                        radial-gradient(circle at 80% 0%, rgba(255, 78, 78, 0.12), transparent 45%),
+                        linear-gradient(160deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
         }
-        /* UPDATED: Red/Crimson Gradient */
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: -40vmax;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.04) 0%, transparent 65%);
+            animation: slowSpin 120s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes slowSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .text-gradient {
-            background-image: linear-gradient(45deg, #dc143c, #ff6347); /* Crimson to Tomato Red */
+            background-image: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .card-bg {
-            background-color: #161b22; /* Slightly lighter dark background for cards */
-            border: 1px solid #30363d;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(18px);
         }
-        /* UPDATED: Red hover color */
-        .nav-link:hover {
-            color: #ff6347; /* Tomato Red for hover */
-            text-shadow: 0 0 5px rgba(255, 99, 71, 0.5);
+
+        .neon-panel {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
         }
-        /* New: Style for the active navigation link */
+
+        .neon-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            border: 1px solid transparent;
+            background: linear-gradient(120deg, rgba(255, 0, 0, 0.6), rgba(255, 78, 78, 0.6)) border-box;
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            transition: color 0.25s ease, transform 0.35s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.35s ease;
+        }
+
+        .nav-link:hover,
         .nav-link.active {
-            color: #ff6347; /* Tomato Red for active state */
-            font-weight: 600;
+            color: var(--accent-primary);
+            text-shadow: 0 4px 24px rgba(255, 0, 0, 0.35);
         }
-        /* Style for buttons to hide default Tailwind focus ring */
-        .focus\:ring-red-500:focus {
-             box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            transform: scaleX(1);
+        }
+
+        .glow-button {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.18), rgba(255, 78, 78, 0.2));
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            box-shadow: var(--shadow-neon);
+            transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+        }
+
+        .glow-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.35);
+        }
+
+        .primary-button {
+            background: linear-gradient(120deg, rgba(255, 0, 0, 0.65), rgba(255, 107, 107, 0.75));
+            color: #03101f;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
+        }
+
+        .primary-button:hover {
+            color: #01060d;
+            box-shadow: 0 18px 45px rgba(255, 78, 78, 0.45);
+        }
+
+        .neon-chip {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.15), rgba(255, 78, 78, 0.16));
+            border: 1px solid rgba(255, 0, 0, 0.35);
+            color: var(--text-primary);
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.18);
+        }
+
+        .content-section {
+            position: relative;
+            border-radius: 32px;
+            padding: 4rem 3rem;
+            margin-bottom: 5rem;
+            background: rgba(4, 0, 19, 0.45);
+            border: 1px solid rgba(255, 0, 0, 0.08);
+            backdrop-filter: blur(14px);
+            overflow: hidden;
+        }
+
+        .content-section::before {
+            content: '';
+            position: absolute;
+            width: 45%;
+            height: 45%;
+            top: -20%;
+            right: -15%;
+            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.18), transparent 68%);
+            filter: blur(8px);
+        }
+
+        .content-section::after {
+            content: '';
+            position: absolute;
+            width: 55%;
+            height: 55%;
+            bottom: -25%;
+            left: -20%;
+            background: radial-gradient(circle at center, rgba(255, 78, 78, 0.15), transparent 70%);
+            filter: blur(10px);
+        }
+
+        .focus\:ring-red-500:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.35);
+        }
+
+        input,
+        select,
+        textarea {
+            background-color: rgba(6, 14, 35, 0.7);
+            border: 1px solid rgba(255, 0, 0, 0.18);
+            color: var(--text-primary);
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(198, 212, 255, 0.5);
+        }
+
+        .section-header {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.85), transparent);
+        }
+
+        .badge-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 999px;
+            background: linear-gradient(120deg, rgba(255, 0, 0, 0.15), rgba(255, 78, 78, 0.22));
+            border: 1px solid rgba(255, 0, 0, 0.35);
+            color: var(--text-primary);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge-label i {
+            color: var(--accent-primary);
+        }
+
+        .subscription-tag {
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            padding: 0.45rem 0.9rem;
+            border-radius: 999px;
+            background: linear-gradient(120deg, rgba(255, 0, 0, 0.35), rgba(255, 78, 78, 0.45));
+            color: #040013;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
+        }
+
+        .subscription-tag.secondary {
+            background: linear-gradient(120deg, rgba(255, 78, 78, 0.35), rgba(255, 107, 107, 0.45));
+            color: #08041c;
+        }
+
+        .subscription-tag.tertiary {
+            background: linear-gradient(120deg, rgba(255, 0, 0, 0.25), rgba(255, 107, 107, 0.3));
+            color: #08041c;
+        }
+
+        .pulse-glow {
+            position: relative;
+            isolation: isolate;
+        }
+
+        .pulse-glow::before {
+            content: '';
+            position: absolute;
+            inset: -40%;
+            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.16), transparent 65%);
+            filter: blur(18px);
+            opacity: 0.6;
+            animation: pulse 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.9); opacity: 0.4; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .neon-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 0, 0, 0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 78, 78, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.75) 30%, transparent 85%);
+            pointer-events: none;
+        }
+
+        .price-stack {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }
+
+        .price-old {
+            text-decoration: line-through;
+            opacity: 0.45;
+            font-size: 0.85rem;
+        }
+
+        .price-new {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .price-badge {
+            padding: 0.25rem 0.65rem;
+            border-radius: 999px;
+            background: linear-gradient(120deg, rgba(255, 0, 0, 0.2), rgba(255, 78, 205, 0.28));
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 0, 0, 0.35);
         }
     </style>
 </head>
 <body>
 
     <!-- Navigation Bar -->
-    <nav class="sticky top-0 z-50 card-bg shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="sticky top-0 z-50 card-bg neon-panel shadow-2xl backdrop-blur-xl border border-transparent relative overflow-hidden">
+        <span class="neon-grid"></span>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0">
                     <span class="text-2xl font-bold text-gradient">RVO Inc.</span>
@@ -60,7 +341,7 @@
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="services">Services</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="subscriptions">Subscriptions</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="digital-design">Discord Setup Services</button>
-                    <button class="nav-link text-sm font-medium transition duration-150" data-target="services-coming-soon">Graphic Design</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="graphic-design">Graphic Design</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="affiliates">Affiliates</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="tech-partners">Tech Partners</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="business-partners">Business Partners</button>
@@ -68,10 +349,10 @@
                 </div>
                 <!-- Auth/Logout Button Placeholder -->
                 <div class="flex items-center space-x-4">
-                    <button id="auth-status-btn" class="px-3 py-1.5 text-sm font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300 shadow-xl shadow-red-900/50 hidden">
+                    <button id="auth-status-btn" class="px-3 py-1.5 text-sm font-semibold rounded-xl glow-button text-white transition duration-300 hidden">
                         Sign In
                     </button>
-                    <button id="logout-btn" class="hidden p-2 rounded-lg hover:bg-red-700 transition duration-150" aria-label="Logout">
+                    <button id="logout-btn" class="hidden p-2 rounded-lg hover:bg-cyan-500/20 transition duration-150" aria-label="Logout">
                         <i data-lucide="log-out" class="w-6 h-6 text-white"></i>
                     </button>
                 </div>
@@ -82,13 +363,14 @@
             </div>
         </div>
         <!-- Mobile Menu (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden card-bg shadow-xl">
+        <div id="mobile-menu" class="hidden md:hidden card-bg neon-panel shadow-xl relative overflow-hidden">
+            <span class="neon-grid"></span>
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="home">Home</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="services">Services</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="subscriptions">Subscriptions</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="digital-design">Discord Services</button>                              
-                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="graphic-design">Graphic Design</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="services-coming-soon">Graphic Design</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="affiliates">Affiliates</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="tech-partners">Tech Partners</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150" data-target="business-partners">Business Partners</button>
@@ -97,26 +379,34 @@
     </nav>
 
     <!-- Main Content Sections Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
 
         <!-- 1. Home Section - Initially shown -->
-        <section id="home" class="pt-8 pb-20 text-center content-section">
-            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4 leading-snug">
-                Building <span class="text-gradient">Tomorrow's Systems</span>, Today.
-            </h1>
-            <p class="mt-4 text-xl text-gray-400 max-w-3xl mx-auto">
-                RVO Inc. specializes in cutting-edge development services. From static websites and robust backend systems to complex game clients and multilingual coding solutions, we are your comprehensive development partner.
-            </p>
-            <div class="mt-10 flex justify-center space-x-4">
-                <!-- Buttons now use data-target for switching -->
-                <button class="navigate-link px-8 py-3 text-lg font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300 shadow-xl shadow-red-900/50" data-target="services">Explore Services</button>
-                <button class="navigate-link px-8 py-3 text-lg font-semibold rounded-xl card-bg hover:bg-gray-700 transition duration-300" data-target="subscriptions">View Plans</button>
-
+        <section id="home" class="pt-12 pb-24 text-center content-section pulse-glow neon-panel overflow-hidden">
+            <span class="neon-grid"></span>
+            <div class="relative z-10 space-y-6">
+                <div class="flex justify-center">
+                    <span class="badge-label">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        Elevate Your Vision
+                    </span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-snug">
+                    Building <span class="text-gradient">Tomorrow's Systems</span>, Today.
+                </h1>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    RVO Inc. specializes in cutting-edge development services. From static websites and robust backend systems to complex game clients and multilingual coding solutions, we are your comprehensive development partner.
+                </p>
+                <div class="mt-10 flex justify-center space-x-4">
+                    <!-- Buttons now use data-target for switching -->
+                    <button class="navigate-link glow-button text-white px-10 py-3 text-lg font-semibold rounded-2xl transition duration-300" data-target="services">Explore Services</button>
+                    <button class="navigate-link glow-button text-white px-10 py-3 text-lg font-semibold rounded-2xl transition duration-300" data-target="subscriptions">View Plans</button>
+                </div>
             </div>
         </section>
 
         <!-- 2. Subscriptions Section - Initially hidden -->
-        <section id="subscriptions" class="py-20 content-section hidden">
+        <section id="subscriptions" class="py-20 content-section neon-panel hidden">
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our <span class="text-gradient">Subscriptions</span></h2>
             <div id="subscription-plans" class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Content generated by JS -->
@@ -124,11 +414,11 @@
         </section>
 
         <!-- 3. Digital Design Section - Initially hidden -->
-        <section id="digital-design" class="py-20 content-section hidden">
+        <section id="digital-design" class="py-20 content-section neon-panel hidden">
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our Comprehensive <span class="text-gradient">Discord Services</span></h2>
 
             <!-- Service Search and Filter -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-10 card-bg p-6 rounded-xl shadow-lg">
+            <div class="flex flex-col sm:flex-row gap-4 mb-10 card-bg neon-panel p-6 rounded-xl shadow-lg">
                 <!-- UPDATED: Focus ring/border to red-500 -->
                 <input type="text" id="digital-design-search" placeholder="Search our comprehensive discord Services" class="flex-grow p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500">
                 <select id="digital-design-filter" class="p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
@@ -147,11 +437,11 @@
         </section>
 
         <!-- 4. Graphic Design Section - Initially hidden -->
-        <section id="graphic-design" class="py-20 content-section hidden">
+        <section id="graphic-design" class="py-20 content-section neon-panel hidden">
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Creative <span class="text-gradient">Graphic Design Services</span></h2>
 
             <!-- Service Search and Filter -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-10 card-bg p-6 rounded-xl shadow-lg">
+            <div class="flex flex-col sm:flex-row gap-4 mb-10 card-bg neon-panel p-6 rounded-xl shadow-lg">
                 <!-- UPDATED: Focus ring/border to red-500 -->
                 <input type="text" id="graphic-design-search" placeholder="Search graphic design services (e.g., Logo, Branding)" class="flex-grow p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500">
                 <select id="graphic-design-filter" class="p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
@@ -170,11 +460,11 @@
         </section>
 
         <!-- 5. Services Section - Initially hidden -->
-        <section id="services" class="py-20 content-section hidden">
+        <section id="services" class="py-20 content-section neon-panel hidden">
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our Comprehensive <span class="text-gradient">Coding Capabilities</span></h2>
 
             <!-- Service Search and Filter -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-10 card-bg p-6 rounded-xl shadow-lg">
+            <div class="flex flex-col sm:flex-row gap-4 mb-10 card-bg neon-panel p-6 rounded-xl shadow-lg">
                 <!-- UPDATED: Focus ring/border to red-500 -->
                 <input type="text" id="service-search" placeholder="Search services (e.g., React, Python, Unity)" class="flex-grow p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500">
                 <select id="service-filter" class="p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
@@ -193,23 +483,23 @@
         </section>
 
         <!-- 4. Affiliates Section - Initially hidden -->
-        <section id="affiliates" class="py-20 content-section hidden">
+        <section id="affiliates" class="py-20 content-section neon-panel hidden">
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Join Our <span class="text-gradient">Affiliate Network</span></h2>
-            <div class="card-bg p-8 rounded-xl shadow-lg max-w-4xl mx-auto text-center">
+            <div class="card-bg neon-panel p-8 rounded-xl shadow-lg max-w-4xl mx-auto text-center">
                 <p class="text-lg text-gray-300 mb-6">
                     Refer clients to RVO Inc. and earn a commission on every successful development project or subscription sign-up. We provide detailed tracking and competitive payouts for referring top-tier coding work.
                 </p>
-                <!-- Retaining green for 'Sign Up' button for contrast -->
-                <button id="open-affiliate-modal" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition duration-300">
+                <!-- CTA Button -->
+                <button id="open-affiliate-modal" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl glow-button text-white transition duration-300">
                     <i data-lucide="zap" class="w-5 h-5 mr-2"></i> Sign Up Today
                 </button>
             </div>
         </section>
 
         <!-- 5. Tech Partners Section - Initially hidden -->
-        <section id="tech-partners" class="py-20 content-section hidden">
+        <section id="tech-partners" class="py-20 content-section neon-panel hidden">
             <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">Our <span class="text-gradient">Tech Partners</span></h2>
-            <div class="flex flex-wrap justify-center items-center gap-8 card-bg p-8 rounded-xl shadow-lg">
+            <div class="flex flex-wrap justify-center items-center gap-8 card-bg neon-panel p-8 rounded-xl shadow-lg">
                 <div class="w-24 h-10 flex justify-center items-center text-xl font-bold text-white opacity-80 hover:opacity-100 transition duration-300">
                     <i data-lucide="cloud" class="w-6 h-6 mr-1 text-blue-500"></i> AWS
                 </div>
@@ -355,16 +645,17 @@
         </section>
 
         <!-- 6. Business Partners Section - Initially hidden -->
-        <section id="business-partners" class="py-20 content-section hidden">
+        <section id="business-partners" class="py-20 content-section neon-panel hidden">
             <div class="flex justify-between items-center mb-12">
                 <h2 class="text-3xl sm:text-4xl font-bold">Our <span class="text-gradient">Business Partners</span></h2>
-                <button id="open-partnership-modal" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl bg-green-600 hover:bg-green-500 text-white transition duration-300">
+                <button id="open-partnership-modal" class="inline-flex items-center px-6 py-3 text-lg font-semibold rounded-xl primary-button glow-button text-black transition duration-300">
                     <i data-lucide="plus" class="w-5 h-5 mr-2"></i> Become a Partner
                 </button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 <!-- Partner Card 1 -->
-<div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+<div class="card-bg neon-panel p-6 rounded-2xl shadow-lg hover:shadow-neon transition duration-300 relative overflow-hidden">
+    <span class="neon-grid"></span>
     <div class="flex items-center mb-4">
         <!-- Circular Avatar (clickable) -->
         <a href="https://discord.gg/mqV9hYgR8x" target="_blank" class="block mr-3">
@@ -384,18 +675,18 @@
     </p>
 
     <div class="flex flex-wrap gap-2 mb-4">
-        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Cheap</span>
-        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Gameing</span>
-        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Entertainment</span>
-        <span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">Soulitions</span>
+        <span class="neon-chip text-xs uppercase tracking-wide">Cheap</span>
+        <span class="neon-chip text-xs uppercase tracking-wide">Gaming</span>
+        <span class="neon-chip text-xs uppercase tracking-wide">Entertainment</span>
+        <span class="neon-chip text-xs uppercase tracking-wide">Solutions</span>
     </div>
 
-    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2"
+    <button class="primary-button glow-button w-full px-4 py-2 text-sm font-semibold rounded-xl text-black transition duration-300 mb-2"
         onclick="window.open('https://discord.gg/mqV9hYgR8x', '_blank')">
         Visit Partner (Discord)
     </button>
     <small class="text-gray-500 block text-center">Leads to https://discord.gg/mqV9hYgR8x</small>
-      <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2"
+      <button class="glow-button w-full px-4 py-2 text-sm font-semibold rounded-xl text-white transition duration-300 mb-2"
         onclick="window.open('https://hub.spookydevz.org/index.html', '_blank')">
         Visit Partner (Main Site)
     </button>
@@ -405,7 +696,7 @@
         </section>
 
         <!-- Standalone 404 Section (hidden from navigation) -->
-        <section id="not-found" class="py-20 content-section hidden">
+        <section id="not-found" class="py-20 content-section neon-panel hidden">
             <div class="max-w-xl mx-auto card-bg rounded-3xl shadow-2xl p-10 text-center space-y-6 border border-gray-800">
                 <div>
                     <p class="uppercase tracking-widest text-sm text-gray-500">Error 404</p>
@@ -415,13 +706,13 @@
                     The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
                 </p>
                 <div class="space-y-3">
-                    <button class="inline-block px-6 py-3 bg-red-700 hover:bg-red-600 transition-colors duration-200 rounded-2xl text-white font-semibold shadow-lg shadow-red-900/50 navigate-link" data-target="home">
+                    <button class="navigate-link glow-button text-white inline-block px-6 py-3 transition-colors duration-200 rounded-2xl font-semibold" data-target="home">
                         Return to Home
                     </button>
                     <p class="text-sm text-gray-500">
                         Need direct assistance? Email
-                        <a href="mailto:contact@rvoinc.com" class="text-red-400 hover:text-red-300 underline">
-                            contact@rvoinc.com
+                        <a href="mailto:inquiries.rvoinc@execs.com" class="text-red-400 hover:text-red-300 underline">
+                            inquiries.rvoinc@execs.com
                         </a>.
                     </p>
                 </div>
@@ -429,10 +720,10 @@
         </section>
 
         <!-- Standalone Coming Soon Section (hidden from navigation) -->
-        <section id="services-coming-soon" class="py-20 content-section hidden">
+        <section id="services-coming-soon" class="py-20 content-section neon-panel hidden">
             <div class="max-w-6xl mx-auto space-y-10">
                 <header class="text-center space-y-4">
-                    <p class="uppercase tracking-widest text-sm text-gray-500">Roadmap | Coming soon Stuff</p>
+                    <p class="uppercase tracking-widest text-sm text-gray-500">Roadmap | Coming Soon Stuff</p>
                     <h2 class="text-4xl md:text-5xl font-extrabold text-gradient">These Services Are Coming Soon</h2>
                     <p class="text-gray-400 max-w-2xl mx-auto leading-relaxed">
                         We are polishing the next wave of RVO Inc. experiences. Preview what is in the works and reach out if you would like early access or to partner with us on a pilot engagement.
@@ -442,10 +733,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <article class="card-bg rounded-2xl p-6 border border-gray-800 shadow-lg shadow-red-900/20">
                         <h3 class="text-2xl font-semibold text-white mb-2">Graphic Design Services</h3>
-                        <p class="text-gray-400 mb-4">Automated workflows that connect your CRM, support desk, and internal tools with intelligent decision-making.</p>
+                        <p class="text-gray-400 mb-4">Our Advanced Graphic Design Systems Will Be Coming Soon With Tons Of Services</p>
                         <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-red-400">
-                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">Phase: Gpx Design Department Implementations</span>
-                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">ETA: Unknown</span>
+                            <span class="neon-chip text-[0.6rem] uppercase tracking-[0.3em]">Phase: Gpx Department Implementation</span>
+                            <span class="neon-chip text-[0.6rem] uppercase tracking-[0.3em]">ETA: Unknown</span>
                         </div>
                     </article>
 
@@ -453,18 +744,17 @@
                         <h3 class="text-2xl font-semibold text-white mb-2">Enterprise Discord Concierge</h3>
                         <p class="text-gray-400 mb-4">A managed service that keeps your community spaces moderated, automated, and aligned with your brand 24/7.</p>
                         <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-red-400">
-                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">Phase: Beta Signups</span>
-                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">ETA: Unknown</span>
+                            <span class="neon-chip text-[0.6rem] uppercase tracking-[0.3em]">Phase: Beta Signups</span>
+                            <span class="neon-chip text-[0.6rem] uppercase tracking-[0.3em]">ETA: Unknown</span>
                         </div>
                     </article>
-
                 </div>
 
                 <footer class="text-center space-y-4 text-gray-400">
                     <p>Want to be notified when these launch? Drop us a line and we will bring you in early.</p>
                     <div class="flex flex-wrap items-center justify-center gap-3">
-                        <a href="mailto:contact@rvoinc.com" class="px-5 py-3 bg-red-700 hover:bg-red-600 transition-colors duration-200 rounded-2xl text-white font-semibold shadow-lg shadow-red-900/50">
-                            Contact RVO Inc.
+                        <a href="mailto:inquiries.rvoinc@execs.com" class="primary-button glow-button px-5 py-3 rounded-2xl text-black font-semibold transition duration-300">
+                            Contact RVO Inc. (inquiries.rvoinc@execs.com)
                         </a>
                         <button class="px-5 py-3 border border-gray-700 hover:border-red-600 transition-colors duration-200 rounded-2xl text-sm uppercase tracking-wide navigate-link" data-target="home">
                             Back to Home
@@ -473,18 +763,15 @@
                 </footer>
             </div>
         </section>
-
-    </main>
-
-
             <!-- 6. Important Section - Initially hidden -->
-        <section id="important-links" class="py-20 content-section hidden">
+        <section id="important-links" class="py-20 content-section neon-panel hidden">
             <div class="flex justify-between items-center mb-12">
                 <h2 class="text-3xl sm:text-4xl font-bold">Our <span class="text-gradient">Important Links</span></h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 <!-- Partner Card 1 -->
-<div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
+<div class="card-bg neon-panel p-6 rounded-2xl shadow-lg hover:shadow-neon transition duration-300 relative overflow-hidden">
+    <span class="neon-grid"></span>
     <div class="flex items-center mb-4">
         <!-- Circular Avatar (clickable) -->
         <div>
@@ -496,30 +783,28 @@
        RVO Inc. Terms of Service (ToS) outline the rules and conditions for using our products, services, and platforms. By following them, you help ensure fair use, security, and consistency across all client interactions. Adhering to the ToS protects both you and RVO Inc. by defining rights, responsibilities, and the proper way to engage with our services.
     </p>
 
-    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2"
+    <button class="primary-button glow-button w-full px-4 py-2 text-sm font-semibold rounded-xl text-black transition duration-300"
         onclick="window.open('https://sites.google.com/view/rvo-inc-services/tos', '_blank')">
         Visit Our Terms Of Service (ToS)
     </button>
     <small class="text-gray-500 block text-center">Leads to https://sites.google.com/view/rvo-inc-services/tos</small>
 </div>
 <!-- Partner Card 1 -->
-<div class="card-bg p-6 rounded-xl shadow-lg hover:shadow-red-900/50 transition duration-300">
-    <div class="flex items-center mb-4">
-        <!-- Circular Avatar (clickable) -->
-        <div>
-            <h3 class="text-xl font-bold text-white">RVO INC | Privacy </h3>
+<div class="card-bg neon-panel p-6 rounded-3xl shadow-xl hover:shadow-neon transition duration-300 relative overflow-hidden">
+    <span class="neon-grid"></span>
+    <div class="relative z-10 space-y-5">
+        <div class="flex items-center">
+            <h3 class="text-xl font-bold text-white">RVO INC | Privacy</h3>
         </div>
+        <p class="text-gray-400 leading-relaxed">
+           RVO Inc. Privacy Policy explains how we collect, use, and protect your personal information. It ensures transparency in how your data is handled, stored, and shared. Following our privacy policy helps maintain trust, security, and compliance with data protection standards while keeping your information safe and confidential.
+        </p>
+        <button class="primary-button glow-button w-full px-4 py-2 text-sm font-semibold rounded-xl text-black transition duration-300"
+            onclick="window.open('https://sites.google.com/view/rvo-inc-services/privacy', '_blank')">
+            Visit Our Privacy Policy
+        </button>
+        <small class="text-gray-500 block text-center">Leads to https://sites.google.com/view/rvo-inc-services/privacy</small>
     </div>
-
-    <p class="text-gray-400 mb-4">
-       RVO Inc. Privacy Policy explains how we collect, use, and protect your personal information. It ensures transparency in how your data is handled, stored, and shared. Following our privacy policy helps maintain trust, security, and compliance with data protection standards while keeping your information safe and confidential.
-    </p>
-
-    <button class="w-full px-4 py-2 text-sm font-semibold rounded-lg bg-red-700 hover:bg-red-600 text-white transition duration-300 mb-2"
-        onclick="window.open('https://sites.google.com/view/rvo-inc-services/privacy', '_blank')">
-        Visit Our Privacy Policy
-    </button>
-    <small class="text-gray-500 block text-center">Leads to https://sites.google.com/view/rvo-inc-services/privacy</small>
 </div>
 
         </section>
@@ -528,7 +813,7 @@
 
     <!-- Auth Modal -->
     <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-md mx-4">
+        <div class="card-bg neon-panel p-8 rounded-xl shadow-2xl w-full max-w-md mx-4">
             <div class="flex justify-between items-center mb-6">
                 <h3 id="auth-title" class="text-2xl font-bold text-white">Sign In</h3>
                 <button id="close-modal" class="text-gray-400 hover:text-white">
@@ -544,7 +829,7 @@
                     <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
                     <input type="password" id="auth-password" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
                 </div>
-                <button id="auth-submit" class="w-full py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">Sign In</button>
+                <button id="auth-submit" class="w-full py-3 font-semibold rounded-xl primary-button glow-button text-black transition duration-300">Sign In</button>
                 <button id="auth-toggle" class="w-full py-2 text-sm text-gray-400 hover:text-white">Don't have an account? Sign Up</button>
                 <div class="relative">
                     <div class="absolute inset-0 flex items-center">
@@ -571,7 +856,7 @@
 
     <!-- Affiliate Registration Modal -->
     <div id="affiliate-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="card-bg neon-panel p-8 rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-bold text-white">Join Our Affiliate Program</h3>
                 <button id="close-affiliate-modal" class="text-gray-400 hover:text-white">
@@ -742,7 +1027,7 @@
                 <div id="affiliate-error" class="hidden text-red-500 text-sm p-3 bg-red-900/20 rounded-lg"></div>
 
                 <!-- Submit Button -->
-                <button type="submit" id="affiliate-submit" class="w-full py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
+                <button type="submit" id="affiliate-submit" class="w-full py-3 font-semibold rounded-xl primary-button glow-button text-black transition duration-300">
                     Submit Application
                 </button>
             </form>
@@ -751,7 +1036,7 @@
 
     <!-- Success Popup -->
     <div id="success-popup" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-md mx-4 text-center">
+        <div class="card-bg neon-panel p-8 rounded-xl shadow-2xl w-full max-w-md mx-4 text-center">
             <div class="mb-4 flex justify-center">
                 <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
                     <i data-lucide="check-circle" class="w-10 h-10 text-green-500"></i>
@@ -764,7 +1049,7 @@
             <p class="text-sm text-gray-400 mb-6">
                 Our team will review your application and get back to you within <span class="text-red-400 font-semibold">3-5 business days</span>.
             </p>
-            <button id="close-success-popup" class="px-6 py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
+            <button id="close-success-popup" class="px-6 py-3 font-semibold rounded-xl glow-button text-white transition duration-300">
                 Got it!
             </button>
         </div>
@@ -772,7 +1057,7 @@
 
     <!-- Partnership Application Modal -->
     <div id="partnership-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="card-bg p-8 rounded-xl shadow-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="card-bg neon-panel p-8 rounded-xl shadow-2xl w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-bold text-white">Become a Business Partner</h3>
                 <button id="close-partnership-modal" class="text-gray-400 hover:text-white">
@@ -1346,7 +1631,7 @@
                     <div id="partnership-error" class="hidden text-red-500 text-sm p-3 bg-red-900/20 rounded-lg"></div>
 
                     <!-- Submit Button -->
-                    <button type="submit" id="partnership-submit" class="w-full py-3 font-semibold rounded-xl bg-red-700 hover:bg-red-600 text-white transition duration-300">
+                    <button type="submit" id="partnership-submit" class="w-full py-3 font-semibold rounded-xl primary-button glow-button text-black transition duration-300">
                         Submit Partnership Application
                     </button>
                 </div>
@@ -1355,8 +1640,9 @@
     </div>
 
 <!-- Footer -->
-<footer class="card-bg mt-16 py-8 border-t border-gray-800 relative" style="position: relative; z-index: 10;">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+<footer class="card-bg neon-panel mt-16 py-8 border-t border-transparent relative z-10 overflow-hidden">
+  <span class="neon-grid"></span>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
     <p>&copy; 2025 RVO Inc. All Rights Reserved. Specializing in High-Quality Software Development.</p>
 
     <a
@@ -1422,6 +1708,21 @@
             storageBucket: "rvoincwebsite.firebasestorage.app",
             messagingSenderId: "675340459793",
             appId: "1:675340459793:web:89dd0ecce1f1c3ee1336b0"
+        };
+
+        // Toggle visibility for sections directly from this configuration object
+        const SECTION_CONFIG = {
+            home: true,
+            services: true,
+            subscriptions: true,
+            "digital-design": true,
+            "graphic-design": true,
+            affiliates: true,
+            "tech-partners": true,
+            "business-partners": true,
+            "important-links": true,
+            "services-coming-soon": true,
+            "not-found": true
         };
 
         // This logic ensures we use the canvas global if available, but falls back to the hardcoded config
@@ -1509,21 +1810,21 @@
 
         function updateUIForAuthState() {
             authStatusBtn.classList.remove('hidden'); // Always show the general button
+            authStatusBtn.onclick = null;
 
             if (isLoggedIn) {
                 // User is authenticated (Email/Google)
                 authStatusBtn.textContent = currentUser.email ? currentUser.email.split('@')[0] : 'Profile';
-                authStatusBtn.classList.remove('bg-red-700', 'hover:bg-red-600', 'shadow-red-900/50');
-                authStatusBtn.classList.add('card-bg', 'border', 'border-gray-700');
-                authStatusBtn.removeEventListener('click', showAuthModal);
-                authStatusBtn.addEventListener('click', () => navigateTo('subscriptions')); // Example: Go to profile/subscriptions
+                authStatusBtn.classList.remove('glow-button', 'text-white');
+                authStatusBtn.classList.add('card-bg', 'border', 'border-gray-700', 'text-gray-200');
+                authStatusBtn.onclick = () => navigateTo('subscriptions'); // Example: Go to profile/subscriptions
                 logoutBtn.classList.remove('hidden');
             } else {
                 // User is anonymous or logged out
                 authStatusBtn.textContent = 'Sign In';
-                authStatusBtn.classList.remove('card-bg', 'border', 'border-gray-700');
-                authStatusBtn.classList.add('bg-red-700', 'hover:bg-red-600', 'shadow-red-900/50');
-                authStatusBtn.addEventListener('click', showAuthModal);
+                authStatusBtn.classList.remove('card-bg', 'border', 'border-gray-700', 'text-gray-200');
+                authStatusBtn.classList.add('glow-button', 'text-white');
+                authStatusBtn.onclick = showAuthModal;
                 logoutBtn.classList.add('hidden');
             }
         }
@@ -1683,6 +1984,39 @@
         // VIEW SWITCHING LOGIC (Multipage Simulation)
         // --------------------------------------------------------------------------------
 
+        function isSectionEnabled(sectionId) {
+            if (!sectionId) return false;
+            if (Object.prototype.hasOwnProperty.call(SECTION_CONFIG, sectionId)) {
+                return SECTION_CONFIG[sectionId];
+            }
+            return true;
+        }
+
+        function applySectionConfiguration() {
+            Object.entries(SECTION_CONFIG).forEach(([sectionId, isEnabled]) => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.dataset.enabled = String(isEnabled);
+                    if (!isEnabled) {
+                        section.classList.add('hidden');
+                    }
+                }
+            });
+
+            document.querySelectorAll('[data-target]').forEach(element => {
+                const targetId = element.getAttribute('data-target');
+                if (isSectionEnabled(targetId)) {
+                    element.classList.remove('hidden');
+                    element.removeAttribute('disabled');
+                    element.setAttribute('aria-hidden', 'false');
+                } else {
+                    element.classList.add('hidden');
+                    element.setAttribute('disabled', 'true');
+                    element.setAttribute('aria-hidden', 'true');
+                }
+            });
+        }
+
         /**
          * Switches the displayed content section and updates the active navigation link.
          * @param {string} targetId - The ID of the section to display (e.g., 'home', 'services').
@@ -1695,15 +2029,19 @@
 
             const targetSection = document.getElementById(targetId);
             const mainElement = document.querySelector('main');
+            const sectionAllowed = isSectionEnabled(targetId);
 
-            if (targetSection) {
+            let resolvedTarget = targetId;
+
+            if (targetSection && sectionAllowed) {
                 targetSection.classList.remove('hidden');
                 if (mainElement) {
                     mainElement.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             } else {
+                resolvedTarget = 'not-found';
                 const fallbackSection = document.getElementById('not-found');
-                if (fallbackSection) {
+                if (fallbackSection && isSectionEnabled('not-found')) {
                     fallbackSection.classList.remove('hidden');
                     if (mainElement) {
                         mainElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1714,7 +2052,7 @@
 
             // 3. Update active state of navigation links
             document.querySelectorAll('.nav-link').forEach(link => {
-                if (link.getAttribute('data-target') === targetId) {
+                if (link.getAttribute('data-target') === resolvedTarget) {
                     link.classList.add('active');
                 } else {
                     link.classList.remove('active');
@@ -1799,9 +2137,11 @@
                 description: "Perfect for MVPs and small projects. Includes 40 hours of development per month.", 
                 features: ["40 Dev Hours/Mo", "Basic Code Review", "Email Support", "1 Active Project"], 
                 icon: "zap", 
-                color: "text-green-400", 
+                color: "text-green-400",
                 tagline: "Minimum Viable Product",
-                stripeLink: "https://buy.stripe.com/4gMaEXbhwc1q9AjfXo9EI16"
+                stripeLink: "https://buy.stripe.com/4gMaEXbhwc1q9AjfXo9EI16",
+                tagLabel: "Best Entry Package",
+                tagVariant: "tertiary"
             },
             { 
                 name: "Gold VIP (Professional)", 
@@ -1812,7 +2152,9 @@
                 color: "text-red-400", 
                 isFeatured: true,
                 tagline: "Dedicated Support Team",
-                stripeLink: "https://buy.stripe.com/5kQfZh99o9Ti8wf7qS9EI15"
+                stripeLink: "https://buy.stripe.com/5kQfZh99o9Ti8wf7qS9EI15",
+                tagLabel: "Recommended",
+                tagVariant: "secondary"
             },
             { 
                 name: "Platinum VIP (Enterprise)", 
@@ -1822,7 +2164,9 @@
                 icon: "shield", 
                 color: "text-blue-400", 
                 tagline: "Scalable Mission-Critical",
-                stripeLink: "https://buy.stripe.com/bJeeVd0CS1mM8wffXo9EI14"
+                stripeLink: "https://buy.stripe.com/bJeeVd0CS1mM8wffXo9EI14",
+                tagLabel: "Ultimate Control",
+                tagVariant: ""
             },
         ];
 
@@ -1841,21 +2185,31 @@ function applyDiscountToServices(services) {
       const num = parseFloat(p.replace(/[^0-9.]/g, ""));
       if (!isNaN(num)) {
         const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
-        s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
-                           <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+        s.displayPrice = `
+            <div class="price-stack">
+                <span class="price-old">$${num.toFixed(2)}</span>
+                <span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+                <span class="price-new">$${discounted.toFixed(2)}</span>
+            </div>
+        `;
       } else {
         // preserve text like "FREE" or unexpected formats
-        s.displayPrice = p;
+        s.displayPrice = `<span class="price-new">${p}</span>`;
       }
 
     } else if (typeof p === "number") {
       // If someone used a number (assume dollars)
       const discounted = +(p * (1 - DISCOUNT_PERCENT / 100));
-      s.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${p.toFixed(2)}</span>
-                         <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+      s.displayPrice = `
+            <div class="price-stack">
+                <span class="price-old">$${p.toFixed(2)}</span>
+                <span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+                <span class="price-new">$${discounted.toFixed(2)}</span>
+            </div>
+        `;
     } else {
       // fallback for NOT available, null, or other types
-      s.displayPrice = p ?? "N/A";
+      s.displayPrice = `<span class="price-new">${p ?? 'N/A'}</span>`;
     }
   });
 }
@@ -1868,20 +2222,30 @@ function applyDiscountToPlans(plans) {
     if (typeof p === "number") {
       const originalDollars = p / 100;
       const discounted = +(originalDollars * (1 - DISCOUNT_PERCENT / 100));
-      plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${originalDollars.toFixed(2)}</span>
-                           <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+      plan.displayPrice = `
+            <div class="price-stack">
+                <span class="price-old">$${originalDollars.toFixed(2)}</span>
+                <span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+                <span class="price-new">$${discounted.toFixed(2)}</span>
+            </div>
+        `;
     } else if (typeof p === "string" && p.includes("$")) {
       // In case any plan used a dollar string instead of cents
       const num = parseFloat(p.replace(/[^0-9.]/g, ""));
       if (!isNaN(num)) {
         const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
-        plan.displayPrice = `<span style="text-decoration: line-through; opacity: 0.6;">$${num.toFixed(2)}</span>
-                             <span style="font-weight:600; margin-left:6px;"> ${DISCOUNT_PERCENT}% OFF → $${discounted.toFixed(2)}</span>`;
+        plan.displayPrice = `
+            <div class="price-stack">
+                <span class="price-old">$${num.toFixed(2)}</span>
+                <span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+                <span class="price-new">$${discounted.toFixed(2)}</span>
+            </div>
+        `;
       } else {
-        plan.displayPrice = p;
+        plan.displayPrice = `<span class="price-new">${p}</span>`;
       }
     } else {
-      plan.displayPrice = p ?? "N/A";
+      plan.displayPrice = `<span class="price-new">${p ?? 'N/A'}</span>`;
     }
   });
 }
@@ -1912,41 +2276,44 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
             }
 
             servicesToRender.forEach(service => {
+                const priceString = typeof service.price === 'string' ? service.price.toLowerCase() : String(service.price || '').toLowerCase();
+                const isFixedPrice = Boolean(service.stripeLink) && !priceString.includes('quote') && !priceString.includes('hour') && !priceString.includes('not available');
 
-                const isFixedPrice = service.price && !service.price.toLowerCase().includes('quote') && !service.price.toLowerCase().includes('hour');
-
-                // Determine button properties
                 const actionType = isFixedPrice ? 'purchase' : 'quote';
                 const baseButtonText = isFixedPrice ? 'Buy Now' : 'Get Quote';
                 const loginPrefix = isFixedPrice ? 'Buy' : 'Quote';
 
                 const buttonText = isLoggedIn ? baseButtonText : `Log In to ${loginPrefix}`;
                 const buttonClasses = isLoggedIn
-                    ? 'bg-red-700 hover:bg-red-600'
-                    : 'bg-gray-700 text-gray-400 cursor-not-allowed';
+                    ? (isFixedPrice
+                        ? 'service-action-btn primary-button glow-button px-5 py-2.5 text-sm font-semibold rounded-xl transition duration-300'
+                        : 'service-action-btn glow-button text-white px-5 py-2.5 text-sm font-semibold rounded-xl transition duration-300')
+                    : 'service-action-btn card-bg px-5 py-2.5 text-sm font-semibold rounded-xl border border-gray-700 text-gray-400 cursor-not-allowed transition duration-300';
 
                 const buttonAttributes = isFixedPrice
                     ? `data-link="${service.stripeLink}" data-service-name="${service.name}"`
                     : `data-service-name="${service.name}"`;
 
-
                 const tagsHtml = service.tags.map(tag =>
-                    `<span class="inline-block bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">${tag}</span>`
+                    `<span class="neon-chip text-xs uppercase tracking-wide">${tag}</span>`
                 ).join('');
 
+                const priceDisplay = service.displayPrice || `<span class="price-new">${service.price}</span>`;
+
                 const cardHtml = `
-                    <div class="card-bg p-6 rounded-xl shadow-xl transition duration-300 hover:shadow-red-900/50 hover:border-red-500 flex flex-col">
-                        <div class="flex items-center mb-4">
-                            <i data-lucide="${service.icon}" class="w-8 h-8 ${service.color || 'text-red-500'} mr-3"></i>
+                    <div class="card-bg neon-panel p-6 rounded-3xl shadow-xl relative overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-neon flex flex-col">
+                        <span class="neon-grid"></span>
+                        <div class="flex items-center mb-4 relative z-10">
+                            <i data-lucide="${service.icon}" class="w-8 h-8 ${service.color || 'text-cyan-300'} mr-3"></i>
                             <h3 class="text-xl font-bold text-white">${service.name}</h3>
                         </div>
-                        <p class="text-gray-400 mb-4 flex-grow">${service.description}</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
+                        <p class="text-gray-400 mb-4 flex-grow relative z-10">${service.description}</p>
+                        <div class="flex flex-wrap gap-2 mb-4 relative z-10">
                             ${tagsHtml}
                         </div>
-                        <div class="mt-auto pt-4 border-t border-gray-700 flex justify-between items-center">
-                            <span class="text-lg font-semibold text-red-400">${service.displayPrice || service.price}</span>
-                            <button class="service-action-btn px-4 py-2 text-sm font-semibold rounded-lg ${buttonClasses} text-white transition duration-300"
+                        <div class="mt-auto pt-4 border-t border-gray-800 flex justify-between items-center gap-3 relative z-10 flex-wrap">
+                            ${priceDisplay}
+                            <button class="${buttonClasses}"
                                 data-action-type="${actionType}"
                                 ${buttonAttributes}
                                 ${isLoggedIn ? '' : 'title="You must sign in to proceed"'}
@@ -2095,39 +2462,50 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
             subscriptionPlansDiv.innerHTML = '';
 
             plans.forEach(plan => {
-                const isFeatured = plan.isFeatured ? 'border-red-500 ring-4 ring-red-900/50' : 'border-gray-700';
+                const isFeatured = plan.isFeatured ? 'ring-2 ring-offset-2 ring-offset-transparent ring-cyan-400/60' : '';
+                const tagClass = `subscription-tag ${plan.tagVariant || ''}`.trim();
+                const tagHtml = plan.tagLabel ? `<span class="${tagClass}">${plan.tagLabel}</span>` : '';
 
-                // Determine button state based on current auth status
                 const buttonText = isLoggedIn ? `Start ${plan.name} Plan` : 'Log In to Subscribe';
-                const buttonColor = isLoggedIn 
-                    ? (plan.isFeatured ? 'bg-red-700 hover:bg-red-600' : 'card-bg hover:bg-gray-700 border border-red-700 text-red-400')
-                    : 'bg-gray-700 text-gray-400 cursor-not-allowed'; // Grayed out if not logged in
+                const buttonClasses = isLoggedIn
+                    ? (plan.isFeatured
+                        ? 'purchase-btn primary-button glow-button w-full py-3 font-semibold rounded-xl transition duration-300'
+                        : 'purchase-btn glow-button w-full py-3 font-semibold rounded-xl transition duration-300')
+                    : 'purchase-btn card-bg w-full py-3 font-semibold rounded-xl border border-gray-700 text-gray-400 cursor-not-allowed transition duration-300';
 
                 const featuresHtml = plan.features.map(feature => 
-                    `<li class="flex items-center text-gray-300 mb-2">
-                        <i data-lucide="check" class="w-4 h-4 mr-2 text-green-500 flex-shrink-0"></i>
-                        ${feature}
+                    `<li class="flex items-center text-gray-300 gap-2">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+                        <span>${feature}</span>
                     </li>`
                 ).join('');
 
+                const priceHtml = plan.displayPrice || `
+                    <div class="price-stack">
+                        <span class="price-new">$${(plan.price / 100).toFixed(plan.price % 100 === 0 ? 0 : 2)}</span>
+                    </div>
+                `;
+
                 const planHtml = `
-                    <div class="card-bg p-8 rounded-xl shadow-2xl transition duration-300 hover:shadow-red-900/70 border-2 ${isFeatured} flex flex-col">
-                        <div class="mb-6">
-                            <p class="text-sm font-semibold uppercase ${plan.color}">${plan.tagline}</p>
-                            <h3 class="text-3xl font-bold text-white mt-1">${plan.name}</h3>
-                            <p class="text-gray-400 mt-2">${plan.description}</p>
+                    <div class="card-bg neon-panel p-8 rounded-3xl shadow-2xl transition duration-300 hover:-translate-y-1 hover:shadow-neon flex flex-col relative overflow-hidden ${isFeatured}">
+                        <span class="neon-grid"></span>
+                        ${tagHtml}
+                        <div class="mb-6 relative z-10">
+                            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200/80">${plan.tagline}</p>
+                            <h3 class="text-3xl font-bold text-white mt-3">${plan.name}</h3>
+                            <p class="text-gray-400 mt-3 leading-relaxed">${plan.description}</p>
                         </div>
-                        <div class="text-4xl font-extrabold text-white mb-6">
-                            $${(plan.price / 100).toFixed( plan.price % 100 === 0 ? 0 : 2)}
-                            <span class="text-lg font-medium text-gray-500">/mo</span>
+                        <div class="mb-6 relative z-10">
+                            ${priceHtml}
+                            <span class="text-sm text-gray-500 block mt-1 uppercase tracking-widest">Per Month</span>
                         </div>
                         
-                        <ul class="flex-grow mb-8">
+                        <ul class="flex-grow mb-8 relative z-10 space-y-2">
                             ${featuresHtml}
                         </ul>
                         
                         <button 
-                            class="purchase-btn w-full py-3 font-semibold rounded-xl ${buttonColor} text-white transition duration-300"
+                            class="${buttonClasses} relative z-10"
                             data-link="${plan.stripeLink}" 
                             data-plan-name="${plan.name}"
                             ${isLoggedIn ? '' : 'title="You must sign in to subscribe"'}
@@ -2599,6 +2977,9 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
         document.addEventListener('DOMContentLoaded', () => {
             setupFirebase();
 
+            // Respect section configuration before any navigation occurs
+            applySectionConfiguration();
+
             // Set initial active nav link
             navigateTo('home');
 
@@ -2617,7 +2998,11 @@ console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
                 button.addEventListener('click', (event) => {
                     const target = event.currentTarget.getAttribute('data-target');
                     if (target) {
-                        navigateTo(target);
+                        if (isSectionEnabled(target)) {
+                            navigateTo(target);
+                        } else {
+                            navigateTo('not-found');
+                        }
                     }
                 });
             });
