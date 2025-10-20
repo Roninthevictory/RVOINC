@@ -60,7 +60,7 @@
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="services">Services</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="subscriptions">Subscriptions</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="digital-design">Discord Setup Services</button>
-                    <button class="nav-link text-sm font-medium transition duration-150" data-target="graphic-design">Graphic Design</button>
+                    <button class="nav-link text-sm font-medium transition duration-150" data-target="services-coming-soon">Graphic Design</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="affiliates">Affiliates</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="tech-partners">Tech Partners</button>
                     <button class="nav-link text-sm font-medium transition duration-150" data-target="business-partners">Business Partners</button>
@@ -402,6 +402,93 @@
     <small class="text-gray-500 block text-center">Leads to https://hub.spookydevz.org/index.html</small>
 </div>
 
+        </section>
+
+        <!-- Standalone 404 Section (hidden from navigation) -->
+        <section id="not-found" class="py-20 content-section hidden">
+            <div class="max-w-xl mx-auto card-bg rounded-3xl shadow-2xl p-10 text-center space-y-6 border border-gray-800">
+                <div>
+                    <p class="uppercase tracking-widest text-sm text-gray-500">Error 404</p>
+                    <h2 class="text-4xl font-extrabold mt-2 text-gradient">Page Not Found</h2>
+                </div>
+                <p class="text-gray-400 leading-relaxed">
+                    The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+                </p>
+                <div class="space-y-3">
+                    <button class="inline-block px-6 py-3 bg-red-700 hover:bg-red-600 transition-colors duration-200 rounded-2xl text-white font-semibold shadow-lg shadow-red-900/50 navigate-link" data-target="home">
+                        Return to Home
+                    </button>
+                    <p class="text-sm text-gray-500">
+                        Need direct assistance? Email
+                        <a href="mailto:contact@rvoinc.com" class="text-red-400 hover:text-red-300 underline">
+                            contact@rvoinc.com
+                        </a>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Standalone Coming Soon Section (hidden from navigation) -->
+        <section id="services-coming-soon" class="py-20 content-section hidden">
+            <div class="max-w-6xl mx-auto space-y-10">
+                <header class="text-center space-y-4">
+                    <p class="uppercase tracking-widest text-sm text-gray-500">Roadmap</p>
+                    <h2 class="text-4xl md:text-5xl font-extrabold text-gradient">These Services Are Coming Soon</h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                        We are polishing the next wave of RVO Inc. experiences. Preview what is in the works and reach out if you would like early access or to partner with us on a pilot engagement.
+                    </p>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <article class="card-bg rounded-2xl p-6 border border-gray-800 shadow-lg shadow-red-900/20">
+                        <h3 class="text-2xl font-semibold text-white mb-2">AI Automation Suite</h3>
+                        <p class="text-gray-400 mb-4">Automated workflows that connect your CRM, support desk, and internal tools with intelligent decision-making.</p>
+                        <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-red-400">
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">Phase: Internal Testing</span>
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">ETA: Q1</span>
+                        </div>
+                    </article>
+
+                    <article class="card-bg rounded-2xl p-6 border border-gray-800 shadow-lg shadow-red-900/20">
+                        <h3 class="text-2xl font-semibold text-white mb-2">Enterprise Discord Concierge</h3>
+                        <p class="text-gray-400 mb-4">A managed service that keeps your community spaces moderated, automated, and aligned with your brand 24/7.</p>
+                        <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-red-400">
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">Phase: Beta Signups</span>
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">ETA: Q2</span>
+                        </div>
+                    </article>
+
+                    <article class="card-bg rounded-2xl p-6 border border-gray-800 shadow-lg shadow-red-900/20">
+                        <h3 class="text-2xl font-semibold text-white mb-2">Interactive Data Dashboards</h3>
+                        <p class="text-gray-400 mb-4">Custom-tailored analytics dashboards powered by secure pipelines and rich visualizations.</p>
+                        <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-red-400">
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">Phase: Design</span>
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">ETA: Q3</span>
+                        </div>
+                    </article>
+
+                    <article class="card-bg rounded-2xl p-6 border border-gray-800 shadow-lg shadow-red-900/20">
+                        <h3 class="text-2xl font-semibold text-white mb-2">On-Demand Creative Collective</h3>
+                        <p class="text-gray-400 mb-4">Access a curated roster of designers and developers for quick-turn creative projects.</p>
+                        <div class="flex flex-wrap gap-2 text-xs uppercase tracking-wide text-red-400">
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">Phase: Partner Intake</span>
+                            <span class="px-3 py-1 rounded-full border border-gray-700 bg-red-900/20">ETA: Q4</span>
+                        </div>
+                    </article>
+                </div>
+
+                <footer class="text-center space-y-4 text-gray-400">
+                    <p>Want to be notified when these launch? Drop us a line and we will bring you in early.</p>
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <a href="mailto:contact@rvoinc.com" class="px-5 py-3 bg-red-700 hover:bg-red-600 transition-colors duration-200 rounded-2xl text-white font-semibold shadow-lg shadow-red-900/50">
+                            Contact RVO Inc.
+                        </a>
+                        <button class="px-5 py-3 border border-gray-700 hover:border-red-600 transition-colors duration-200 rounded-2xl text-sm uppercase tracking-wide navigate-link" data-target="home">
+                            Back to Home
+                        </button>
+                    </div>
+                </footer>
+            </div>
         </section>
 
     </main>
@@ -1618,19 +1705,28 @@
          * @param {string} targetId - The ID of the section to display (e.g., 'home', 'services').
          */
         function navigateTo(targetId) {
-            // 1. Hide all content sections
+            // 1. Hide all content sections before showing the requested view
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.add('hidden');
             });
 
-            // 2. Show the target section
             const targetSection = document.getElementById(targetId);
+            const mainElement = document.querySelector('main');
+
             if (targetSection) {
                 targetSection.classList.remove('hidden');
-                // Scroll to the top of the main container for a "fresh page" feel
-                document.querySelector('main').scrollTo(0, 0);
+                if (mainElement) {
+                    mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             } else {
-                console.error(`Attempted to navigate to unknown page ID: ${targetId}`);
+                const fallbackSection = document.getElementById('not-found');
+                if (fallbackSection) {
+                    fallbackSection.classList.remove('hidden');
+                    if (mainElement) {
+                        mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                }
+                console.warn(`Attempted to navigate to unknown page ID: ${targetId}`);
             }
 
             // 3. Update active state of navigation links
