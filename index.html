@@ -87,7 +87,7 @@
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="home">Home</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="services">Services</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="subscriptions">Subscriptions</button>
-                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="digital-design">Digital Design</button>
+                <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="digital-design">Discord Setup</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="graphic-design">Graphic Design</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="affiliates">Affiliates</button>
                 <button class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-target="tech-partners">Tech Partners</button>
@@ -1903,16 +1903,33 @@
 ];
 
 
-        // Digital Design Services Data
-        const digitalDesignData = [
-            { id: 1, name: "UI/UX Design Consultation", description: "Comprehensive user interface and experience design consultation for web and mobile applications.", category: "UI/UX", tags: ["UI", "UX", "Design", "Consultation"], icon: "layout", price: "$150.00", stripeLink: "https://buy.stripe.com/mock-digital-1" },
-            { id: 2, name: "Wireframing & Prototyping", description: "Create detailed wireframes and interactive prototypes to visualize your product before development.", category: "Prototyping", tags: ["Wireframing", "Prototyping", "Design"], icon: "layers", price: "$200.00", stripeLink: "https://buy.stripe.com/mock-digital-2" },
-            { id: 3, name: "User Research & Analysis", description: "Conduct user research, interviews, and analysis to inform design decisions.", category: "Research", tags: ["User Research", "Analysis", "UX"], icon: "users", price: "$250.00", stripeLink: "https://buy.stripe.com/mock-digital-3" },
-            { id: 4, name: "Information Architecture", description: "Design intuitive navigation and content structure for optimal user experience.", category: "Architecture", tags: ["IA", "Navigation", "Structure"], icon: "map", price: "$180.00", stripeLink: "https://buy.stripe.com/mock-digital-4" },
-            { id: 5, name: "Usability Testing", description: "Perform usability testing sessions and provide detailed reports with recommendations.", category: "Testing", tags: ["Usability", "Testing", "Feedback"], icon: "check-circle", price: "$300.00", stripeLink: "https://buy.stripe.com/mock-digital-5" },
-            { id: 6, name: "Design System Creation", description: "Build comprehensive design systems with components, patterns, and guidelines.", category: "Systems", tags: ["Design System", "Components", "Guidelines"], icon: "grid", price: "$400.00", stripeLink: "https://buy.stripe.com/mock-digital-6" },
-            { id: 7, name: "Mobile App UI Design", description: "Design beautiful and functional user interfaces specifically for mobile applications.", category: "Mobile", tags: ["Mobile", "UI", "App Design"], icon: "smartphone", price: "$350.00", stripeLink: "https://buy.stripe.com/mock-digital-7" },
-            { id: 8, name: "Accessibility Audit & Design", description: "Ensure your digital products are accessible to all users with comprehensive audits and redesigns.", category: "Accessibility", tags: ["Accessibility", "A11y", "Inclusive Design"], icon: "eye", price: "$275.00", stripeLink: "https://buy.stripe.com/mock-digital-8" }
+        // Discord Setup Services Data
+        const discordSetupData = [
+            // STRUCTURE SERIES
+            { id: 1, name: "RVO GridLine", description: "Architected channel layouts designed for flow, clarity, and style. Includes: Custom category & channel naming, Emoji / symbol formatting, Role-based permissions for each, Info and staff sections included.", category: "Structure Series", tags: ["Channels", "Layout", "Permissions", "Organization"], icon: "grid-3x3", price: "$0.75 per channel", stripeLink: "https://buy.stripe.com/mock-discord-1" },
+            { id: 2, name: "RVO TierForge", description: "Dynamic, color-coded role design with precision hierarchy. Includes: Staff, member, and booster tiers, Custom colors and icons, Balanced permissions, Visual alignment with theme.", category: "Structure Series", tags: ["Roles", "Hierarchy", "Colors", "Permissions"], icon: "shield", price: "$0.50 per role", stripeLink: "https://buy.stripe.com/mock-discord-2" },
+            { id: 3, name: "RVO PermiCore", description: "Every channel's permissions, rebuilt and secured. Includes: Clean role visibility, Anti-raid permission matrix, Logging and staff separation.", category: "Structure Series", tags: ["Permissions", "Security", "Anti-raid", "Logging"], icon: "lock", price: "$0.25 per channel permission setup", stripeLink: "https://buy.stripe.com/mock-discord-3" },
+
+            // AUTOMATION & BOT SYSTEMS
+            { id: 4, name: "RVO BotForge", description: "Professional bot setup and integration for any need. Includes: Bot invite & permission setup, Core feature configuration, Command customization. Supports: Dyno, Carl, Arcane, Ticket Tool, and more.", category: "Automation & Bot Systems", tags: ["Bots", "Automation", "Integration", "Commands"], icon: "bot", price: "$1.00 per bot setup", stripeLink: "https://buy.stripe.com/mock-discord-4" },
+            { id: 5, name: "RVO SyncFlow", description: "We design and link automatic processes that power your community. Includes: Auto-roles, welcome, and XP triggers, Event reminders & activity loops, Bot-to-bot integrations.", category: "Automation & Bot Systems", tags: ["Automation", "Workflows", "Triggers", "Integration"], icon: "refresh-cw", price: "$0.75 per automated feature", stripeLink: "https://buy.stripe.com/mock-discord-5" },
+
+            // BRAND & AESTHETIC DESIGN
+            { id: 6, name: "RVO VibeFrame", description: "We craft your server's aesthetic from top to bottom. Includes: Channel emoji formatting, Color palette coordination, Role alignment & branding tone.", category: "Brand & Aesthetic Design", tags: ["Aesthetic", "Branding", "Colors", "Emojis"], icon: "palette", price: "$0.75 per visual element", stripeLink: "https://buy.stripe.com/mock-discord-6" },
+            { id: 7, name: "RVO EchoSet", description: "Complete identity styling for brands and creators. Includes: Custom server icon, Emoji set creation, Animated banner or logo variants.", category: "Brand & Aesthetic Design", tags: ["Identity", "Icons", "Emojis", "Banners"], icon: "star", price: "$1.00 per asset", stripeLink: "https://buy.stripe.com/mock-discord-7" },
+
+            // SECURITY & STAFF CONTROL
+            { id: 8, name: "RVO SentinelCore", description: "Security systems that keep your community safe and under control. Includes: Anti-spam & anti-raid configuration, Log and alert channels, Verification gate setup.", category: "Security & Staff Control", tags: ["Security", "Anti-spam", "Anti-raid", "Verification"], icon: "shield-check", price: "$0.75 per protection layer", stripeLink: "https://buy.stripe.com/mock-discord-8" },
+            { id: 9, name: "RVO ModStack", description: "Staff management system that keeps moderation clean. Includes: Ticket setup, Staff log automation, Command templates, Internal role flow.", category: "Security & Staff Control", tags: ["Moderation", "Tickets", "Staff", "Logging"], icon: "settings", price: "$1.00 per module", stripeLink: "https://buy.stripe.com/mock-discord-9" },
+
+            // ENGAGEMENT & COMMUNITY SYSTEMS
+            { id: 10, name: "RVO BoostNet", description: "Engagement systems that grow your server organically. Includes: Invite or callout trackers, XP/level systems, Booster & reward roles.", category: "Engagement & Community Systems", tags: ["Engagement", "XP", "Rewards", "Growth"], icon: "trending-up", price: "$0.75 per feature", stripeLink: "https://buy.stripe.com/mock-discord-10" },
+            { id: 11, name: "RVO SupportLink", description: "Streamlined ticket and support systems that just work. Includes: Ticket bot setup, Embed and staff alert templates, Log and archive configuration.", category: "Engagement & Community Systems", tags: ["Support", "Tickets", "Templates", "Logging"], icon: "message-square", price: "$1.00 per ticket type", stripeLink: "https://buy.stripe.com/mock-discord-11" },
+            { id: 12, name: "RVO EventPulse", description: "Setup of timed announcements, reminders, and event systems. Includes: Auto-ping for events, Embedded event posts, Auto-reminder scheduling.", category: "Engagement & Community Systems", tags: ["Events", "Announcements", "Reminders", "Scheduling"], icon: "calendar", price: "$0.50 per event automation", stripeLink: "https://buy.stripe.com/mock-discord-12" },
+
+            // INTEGRATED SYSTEMS
+            { id: 13, name: "RVO NexusPrime", description: "Complete server engineering — you choose the parts, we build the network. Includes: Full structure, automation, design, and security, Unified permission linking, Live support during setup.", category: "Integrated Systems", tags: ["Complete", "Engineering", "Unified", "Support"], icon: "network", price: "$0.50 per configured element", stripeLink: "https://buy.stripe.com/mock-discord-13" },
+            { id: 14, name: "RVO CustomForge", description: "Custom-configured, hand-built systems for enterprise-level Discord setups. Includes: Planning consultation, Custom-coded or integrated systems, Documentation & deployment.", category: "Integrated Systems", tags: ["Custom", "Enterprise", "Consultation", "Documentation"], icon: "wrench", price: "$0.25 per configured line-item", stripeLink: "https://buy.stripe.com/mock-discord-14" }
         ];
 
         // Graphic Design Services Data
