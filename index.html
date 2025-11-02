@@ -263,7 +263,7 @@ color: var(--accent-primary);
 
 .subscription-tag {
 position: absolute;
-top: -50px;
+top: -20px;
 left: 50%;
 transform: translateX(-50%);
 padding: 0.45rem 0.9rem;
@@ -275,7 +275,7 @@ letter-spacing: 0.1em;
 text-transform: uppercase;
 font-weight: 700;
 box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
-z-index: 20;
+z-index: 100;
 }
 
 .subscription-tag.secondary {
@@ -2598,9 +2598,10 @@ const priceHtml = plan.displayPrice || `
 `;
 
 const planHtml = `
+<div class="relative">
+${tagHtml}
 <div class="card-bg neon-panel p-8 rounded-3xl shadow-2xl transition duration-300 hover:-translate-y-1 hover:shadow-neon flex flex-col relative overflow-hidden ${isFeatured}">
 <span class="neon-grid"></span>
-${tagHtml}
 <div class="mb-6 relative z-10">
 <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200/80">${plan.tagline}</p>
 <h3 class="text-3xl font-bold text-white mt-3">${plan.name}</h3>
@@ -2623,6 +2624,7 @@ ${isLoggedIn ? '' : 'title="You must sign in to subscribe"'}
 >
 ${buttonText}
 </button>
+</div>
 </div>
 `;
 subscriptionPlansDiv.insertAdjacentHTML('beforeend', planHtml);
