@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVO Inc. | About</title>
+    <link rel="icon" href="https://i.ibb.co/8DL3dhZf/Gemini-Generated-Image-79s1r479s1r479s1r479s1.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 card-bg neon-panel shadow-2xl backdrop-blur-xl border border-transparent relative overflow-hidden">
+        <span class="neon-grid"></span>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <span class="text-2xl font-bold text-gradient">RVO Inc.</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="nav-link" data-page="home">Home</a>
+                    <a href="about.html" class="nav-link active" data-page="about">About</a>
+                    <a href="services.html" class="nav-link" data-page="services">Services</a>
+                    <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
+                    <a href="legal.html" class="nav-link" data-page="legal">Legal</a>
+                </div>
+                <!-- Auth/Logout Button Placeholder -->
+                <div class="flex items-center space-x-4">
+                    <button id="auth-status-btn" class="px-3 py-1.5 text-sm font-semibold rounded-xl glow-button text-white transition duration-300 hidden">
+                        Sign In
+                    </button>
+                    <button id="logout-btn" class="hidden p-2 rounded-lg hover:bg-cyan-500/20 transition duration-150" aria-label="Logout">
+                        <i data-lucide="log-out" class="w-6 h-6 text-white"></i>
+                    </button>
+                </div>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-700 transition duration-150" aria-label="Toggle menu">
+                    <i data-lucide="menu" class="w-6 h-6 text-white"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden card-bg neon-panel shadow-xl relative overflow-hidden">
+            <span class="neon-grid"></span>
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+                <a href="index.html" class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-page="home">Home</a>
+                <a href="about.html" class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700 active" data-page="about">About</a>
+                <a href="services.html" class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-page="services">Services</a>
+                <a href="contact.html" class="nav-link text-base py-2 w-full text-center transition duration-150 border-b border-gray-700" data-page="contact">Contact</a>
+                <a href="legal.html" class="nav-link text-base py-2 w-full text-center transition duration-150" data-page="legal">Legal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+        <!-- About Section -->
+        <section class="pt-12 pb-24 text-center content-section pulse-glow neon-panel overflow-hidden">
+            <span class="neon-grid"></span>
+            <div class="relative z-10 space-y-6">
+                <div class="flex justify-center">
+                    <span class="badge-label">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        About RVO Inc.
+                    </span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-snug">
+                    Who We <span class="text-gradient">Are</span>
+                </h1>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    RVO Inc. is a premier software development company specializing in innovative solutions across web, mobile, and game development. Our team of expert developers delivers high-quality, scalable, and efficient code to bring your vision to life.
+                </p>
+                <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="card-bg neon-panel p-6 rounded-xl">
+                        <i data-lucide="code" class="w-12 h-12 text-red-400 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Expert Development</h3>
+                        <p class="text-gray-400">Years of experience in modern technologies and frameworks.</p>
+                    </div>
+                    <div class="card-bg neon-panel p-6 rounded-xl">
+                        <i data-lucide="zap" class="w-12 h-12 text-red-400 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Fast Delivery</h3>
+                        <p class="text-gray-400">Efficient workflows and agile methodologies for quick results.</p>
+                    </div>
+                    <div class="card-bg neon-panel p-6 rounded-xl">
+                        <i data-lucide="shield" class="w-12 h-12 text-red-400 mx-auto mb-4"></i>
+                        <h3 class="text-xl font-bold mb-2">Quality Assurance</h3>
+                        <p class="text-gray-400">Rigorous testing and code reviews for reliable solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="card-bg neon-panel p-8 rounded-xl shadow-2xl w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="auth-title" class="text-2xl font-bold text-white">Sign In</h3>
+                <button id="close-modal" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                    <input type="email" id="auth-email" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:ring-red-500 focus:border-red-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                    <input type="password" id="auth-password" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-red-500 focus:border-red-500">
+                </div>
+                <button id="auth-submit" class="w-full py-3 font-semibold rounded-xl primary-button glow-button text-black transition duration-300">Sign In</button>
+                <button id="auth-toggle" class="w-full py-2 text-sm text-gray-400 hover:text-white">Don't have an account? Sign Up</button>
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-600"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-gray-800 text-gray-400">Or</span>
+                    </div>
+                </div>
+                <button id="google-signin" class="w-full py-3 font-semibold rounded-xl bg-white hover:bg-gray-100 text-gray-900 transition duration-300 flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </div>
+            <div id="auth-error" class="mt-4 text-red-500 text-sm hidden"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="card-bg neon-panel mt-16 py-8 border-t border-transparent relative z-10 overflow-hidden">
+        <span class="neon-grid"></span>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+            <p>&copy; 2025 RVO Inc. All Rights Reserved. Specializing in High-Quality Software Development.</p>
+            <a href="legal.html" class="text-sm font-medium transition duration-150 hover:underline mx-2 inline-block">Terms Of Service</a>
+            <a href="legal.html" class="text-sm font-medium transition duration-150 hover:underline mx-2 inline-block">Privacy</a>
+            <a href="https://billing.stripe.com/p/login/3cI3cv3P46H66o726y9EI00" target="_blank" rel="noopener noreferrer" class="text-sm font-medium transition duration-150 hover:underline mx-2 inline-block">Manage Your Subscriptions & Account</a>
+        </div>
+    </footer>
+
+    <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
