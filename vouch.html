@@ -160,7 +160,7 @@ document.getElementById("vouchForm").addEventListener("submit",async e=>{
    content:`⭐ **New Vouch Submitted**\n**User:** <@${id}> (${id})\n**Rating:** ${"★".repeat(rating)}${"☆".repeat(5-rating)}\n**Description:** ${desc||"_No description provided._"}`
  };
  try{
-   await fetch("https://discord.com/api/webhooks/REPLACE_WITH_YOUR_WEBHOOK",{
+   await fetch("https://discord.com/api/webhooks/1434786041864261745/nY0FxzahuhJzHmgX01kmicw6xjh2oHqj7mVSjTQNy3EYAlti2Il6SqIJTxAVVJxQO-3Q",{
      method:"POST",
      headers:{"Content-Type":"application/json"},
      body:JSON.stringify(payload)
