@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RVO INC — Community Vouch Submission</title>
+<style>
+:root{
+ --bg:#0b0b0d;--card:#141418;--ink:#eaeaf0;--muted:#b9b9c7;
+ --brand:#ff3b3b;--accent:#6c6cff;--border:#23232a;
+ --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+body{
+ font-family:var(--sans);color:var(--ink);line-height:1.6;
+ background:
+ radial-gradient(1100px 700px at 110% -10%,rgba(255,59,59,.08),transparent 60%),
+ radial-gradient(900px 600px at -10% -10%,rgba(108,108,255,.08),transparent 60%),
+ var(--bg);
+}
+.wrap{max-width:960px;margin:2.5rem auto 4rem;padding:0 1.25rem}
+header.card{position:sticky;top:0;z-index:10;border:1px solid var(--border);
+ background:var(--card);border-radius:18px;padding:1.5rem;
+ box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.kicker{display:inline-flex;align-items:center;gap:.5rem;letter-spacing:.12em;
+ text-transform:uppercase;font-size:.78rem;color:var(--muted)}
+.dot{width:.45rem;height:.45rem;border-radius:50%;background:var(--brand);
+ box-shadow:0 0 10px var(--brand)}
+h1{margin:.35rem 0 .15rem;font-size:1.9rem}
+.meta{color:var(--muted);font-size:.9rem;margin-top:.35rem}
+.btns{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+.btn{border:1px solid var(--brand);background:var(--brand);color:#fff;
+ border-radius:10px;padding:.6rem 1rem;cursor:pointer;font-weight:600;transition:.2s}
+.btn:hover{box-shadow:0 0 10px var(--brand)}
+.notice{margin-top:1rem;border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;
+ background:linear-gradient(90deg,rgba(255,59,59,.16),rgba(108,108,255,.16));
+ box-shadow:0 0 12px rgba(255,59,59,.15);font-weight:600}
+section.card{border:1px solid var(--border);background:var(--card);
+ border-radius:16px;padding:1.25rem;margin-top:1rem}
+label{font-weight:600;display:block;margin-bottom:.35rem}
+input,textarea,select{width:100%;border:1px solid var(--border);
+ background:#101014;color:var(--ink);padding:.6rem .7rem;
+ border-radius:10px;margin-bottom:1rem;font-size:.95rem}
+textarea{resize:vertical;min-height:100px}
+.tip{color:var(--muted);font-size:.9rem;margin-top:-.75rem;margin-bottom:1rem;cursor:pointer}
+.tip-content{display:none;font-size:.9rem;color:#cfcfed;background:rgba(255,255,255,.03);
+ border:1px dashed var(--border);border-radius:10px;padding:.8rem;margin-top:.5rem}
+.stars{display:flex;gap:.25rem;margin-bottom:1rem}
+.star{cursor:pointer;font-size:1.5rem;transition:.2s}
+.star:hover{transform:scale(1.1)}
+.star.active{color:var(--brand);text-shadow:0 0 10px var(--brand)}
+footer{margin-top:2rem;color:var(--muted);font-size:.9rem;
+ display:flex;justify-content:space-between;flex-wrap:wrap}
+footer .tagline{color:var(--ink)}
+@media print{body{background:#fff;color:#000}header.card,section.card{background:#fff;color:#000;
+ box-shadow:none;border:1px solid #ccc}.btns,footer{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="card">
+ <div class="kicker"><span class="dot"></span> RVO INC • Community Trust</div>
+ <h1>Submit a Vouch</h1>
+ <div class="meta">Effective Date: <strong>July 1, 2024</strong> • Last Updated: <strong id="lastUpdated"></strong></div>
+ <div class="btns"><button class="btn" onclick="window.print()">Print / Save as PDF</button></div>
+ <div class="notice">Submit a verified vouch for another RVO INC member. Vouches strengthen credibility, trust, and recognition across all divisions.</div>
+</header>
+
+<main>
+<section class="card">
+<form id="vouchForm">
+  <label for="discordId">Discord ID</label>
+  <input id="discordId" name="discordId" placeholder="Enter numeric Discord ID (e.g. 123456789012345678)" required>
+  <div class="tip" onclick="toggleTip()">💡 How to find your Discord ID (click to expand)</div>
+  <div class="tip-content" id="tipContent">
+    <strong>On Desktop (PC):</strong><br>Go to <em>User Settings → Advanced → Enable Developer Mode</em>. Then right-click your profile → “Copy ID”.<br><br>
+    <strong>On Mobile:</strong><br>Tap your profile → “App Settings → Advanced → Enable Developer Mode”. Then long-press your name → “Copy ID”.<br><br>
+    <strong>On Browser:</strong><br>Enable Developer Mode in settings, then right-click your username → “Copy ID”.<br><br>
+    Example: <code>123456789012345678</code>
+  </div>
+
+  <label>Converted Mention</label>
+  <input id="mentionPreview" readonly placeholder="<@userID> will appear here">
+
+  <label>Rating</label>
+  <div class="stars" id="stars">
+    <span class="star" data-value="1">★</span>
+    <span class="star" data-value="2">★</span>
+    <span class="star" data-value="3">★</span>
+    <span class="star" data-value="4">★</span>
+    <span class="star" data-value="5">★</span>
+  </div>
+  <input type="hidden" id="rating" name="rating" required>
+
+  <label for="desc">Optional Description</label>
+  <textarea id="desc" name="desc" maxlength="300" placeholder="(Optional) Share why you're vouching for this user..."></textarea>
+
+  <button class="btn" type="submit">Submit Vouch</button>
+</form>
+</section>
+
+<footer>
+ <div>© <span id="copyrightSpan">2024–YYYY</span> RVO INC</div>
+ <div class="tagline">RVO INC | Community Integrity Through Recognition</div>
+</footer>
+</main>
+</div>
+
+<script>
+(function(){
+ const tz='America/Chicago';
+ const now=new Date();
+ const fmt=new Intl.DateTimeFormat('en-US',{timeZone:tz,year:'numeric',month:'long',day:'numeric'});
+ const yearFmt=new Intl.DateTimeFormat('en-US',{timeZone:tz,year:'numeric'});
+ const dateStr=fmt.format(now);
+ const year=yearFmt.format(now);
+ document.getElementById('lastUpdated').textContent=dateStr;
+ document.getElementById('copyrightSpan').textContent=`2024–${year}`;
+})();
+
+// Expand/collapse tip
+function toggleTip(){
+ const el=document.getElementById("tipContent");
+ el.style.display=el.style.display==="block"?"none":"block";
+}
+
+// Discord ID conversion
+document.getElementById("discordId").addEventListener("input",()=>{
+ const id=document.getElementById("discordId").value.trim();
+ document.getElementById("mentionPreview").value=id?`<@${id}>`:"";
+});
+
+// Star rating
+const stars=document.querySelectorAll(".star");
+stars.forEach(s=>{
+ s.addEventListener("click",()=>{
+  const val=s.getAttribute("data-value");
+  document.getElementById("rating").value=val;
+  stars.forEach(st=>st.classList.toggle("active",st.getAttribute("data-value")<=val));
+ });
+});
+
+// Regex profanity filter
+function containsProfanity(str){
+ const banned=/\b(fuck|shit|bitch|asshole|nigg|cunt|slut|whore|dick|cock|pussy|retard|fag)\b/i;
+ return banned.test(str);
+}
+
+// Submit webhook
+document.getElementById("vouchForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const id=document.getElementById("discordId").value.trim();
+ const rating=document.getElementById("rating").value;
+ const desc=document.getElementById("desc").value.trim();
+
+ if(!id||!rating)return alert("Please enter a Discord ID and select a rating.");
+ if(containsProfanity(desc))return alert("Your description contains inappropriate language.");
+
+ const payload={
+   content:`⭐ **New Vouch Submitted**\n**User:** <@${id}> (${id})\n**Rating:** ${"★".repeat(rating)}${"☆".repeat(5-rating)}\n**Description:** ${desc||"_No description provided._"}`
+ };
+ try{
+   await fetch("https://discord.com/api/webhooks/REPLACE_WITH_YOUR_WEBHOOK",{
+     method:"POST",
+     headers:{"Content-Type":"application/json"},
+     body:JSON.stringify(payload)
+   });
+   alert("Vouch submitted successfully!");
+   e.target.reset();
+   document.getElementById("mentionPreview").value="";
+   stars.forEach(st=>st.classList.remove("active"));
+ }catch(err){
+   alert("There was an error sending your vouch. Please try again later.");
+   console.error(err);
+ }
+});
+</script>
+</body>
+</html>
