@@ -1,0 +1,1861 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Discord — RVO INC</title>
+<meta name="color-scheme" content="dark"/>
+<!-- External integrations kept to preserve login and payments -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+
+:root {
+--bg-primary: #040013;
+--bg-secondary: #0d0126;
+--bg-tertiary: #1a0b2e;
+--bg-card: rgba(17, 12, 41, 0.95);
+--bg-card-hover: rgba(22, 16, 48, 0.98);
+--bg-card-border: rgba(255, 0, 0, 0.25);
+--bg-card-border-hover: rgba(255, 0, 0, 0.4);
+--accent-primary: #ff0000;
+--accent-secondary: #ff4e4e;
+--accent-tertiary: #ff6b6b;
+--accent-quaternary: #ff8787;
+--accent-glow: rgba(255, 0, 0, 0.6);
+--text-primary: #ffffff;
+--text-secondary: #e6f7ff;
+--text-muted: #b58787;
+--text-muted-light: #d4a3a3;
+--shadow-neon: 0 0 35px rgba(255, 0, 0, 0.4);
+--shadow-neon-hover: 0 0 50px rgba(255, 0, 0, 0.6);
+--shadow-pink: 0 0 30px rgba(255, 78, 78, 0.3);
+--shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+--shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
+--gradient-primary: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+--gradient-secondary: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+--gradient-bg: radial-gradient(circle at 20% 20%, rgba(255, 0, 0, 0.1), transparent 40%),
+radial-gradient(circle at 80% 0%, rgba(255, 78, 78, 0.15), transparent 45%),
+linear-gradient(160deg, var(--bg-primary), var(--bg-secondary));
+}
+
+body {
+font-family: 'Inter', sans-serif;
+min-height: 100vh;
+background: var(--gradient-bg);
+color: var(--text-primary);
+position: relative;
+overflow-x: hidden;
+line-height: 1.6;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+content: '';
+position: fixed;
+inset: -40vmax;
+background: radial-gradient(circle, rgba(255, 0, 0, 0.04) 0%, transparent 65%);
+animation: slowSpin 120s linear infinite;
+z-index: -2;
+}
+
+@keyframes slowSpin {
+from { transform: rotate(0deg); }
+to { transform: rotate(360deg); }
+}
+
+.text-gradient {
+background-image: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.card-bg {
+background: var(--bg-card);
+border: 1px solid var(--bg-card-border);
+box-shadow: var(--shadow-card);
+backdrop-filter: blur(18px);
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-bg:hover {
+background: var(--bg-card-hover);
+border-color: var(--bg-card-border-hover);
+box-shadow: var(--shadow-card-hover);
+transform: translateY(-2px);
+}
+
+.neon-panel {
+position: relative;
+border-radius: 24px;
+overflow: hidden;
+}
+
+.neon-panel::before {
+content: '';
+position: absolute;
+inset: 0;
+border-radius: inherit;
+border: 1px solid transparent;
+background: linear-gradient(120deg, rgba(255, 0, 0, 0.6), rgba(255, 78, 78, 0.6)) border-box;
+mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+mask-composite: exclude;
+pointer-events: none;
+opacity: 0.5;
+}
+
+.nav-link {
+position: relative;
+color: var(--text-muted);
+letter-spacing: 0.08em;
+text-transform: uppercase;
+font-size: 0.72rem;
+transition: color 0.25s ease, transform 0.35s ease;
+}
+
+.nav-link::after {
+content: '';
+position: absolute;
+left: 0;
+bottom: -6px;
+width: 100%;
+height: 2px;
+background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+transform: scaleX(0);
+transform-origin: center;
+transition: transform 0.35s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+color: var(--accent-primary);
+text-shadow: 0 4px 24px rgba(255, 0, 0, 0.35);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+transform: scaleX(1);
+}
+
+.glow-button {
+background: linear-gradient(135deg, rgba(255, 0, 0, 0.18), rgba(255, 78, 78, 0.2));
+border: 1px solid rgba(255, 0, 0, 0.3);
+box-shadow: var(--shadow-neon);
+transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+}
+
+.glow-button:hover {
+transform: translateY(-2px) scale(1.02);
+box-shadow: 0 15px 40px rgba(255, 0, 0, 0.35);
+}
+
+.primary-button {
+background: linear-gradient(120deg, rgba(255, 0, 0, 0.65), rgba(255, 107, 107, 0.75));
+color: #03101f;
+font-weight: 700;
+box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
+}
+
+.primary-button:hover {
+color: #01060d;
+box-shadow: 0 18px 45px rgba(255, 78, 78, 0.45);
+}
+
+.neon-chip {
+background: linear-gradient(135deg, rgba(255, 0, 0, 0.15), rgba(255, 78, 78, 0.16));
+border: 1px solid rgba(255, 0, 0, 0.35);
+color: var(--text-primary);
+box-shadow: 0 0 12px rgba(255, 0, 0, 0.18);
+}
+
+.content-section {
+position: relative;
+border-radius: 32px;
+padding: 4rem 3rem;
+margin-bottom: 5rem;
+background: rgba(4, 0, 19, 0.45);
+border: 1px solid rgba(255, 0, 0, 0.08);
+backdrop-filter: blur(14px);
+overflow: hidden;
+}
+
+.content-section::before {
+content: '';
+position: absolute;
+width: 45%;
+height: 45%;
+top: -20%;
+right: -15%;
+background: radial-gradient(circle at center, rgba(255, 0, 0, 0.18), transparent 68%);
+filter: blur(8px);
+}
+
+.content-section::after {
+content: '';
+position: absolute;
+width: 55%;
+height: 55%;
+bottom: -25%;
+left: -20%;
+background: radial-gradient(circle at center, rgba(255, 78, 78, 0.15), transparent 70%);
+filter: blur(10px);
+}
+
+.focus\:ring-red-500:focus,
+input:focus,
+select:focus,
+textarea:focus {
+outline: none;
+box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.35);
+}
+
+input,
+select,
+textarea {
+background-color: rgba(6, 14, 35, 0.7);
+border: 1px solid rgba(255, 0, 0, 0.18);
+color: var(--text-primary);
+transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+color: rgba(198, 212, 255, 0.5);
+}
+
+.section-header {
+position: relative;
+padding-bottom: 2rem;
+}
+
+.section-header::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 220px;
+height: 2px;
+background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.85), transparent);
+}
+
+.badge-label {
+display: inline-flex;
+align-items: center;
+gap: 0.35rem;
+padding: 0.45rem 0.9rem;
+border-radius: 999px;
+background: linear-gradient(120deg, rgba(255, 0, 0, 0.15), rgba(255, 78, 78, 0.22));
+border: 1px solid rgba(255, 0, 0, 0.35);
+color: var(--text-primary);
+font-size: 0.7rem;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+}
+
+.badge-label i {
+color: var(--accent-primary);
+}
+
+.subscription-tag {
+	position: absolute;
+	top: -20px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 0.45rem 0.9rem;
+	border-radius: 999px;
+	background: linear-gradient(120deg, rgba(255, 0, 0, 1), rgba(255, 78, 78, 1));
+	color: #040013;
+	font-size: 0.7rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	font-weight: 700;
+	box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
+	z-index: 100;
+}
+
+.subscription-tag.secondary {
+	background: linear-gradient(120deg, rgba(255, 78, 78, 1), rgba(255, 107, 107, 1));
+	color: #08041c;
+}
+
+.subscription-tag.tertiary {
+	background: linear-gradient(120deg, rgba(255, 0, 0, 1), rgba(255, 107, 107, 1));
+	color: #08041c;
+}
+
+.pulse-glow {
+position: relative;
+isolation: isolate;
+}
+
+.pulse-glow::before {
+content: '';
+position: absolute;
+inset: -40%;
+background: radial-gradient(circle at center, rgba(255, 0, 0, 0.16), transparent 65%);
+filter: blur(18px);
+opacity: 0.6;
+animation: pulse 6s ease-in-out infinite;
+z-index: -1;
+}
+
+@keyframes pulse {
+0%, 100% { transform: scale(0.9); opacity: 0.4; }
+50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+.neon-grid {
+position: absolute;
+inset: 0;
+background-image: linear-gradient(rgba(255, 0, 0, 0.04) 1px, transparent 1px),
+linear-gradient(90deg, rgba(255, 78, 78, 0.04) 1px, transparent 1px);
+background-size: 60px 60px;
+mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.75) 30%, transparent 85%);
+pointer-events: none;
+}
+
+.price-stack {
+display: inline-flex;
+align-items: center;
+gap: 0.65rem;
+flex-wrap: wrap;
+}
+
+.price-old {
+text-decoration: line-through;
+opacity: 0.45;
+font-size: 0.85rem;
+}
+
+.price-new {
+color: var(--accent-primary);
+font-size: 1.2rem;
+font-weight: 700;
+letter-spacing: 0.04em;
+}
+
+.price-badge {
+padding: 0.25rem 0.65rem;
+border-radius: 999px;
+background: linear-gradient(120deg, rgba(255, 0, 0, 0.2), rgba(255, 78, 205, 0.28));
+font-size: 0.6rem;
+text-transform: uppercase;
+letter-spacing: 0.14em;
+color: var(--text-primary);
+border: 1px solid rgba(255, 0, 0, 0.35);
+}
+
+</style>
+</head>
+<body class="bg-neutral-950 text-neutral-100">
+
+    <nav class="w-full border-b border-neutral-800/60 bg-neutral-950/60 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/40">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="/" class="font-semibold tracking-wide">RVO INC</a>
+        <div class="flex items-center gap-6 text-sm">
+          <a class="hover:text-red-400" href="/services">Services</a>
+          <a class="hover:text-red-400" href="/subscriptions">Subscriptions</a>
+          <a class="hover:text-red-400" href="/affiliates">Affiliates</a>
+          <a class="hover:text-red-400" href="/design">Design</a>
+          <a class="hover:text-red-400" href="/discord">Discord</a>
+          <a class="hover:text-red-400" href="/partners">Partners</a>
+          <a class="hover:text-red-400" href="/tech">Tech</a>
+          <a class="hover:text-red-400" href="/info">Info</a>
+          <a class="hover:text-red-400" href="/coming-soon">Coming&nbsp;Soon</a>
+        </div>
+        <button id="auth-status-btn" class="text-sm px-3 py-1.5 rounded bg-red-600 hover:bg-red-500">Sign In</button>
+      </div>
+    </nav>
+    
+
+        <main class="max-w-6xl mx-auto p-6">
+          <h1 class="text-3xl font-bold mb-4">Discord</h1>
+          <p class="text-neutral-300">This is a placeholder page because the original file has no section with id "<code>discord</code>".</p>
+        </main>
+<footer class="text-center space-y-4 text-gray-400">
+<p>Want to be notified when these launch? Drop us a line and we will bring you in early.</p>
+<div class="flex flex-wrap items-center justify-center gap-3">
+<a class="primary-button glow-button px-5 py-3 rounded-2xl text-black font-semibold transition duration-300" href="mailto:inquiries.rvoinc@execs.com">
+Contact RVO Inc. (inquiries.rvoinc@execs.com)
+</a>
+<button class="px-5 py-3 border border-gray-700 hover:border-red-600 transition-colors duration-200 rounded-2xl text-sm uppercase tracking-wide navigate-link" data-target="home">
+Back to Home
+</button>
+</div>
+</footer>
+<script>
+
+// Firebase V11 Modular Imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import {
+getAuth,
+signInAnonymously,
+signInWithCustomToken,
+onAuthStateChanged,
+signInWithEmailAndPassword,
+createUserWithEmailAndPassword,
+GoogleAuthProvider,
+signInWithPopup,
+getRedirectResult,
+signOut
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+// Import firestore is not needed as data is static for this example, but keep the auth setup.
+
+// ----------------------------------------------------------------------
+// CRITICAL FIX: HARDCODING FIREBASE CONFIG FOR GOOGLE SITES EMBEDS
+// ----------------------------------------------------------------------
+const FIREBASE_CONFIG = {
+// FIREBASE CONFIGURATION PROVIDED BY USER (Placeholder/Fallback):
+apiKey: "AIzaSyATMtyx9nuwIcv-OWODFIQA4NOtDzqTqJc",
+authDomain: "rvoincwebsite.firebaseapp.com",
+projectId: "rvoincwebsite",
+storageBucket: "rvoincwebsite.firebasestorage.app",
+messagingSenderId: "675340459793",
+appId: "1:675340459793:web:89dd0ecce1f1c3ee1336b0"
+};
+
+// Toggle visibility for sections directly from this configuration object
+const SECTION_CONFIG = {
+home: true,
+services: true,
+subscriptions: true,
+"digital-design": true,
+"graphic-design": true,
+affiliates: true,
+"tech-partners": true,
+"business-partners": true,
+"important-links": true,
+"services-coming-soon": true,
+"not-found": true
+};
+
+// This logic ensures we use the canvas global if available, but falls back to the hardcoded config
+const firebaseConfig = (() => {
+if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+try {
+// This block is used in the Canvas environment
+return JSON.parse(__firebase_config);
+} catch (e) {
+console.error("Failed to parse __firebase_config, using hardcoded config.");
+}
+}
+// This block is used when embedded outside of Canvas (like Google Sites)
+if (FIREBASE_CONFIG.apiKey.startsWith("AIzaSyA")) {
+console.warn("Using placeholder Firebase config. Authentication will work but only if you replace the API key with your actual one.");
+}
+return FIREBASE_CONFIG;
+})();
+
+const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+// ----------------------------------------------------------------------
+
+let app = null;
+let auth = null;
+let isLoggedIn = false;
+let currentUser = null;
+let isFirebaseReady = false; // Flag to check if Firebase auth has completed its initial check
+
+// DOM elements
+const authModal = document.getElementById('auth-modal');
+const authStatusBtn = document.getElementById('auth-status-btn');
+const logoutBtn = document.getElementById('logout-btn');
+const authTitle = document.getElementById('auth-title');
+const authSubmitBtn = document.getElementById('auth-submit');
+const authToggleBtn = document.getElementById('auth-toggle');
+const authErrorDiv = document.getElementById('auth-error');
+
+let isSigningUp = false;
+
+// Function to set up Firebase and perform initial authentication
+async function setupFirebase() {
+if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("AIzaSyA")) {
+console.warn("Firebase configuration is potentially incomplete. Auth will proceed with caution.");
+}
+
+try {
+app = initializeApp(firebaseConfig);
+auth = getAuth(app);
+
+// --- 1. HANDLE REDIRECT RESULT (for Google Auth) ---
+const result = await getRedirectResult(auth);
+if (result) {
+console.log("SUCCESS: User returned after Google redirect sign-in:", result.user.email);
+hideAuthModal();
+}
+
+// Initial sign-in with custom token or anonymously
+if (initialAuthToken) {
+await signInWithCustomToken(auth, initialAuthToken).catch(e => console.error("Custom token sign-in failed:", e));
+} else {
+await signInAnonymously(auth).catch(e => console.error("Anonymous sign-in failed:", e));
+}
+
+// Set up Auth State Listener (Modular V11 syntax)
+onAuthStateChanged(auth, (user) => {
+isLoggedIn = !!user && !user.isAnonymous; // Consider only non-anonymous users as 'logged in' for full site features
+currentUser = user;
+isFirebaseReady = true; // Auth check completed
+updateUIForAuthState();
+// CRITICAL: Re-render dynamic content (buttons) on auth state change
+renderServices(allServices);
+renderSubscriptions(subscriptionPlans);
+console.log("Firebase Auth State Changed. User is logged in:", isLoggedIn);
+});
+
+} catch (error) {
+console.error("CRITICAL ERROR: Firebase initialization or initial sign-in failed:", error);
+isFirebaseReady = true;
+}
+}
+
+// --------------------------------------------------------------------------------
+// UI AND AUTHENTICATION HANDLERS
+// --------------------------------------------------------------------------------
+
+function updateUIForAuthState() {
+authStatusBtn.classList.remove('hidden'); // Always show the general button
+authStatusBtn.onclick = null;
+
+if (isLoggedIn) {
+// User is authenticated (Email/Google)
+authStatusBtn.textContent = currentUser.email ? currentUser.email.split('@')[0] : 'Profile';
+authStatusBtn.classList.remove('glow-button', 'text-white');
+authStatusBtn.classList.add('card-bg', 'border', 'border-gray-700', 'text-gray-200');
+authStatusBtn.onclick = () => navigateTo('subscriptions'); // Example: Go to profile/subscriptions
+logoutBtn.classList.remove('hidden');
+} else {
+// User is anonymous or logged out
+authStatusBtn.textContent = 'Sign In';
+authStatusBtn.classList.remove('card-bg', 'border', 'border-gray-700', 'text-gray-200');
+authStatusBtn.classList.add('glow-button', 'text-white');
+authStatusBtn.onclick = showAuthModal;
+logoutBtn.classList.add('hidden');
+}
+}
+
+function showAuthModal(initialError = null) {
+authModal.classList.remove('hidden');
+// Ensure the modal starts in Sign In mode
+isSigningUp = false;
+updateAuthModalUI();
+// Clear general error when modal opens
+authErrorDiv.textContent = '';
+authErrorDiv.classList.remove('text-green-500');
+authErrorDiv.classList.add('text-red-500');
+
+if (initialError) {
+authErrorDiv.textContent = initialError;
+authErrorDiv.classList.remove('hidden');
+} else {
+authErrorDiv.classList.add('hidden');
+}
+}
+
+function hideAuthModal() {
+authModal.classList.add('hidden');
+}
+
+function updateAuthModalUI() {
+authTitle.textContent = isSigningUp ? 'Sign Up' : 'Sign In';
+authSubmitBtn.textContent = isSigningUp ? 'Create Account' : 'Sign In';
+authToggleBtn.textContent = isSigningUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up";
+}
+
+async function handleAuthAction() {
+if (!auth) {
+showAuthError("Firebase is not initialized.");
+return;
+}
+
+const email = document.getElementById('auth-email').value;
+const password = document.getElementById('auth-password').value;
+authErrorDiv.classList.add('hidden');
+
+if (!email || !password) {
+showAuthError("Please enter both email and password.");
+return;
+}
+
+try {
+if (isSigningUp) {
+await createUserWithEmailAndPassword(auth, email, password);
+console.log("Account created and signed in successfully.");
+} else {
+await signInWithEmailAndPassword(auth, email, password);
+console.log("Signed in successfully.");
+}
+hideAuthModal();
+} catch (error) {
+let errorMessage = error.message;
+if (error.code === 'auth/email-already-in-use') {
+errorMessage = 'This email is already in use. Try signing in.';
+} else if (error.code === 'auth/invalid-email') {
+errorMessage = 'The email address is not valid.';
+} else if (error.code === 'auth/weak-password') {
+errorMessage = 'Password should be at least 6 characters.';
+} else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+errorMessage = 'Invalid email or password.';
+}
+showAuthError(errorMessage);
+}
+}
+
+async function handleGoogleSignIn() {
+if (!auth) {
+showAuthError("Firebase is not initialized.");
+return;
+}
+try {
+const provider = new GoogleAuthProvider();
+// Since the environment is an iframe, using signInWithPopup is safer than redirect.
+await signInWithPopup(auth, provider);
+hideAuthModal();
+console.log("Signed in with Google successfully.");
+} catch (error) {
+console.error("Google sign-in failed:", error);
+showAuthError("Google Sign-In failed. Please try again.");
+}
+}
+
+async function handleSignOut() {
+if (auth) {
+try {
+await signOut(auth);
+// Sign in anonymously again to maintain session context
+await signInAnonymously(auth);
+console.log("Signed out and switched to anonymous.");
+navigateTo('home');
+} catch (error) {
+console.error("Sign out failed:", error);
+}
+}
+}
+
+function showAuthError(message) {
+authErrorDiv.textContent = message;
+authErrorDiv.classList.remove('hidden');
+}
+
+// --------------------------------------------------------------------------------
+// PURCHASE & SUBSCRIPTION HANDLERS
+// --------------------------------------------------------------------------------
+
+/**
+* Unified handler for service action buttons (Buy Now or Get Quote)
+*/
+function handleServiceActionUnified(event) {
+const button = event.currentTarget;
+const actionType = button.getAttribute('data-action-type');
+const serviceName = button.getAttribute('data-service-name');
+const stripeLink = button.getAttribute('data-link');
+
+if (!isLoggedIn) {
+showAuthModal("Please sign in to proceed with this service.");
+return;
+}
+
+if (actionType === 'purchase' && stripeLink) {
+// Redirect to Stripe checkout
+window.open(stripeLink, '_blank');
+} else if (actionType === 'quote') {
+// Handle quote request (could open a contact form or modal)
+alert(`Quote requested for: ${serviceName}\n\nPlease contact us via email or our contact form to discuss your project requirements.`);
+}
+}
+
+/**
+* Handler for subscription plan purchase buttons
+*/
+function handleSubscriptionAttempt(event) {
+const button = event.currentTarget;
+const planName = button.getAttribute('data-plan-name');
+const stripeLink = button.getAttribute('data-link');
+
+if (!isLoggedIn) {
+showAuthModal("Please sign in to subscribe to a plan.");
+return;
+}
+
+if (stripeLink) {
+// Redirect to Stripe checkout
+window.open(stripeLink, '_blank');
+} else {
+alert(`Starting ${planName} subscription...\n\nPlease contact us to complete your subscription setup.`);
+}
+}
+
+// --------------------------------------------------------------------------------
+// VIEW SWITCHING LOGIC (Multipage Simulation)
+// --------------------------------------------------------------------------------
+
+function isSectionEnabled(sectionId) {
+if (!sectionId) return false;
+if (Object.prototype.hasOwnProperty.call(SECTION_CONFIG, sectionId)) {
+return SECTION_CONFIG[sectionId];
+}
+return true;
+}
+
+function applySectionConfiguration() {
+Object.entries(SECTION_CONFIG).forEach(([sectionId, isEnabled]) => {
+const section = document.getElementById(sectionId);
+if (section) {
+section.dataset.enabled = String(isEnabled);
+if (!isEnabled) {
+section.classList.add('hidden');
+}
+}
+});
+
+document.querySelectorAll('[data-target]').forEach(element => {
+const targetId = element.getAttribute('data-target');
+if (isSectionEnabled(targetId)) {
+element.classList.remove('hidden');
+element.removeAttribute('disabled');
+element.setAttribute('aria-hidden', 'false');
+} else {
+element.classList.add('hidden');
+element.setAttribute('disabled', 'true');
+element.setAttribute('aria-hidden', 'true');
+}
+});
+}
+
+/**
+* Switches the displayed content section and updates the active navigation link.
+* @param {string} targetId - The ID of the section to display (e.g., 'home', 'services').
+*/
+function navigateTo(targetId) {
+// 1. Hide all content sections before showing the requested view
+document.querySelectorAll('.content-section').forEach(section => {
+section.classList.add('hidden');
+});
+
+const targetSection = document.getElementById(targetId);
+const mainElement = document.querySelector('main');
+const sectionAllowed = isSectionEnabled(targetId);
+
+let resolvedTarget = targetId;
+
+if (targetSection && sectionAllowed) {
+targetSection.classList.remove('hidden');
+if (mainElement) {
+mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+}
+} else {
+resolvedTarget = 'not-found';
+const fallbackSection = document.getElementById('not-found');
+if (fallbackSection && isSectionEnabled('not-found')) {
+fallbackSection.classList.remove('hidden');
+if (mainElement) {
+mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+}
+}
+console.warn(`Attempted to navigate to unknown page ID: ${targetId}`);
+}
+
+// 3. Update active state of navigation links
+document.querySelectorAll('.nav-link').forEach(link => {
+if (link.getAttribute('data-target') === resolvedTarget) {
+link.classList.add('active');
+} else {
+link.classList.remove('active');
+}
+});
+
+// Close mobile menu if open
+const mobileMenu = document.getElementById('mobile-menu');
+if (!mobileMenu.classList.contains('hidden')) {
+mobileMenu.classList.add('hidden');
+}
+}
+
+// --------------------------------------------------------------------------------
+// DATA STRUCTURES (EXPANDED CODING SERVICES WITH STRIPE LINKS)
+// --------------------------------------------------------------------------------
+
+// UPDATED: Added stripeLink to all fixed-price services
+const allServices = [
+// --- Web Frontend ---
+{ id: 1, name: "Responsive Static Website", description: "Full implementation of a modern, fast static site using HTML/CSS/JS.", category: "Web Frontend", tags: ["HTML", "CSS", "JavaScript", "Frontend", "Static"], icon: "monitor", price: "$29.99", stripeLink: "https://buy.stripe.com/cNicN52L06H6cMveTk9EI1D" },
+{ id: 2, name: "React Component Development", description: "Building reusable, optimized components with React and functional hooks.", category: "Web Frontend", tags: ["React", "JavaScript", "Frontend", "Components"], icon: "layout-grid", price: "$35.00", stripeLink: "https://buy.stripe.com/6oUbJ1gBQ6H65k34eG9EI1B" },
+{ id: 3, name: "Angular Module Development", description: "Developing structured modules and components using the Angular framework.", category: "Web Frontend", tags: ["Angular", "TypeScript", "Modules", "Frontend"], icon: "git-fork", price: "$25.00", stripeLink: "https://buy.stripe.com/aFa7sL0CSaXm5k326y9EI1C" },
+{ id: 4, name: "Tailwind CSS Integration", description: "Implementing utility-first styling for rapid, responsive UI design.", category: "Web Frontend", tags: ["Tailwind", "CSS", "Frontend", "Styling"], icon: "palette", price: "$15.00", stripeLink: "https://buy.stripe.com/28EfZh71gaXm7sb7qS9EI1A" },
+{ id: 5, name: "State Management Implementation (Redux/Zustand)", description: "Setting up efficient, predictable state management solutions.", category: "Web Frontend", tags: ["Redux", "Zustand", "React", "State Management"], icon: "pocket", price: "$50.00", stripeLink: "https://buy.stripe.com/28E9ATfxMfdC6o726y9EI1z" },
+{ id: 6, name: "Progressive Web App (PWA) Setup", description: "Enabling offline capabilities and installability for web applications.", category: "Web Frontend", tags: ["PWA", "Web App", "Offline", "Frontend"], icon: "smartphone", price: "$100.00", stripeLink: "https://buy.stripe.com/5kQ3cv99o8PeeUDdPg9EI1y" },
+{ id: 7, name: "Custom JavaScript Utility Libraries", description: "Writing modular, highly optimized vanilla JavaScript functions.", category: "Web Frontend", tags: ["JavaScript", "Library", "Optimization"], icon: "activity", price: "$50.00", stripeLink: "https://buy.stripe.com/5kQ00jbhw8PefYHbH89EI1x" },
+{ id: 8, name: "Web Accessibility (A11y) Audit & Fixes", description: "Ensuring WCAG compliance for an inclusive user experience.", category: "Web Frontend", tags: ["Accessibility", "A11y", "Frontend", "WCAG"], icon: "eye", price: "$199.00", stripeLink: "https://buy.stripe.com/eVq5kDetI2qQaEnfXo9EI1w" },
+{ id: 9, name: "Next.js/Gatsby Static Site Generation (SSG)", description: "Building highly performant, SEO-friendly static sites using modern frameworks.", category: "Web Frontend", tags: ["Next.js", "Gatsby", "Static Site", "Frontend"], icon: "cpu", price: "$70.00", stripeLink: "https://buy.stripe.com/fZu7sL0CSc1qfYH9z09EI1v" },
+{ id: 10, name: "Web Performance Optimization (Core Web Vitals)", description: "Improving loading speed, interactivity, and visual stability for high scores.", category: "Web Frontend", tags: ["Performance", "SEO", "Core Web Vitals"], icon: "zap", price: "$49.00", stripeLink: "https://buy.stripe.com/aFa8wP99o2qQ3bVfXo9EI1u" },
+{ id: 11, name: "Advanced CSS/SVG Animation (GSAP/Framer)", description: "Creating smooth, complex motion graphics and interactive UI elements.", category: "Web Frontend", tags: ["Animation", "CSS", "SVG", "GSAP", "Framer"], icon: "sparkles", price: "$100.00", stripeLink: "https://buy.stripe.com/8x26oH85k7La3bVaD49EI1t" },
+{ id: 12, name: "Cross-Browser Compatibility Testing", description: "Ensuring consistent functionality and display across all major browsers.", category: "Web Frontend", tags: ["Testing", "Cross-Browser", "Compatibility"], icon: "globe", price: "$40.00", stripeLink: "https://buy.stripe.com/00w14n0CS6H63bVcLc9EI1s" },
+{ id: 13, name: "Component Library Development (Storybook)", description: "Creating a centralized, documented system for UI component design.", category: "Web Frontend", tags: ["Storybook", "UI Library", "Documentation"], icon: "book-open", price: "$349", stripeLink: "https://buy.stripe.com/00w9AT4T8d5ubIr7qS9EI1r" },
+
+// --- Backend & API ---
+{ id: 14, name: "Node.js/Express API Development", description: "Building fast and scalable RESTful APIs using the Node.js ecosystem.", category: "Web Backend", tags: ["Node.js", "Express", "API", "Backend"], icon: "server", price: "$100", stripeLink: "https://buy.stripe.com/8x27sL85kghGfYH4eG9EI1q" },
+{ id: 15, name: "Python/Django Backend Development", description: "Creating robust, secure web backends with Django or Flask.", category: "Web Backend", tags: ["Python", "Django", "Flask", "Backend"], icon: "terminal", price: "$120", stripeLink: "https://buy.stripe.com/7sY00jclA5D2bIrcLc9EI1p" },
+{ id: 16, name: "Microservice Architecture Design", description: "Breaking down monolithic applications into scalable, independent services.", category: "Web Backend", tags: ["Microservices", "Architecture", "Backend"], icon: "hexagon", price: "$500", stripeLink: "https://buy.stripe.com/fZucN52L05D24fZcLc9EI1o" },
+{ id: 17, name: "GraphQL Endpoint Implementation", description: "Developing efficient data querying layers with GraphQL.", category: "Web Backend", tags: ["GraphQL", "API", "Backend"], icon: "link", price: "$75", stripeLink: "https://buy.stripe.com/cNi28r71g7La9AjbH89EI1n" },
+{ id: 18, name: "Serverless Function Deployment (AWS Lambda/Firebase)", description: "Setting up event-driven serverless backends for cost efficiency.", category: "Web Backend", tags: ["Serverless", "AWS", "Firebase"], icon: "cloud", price: "$70", stripeLink: "https://buy.stripe.com/14A8wPbhw7La13N8uW9EI1m" },
+{ id: 19, name: "Authentication and Authorization Setup (OAuth/JWT)", description: "Implementing secure user login and role-based access control.", category: "Web Backend", tags: ["OAuth", "JWT", "Auth", "Security"], icon: "lock", price: "$50", stripeLink: "https://buy.stripe.com/3cI6oHetI6H6fYHcLc9EI1l" },
+{ id: 20, name: "Third-Party API Integration", description: "Connecting your system to external services (e.g., payment, weather, map APIs).", category: "Web Backend", tags: ["API", "Integration", "Backend"], icon: "plug", price: "$199", stripeLink: "https://buy.stripe.com/7sY14netI0iI4fZcLc9EI1k" },
+{ id: 21, name: "(Currently Not Available) Real-time Communication (WebSockets)", description: "Implementing live updates and chat functionality.", category: "Web Backend", tags: ["WebSockets", "Realtime", "Chat"], icon: "message-square", price: "Not Available", stripeLink: null },
+{ id: 22, name: "API Documentation (Swagger/OpenAPI)", description: "Creating clear, interactive documentation for your endpoints.", category: "Web Backend", tags: ["Swagger", "OpenAPI", "Docs"], icon: "book-open", price: "$50", stripeLink: "https://buy.stripe.com/8x25kDclA7La13NeTk9EI1j" },
+
+// --- Database ---
+{ id: 23, name: "SQL Database Design & Normalization", description: "Designing optimal schemas for PostgreSQL, MySQL, or SQL Server.", category: "Database", tags: ["SQL", "PostgreSQL", "MySQL", "Schema"], icon: "database", price: "$199", stripeLink: "https://buy.stripe.com/9B6cN5clAghGcMvcLc9EI1i" },
+{ id: 24, name: "NoSQL Schema Design (MongoDB/Firebase)", description: "Structuring flexible and performant NoSQL data models.", category: "Database", tags: ["NoSQL", "MongoDB", "Firebase"], icon: "layers", price: "$100", stripeLink: "https://buy.stripe.com/bJe00jclA5D26o79z09EI1h" },
+{ id: 25, name: "ETL Pipeline Development", description: "Building data extraction, transformation, and loading processes.", category: "Database", tags: ["ETL", "Data", "Pipeline"], icon: "box", price: "$155", stripeLink: "https://buy.stripe.com/fZu6oH1GW0iI3bVaD49EI1g" },
+
+// --- Mobile ---
+{ id: 26, name: "React Native Feature Implementation", description: "Adding cross-platform features to existing or new React Native apps.", category: "Mobile", tags: ["React Native", "Mobile", "Cross Platform"], icon: "app-window", price: "$100", stripeLink: "https://buy.stripe.com/8x228r71g4yY5k3cLc9EI1d" },
+{ id: 27, name: "Flutter UI/Logic Development", description: "Building beautiful and performant mobile UIs with Flutter (Dart).", category: "Mobile", tags: ["Flutter", "Dart", "UI", "Mobile"], icon: "tablet", price: "$299", stripeLink: "https://buy.stripe.com/3cI28r71g9Tih2Lh1s9EI1e" },
+{ id: 28, name: "Mobile Push Notification Setup", description: "Integrating Firebase Cloud Messaging (FCM) or similar services.", category: "Mobile", tags: ["Notifications", "Mobile", "Firebase"], icon: "bell", price: "$199", stripeLink: "https://buy.stripe.com/cNi8wPbhwghG27R8uW9EI1f" },
+
+// --- Game Development ---
+{ id: 29, name: "Unity Engine 2D/3D Scene Setup", description: "Initial scene, camera, and asset integration in the Unity environment. (Assets must be provided by client.)", category: "Game Dev", tags: ["Unity", "C#", "2D", "3D", "Game"], icon: "gamepad-2", price: "$200", stripeLink: "https://buy.stripe.com/4gM4gzclA4yY3bV7qS9EI1c" },
+{ id: 30, name: "C# Game Logic Scripting", description: "Writing core game mechanics and systems in optimized C# scripts.", category: "Game Dev", tags: ["Unity", "C#", "Game Logic"], icon: "code", price: "$299", stripeLink: "https://buy.stripe.com/6oU3cvgBQ5D2fYH6mO9EI1b" },
+{ id: 31, name: "Basic Multiplayer Networking Setup", description: "Implementing simple peer-to-peer or server-authoritative connections.", category: "Game Dev", tags: ["Networking", "Multiplayer", "Unity"], icon: "users", price: "$500", stripeLink: "https://buy.stripe.com/fZubJ1fxMfdC5k3eTk9EI1a" },
+
+// --- Consulting ---
+{ id: 32, name: "Technical Consulting Session", description: "One-on-one session for technical roadmap planning and architecture guidance.", category: "Consulting", tags: ["Consulting", "Architecture", "Planning"], icon: "brain", price: "FREE", stripeLink: "https://buy.stripe.com/00w14nclAghGfYH5iK9EI19" },
+{ id: 33, name: "In-Depth Code Review & Refactoring", description: "Thorough review for best practices, security, and performance improvements.", category: "Consulting", tags: ["Code Review", "Security", "Optimization"], icon: "file-check", price: "$30 / Hour", stripeLink: "https://buy.stripe.com/5kQdR94T85D27sbdPg9EI18" },
+{ id: 34, name: "Security Vulnerability Patching", description: "Addressing common security issues like XSS, CSRF, and SQL injection.", category: "Consulting", tags: ["Security", "Vulnerability", "Fix"], icon: "bug", price: "$50 / hour", stripeLink: "https://mock-stripe.com/buy/rvo-security-299" }
+];
+
+
+// Digital Design Services Data
+const digitalDesignData = [
+{ id: 1, name: "RVO GridLine", description: "Architected channel layouts designed for flow, clarity, and visual precision.", category: "Structure", tags: ["Channels","Layout","Organization","Structure"], icon: "grid", price: "$0.75 / channel", stripeLink: "https://buy.stripe.com/mock-gridline" },
+{ id: 2, name: "RVO TierForge", description: "Dynamic, color-coded role hierarchy for staff, boosters, and members.", category: "Roles", tags: ["Roles","Permissions","Hierarchy","Design"], icon: "shield", price: "$0.50 / role", stripeLink: "https://buy.stripe.com/mock-tierforge" },
+{ id: 3, name: "RVO PermiCore", description: "Complete channel permission cleanup and security setup with logging.", category: "Security", tags: ["Permissions","Security","Access","Setup"], icon: "lock", price: "$0.25 / permission set", stripeLink: "https://buy.stripe.com/mock-permicore" },
+{ id: 4, name: "RVO BotForge", description: "Professional Discord bot setup and integration with custom commands.", category: "Automation", tags: ["Bots","Automation","Setup","Integration"], icon: "cpu", price: "$1.00 / bot", stripeLink: "https://buy.stripe.com/mock-botforge" },
+{ id: 5, name: "RVO SyncFlow", description: "Automated server workflows from welcome triggers to XP systems.", category: "Automation", tags: ["Automation","Bot","XP","Roles"], icon: "repeat", price: "$0.75 / feature", stripeLink: "https://buy.stripe.com/mock-syncflow" },
+{ id: 6, name: "RVO VibeFrame", description: "Visual styling for your server including emojis, colors, and layout.", category: "Design", tags: ["Branding","Style","Color","Aesthetic"], icon: "palette", price: "$0.75 / element", stripeLink: "https://buy.stripe.com/mock-vibeframe" },
+{ id: 7, name: "RVO EchoSet", description: "Custom identity package including icons, banners, and emoji design.", category: "Design", tags: ["Branding","Identity","Assets","Graphics"], icon: "image", price: "$1.00 / asset", stripeLink: "https://buy.stripe.com/mock-echoset" },
+{ id: 8, name: "RVO SentinelCore", description: "Protection layers and anti-raid configuration for secure servers.", category: "Security", tags: ["Security","Protection","Verification","Logging"], icon: "shield-check", price: "$0.75 / layer", stripeLink: "https://buy.stripe.com/mock-sentinelcore" },
+{ id: 9, name: "RVO ModStack", description: "Staff and moderation system setup with logs, tickets, and templates.", category: "Security", tags: ["Moderation","Staff","Logs","Tickets"], icon: "tools", price: "$1.00 / module", stripeLink: "https://buy.stripe.com/mock-modstack" },
+{ id: 10, name: "RVO BoostNet", description: "Engagement systems including invite tracking, XP roles, and leaderboards.", category: "Engagement", tags: ["Growth","XP","Leaderboard","Invites"], icon: "rocket", price: "$0.75 / feature", stripeLink: "https://buy.stripe.com/mock-boostnet" },
+{ id: 11, name: "RVO SupportLink", description: "Ticket system setup for support, orders, and feedback.", category: "Engagement", tags: ["Support","Tickets","Moderation","Workflow"], icon: "ticket", price: "$1.00 / ticket type", stripeLink: "https://buy.stripe.com/mock-supportlink" },
+{ id: 12, name: "RVO EventPulse", description: "Event automation and announcement system with reminders and embeds.", category: "Engagement", tags: ["Events","Automation","Reminders","Community"], icon: "calendar", price: "$0.50 / event", stripeLink: "https://buy.stripe.com/mock-eventpulse" },
+{ id: 13, name: "RVO NexusPrime", description: "Complete modular server system combining structure, automation, and design.", category: "Integrated", tags: ["FullServer","Automation","Design","Structure"], icon: "server", price: "$0.50 / element", stripeLink: "https://buy.stripe.com/mock-nexusprime" },
+{ id: 14, name: "RVO CustomForge", description: "Custom-built Discord ecosystem designed from scratch for brands or large communities.", category: "Integrated", tags: ["Custom","FullServer","Brand","Automation"], icon: "hammer", price: "$0.25 / configured item", stripeLink: "https://buy.stripe.com/mock-customforge" }
+];
+
+// Graphic Design Services Data
+const graphicDesignData = [
+{ id: 1, name: "Logo Design Package", description: "Complete logo design including concept development, multiple variations, and final files.", category: "Branding", tags: ["Logo", "Branding", "Identity"], icon: "circle", price: "$199.00", stripeLink: "https://buy.stripe.com/mock-graphic-1" },
+];
+
+const subscriptionPlans = [
+{
+name: "Silver VIP (Starter)",
+price: 15000,
+description: "Perfect for MVPs and small projects. Includes 40 hours of development per month.",
+features: ["40 Dev Hours/Mo", "Basic Code Review", "Email Support", "1 Active Project"],
+icon: "zap",
+color: "text-green-400",
+tagline: "Minimum Viable Product",
+stripeLink: "https://buy.stripe.com/4gMaEXbhwc1q9AjfXo9EI16",
+tagLabel: "Best Entry Package",
+tagVariant: "tertiary"
+},
+{
+name: "Gold VIP (Professional)",
+price: 40000,
+description: "Our most popular plan. Ideal for growing businesses needing dedicated support.",
+features: ["160 Dev Hours/Mo", "Dedicated Team Lead", "Priority Support (Slack)", "2 Active Projects", "CI/CD Setup"],
+icon: "trending-up",
+color: "text-red-400",
+isFeatured: true,
+tagline: "Dedicated Support Team",
+stripeLink: "https://buy.stripe.com/5kQfZh99o9Ti8wf7qS9EI15",
+tagLabel: "Recommended",
+tagVariant: "secondary"
+},
+{
+name: "Platinum VIP (Enterprise)",
+price: 105000,
+description: "Full-scale solution for complex, mission-critical projects and large teams.",
+features: ["320 Dev Hours/Mo", "Very Fast Premium Support (Under 5 Hours Response)", "On-demand Scaling", "Unlimited Projects"],
+icon: "shield",
+color: "text-blue-400",
+tagline: "Scalable Mission-Critical",
+stripeLink: "https://buy.stripe.com/bJeeVd0CS1mM8wffXo9EI14",
+tagLabel: "Ultimate Control",
+tagVariant: ""
+},
+{
+name: "RVO Pulse (Starter)",
+price: 500,
+description: "Entry-level management for small Discord servers or startup communities.",
+features: ["Monthly Optimization Check", "Bot & Role Maintenance", "Basic Security Monitoring", "Email Support"],
+icon: "activity",
+color: "text-green-400",
+tagline: "For Growing Communities",
+stripeLink: "https://buy.stripe.com/mock-rvo-pulse",
+tagLabel: "Best for Starters",
+tagVariant: "tertiary"
+},
+{
+name: "RVO Sync (Standard)",
+price: 1200,
+description: "Automation and moderation support with smart server workflows and updates.",
+features: ["Auto-Moderation Management", "Monthly System Updates", "Bot Feature Expansion", "Priority Email Support"],
+icon: "repeat",
+color: "text-yellow-400",
+tagline: "Automation for All",
+stripeLink: "https://buy.stripe.com/mock-rvo-sync",
+tagLabel: "Popular Choice",
+tagVariant: "secondary"
+},
+{
+name: "RVO Sentinel (Security+)",
+price: 2500,
+description: "Advanced server protection and moderation automation for high-activity communities.",
+features: ["Raid & Spam Defense", "Custom Logging System", "24/7 Monitoring Alerts", "Incident Response Support"],
+icon: "shield-check",
+color: "text-red-400",
+tagline: "Stay Secure & Stable",
+stripeLink: "https://buy.stripe.com/mock-rvo-sentinel",
+tagLabel: "Enhanced Protection",
+tagVariant: "secondary"
+},
+{
+name: "RVO Nexus (Professional)",
+price: 5000,
+description: "Full professional Discord management for content creators and brands.",
+features: ["Full Automation Suite", "Monthly Brand Alignment Audit", "Custom Command Integration", "Dedicated Support Channel"],
+icon: "server",
+color: "text-blue-400",
+tagline: "Premium Server Management",
+stripeLink: "https://buy.stripe.com/mock-rvo-nexus",
+tagLabel: "Recommended",
+tagVariant: "primary",
+isFeatured: true
+},
+{
+name: "RVO Ascend (Elite)",
+price: 10000,
+description: "Comprehensive management, branding, and event automation for large-scale or verified communities.",
+features: ["All Nexus Features", "Custom Events & Giveaways", "Role Economy & Tier System", "Direct 1-on-1 Support"],
+icon: "trending-up",
+color: "text-purple-400",
+tagline: "Built for Big Servers",
+stripeLink: "https://buy.stripe.com/mock-rvo-ascend",
+tagLabel: "Elite Tier",
+tagVariant: "accent"
+},
+{
+name: "RVO Infinity (Enterprise)",
+price: 25000,
+description: "White-glove, fully managed Discord operations for enterprises, agencies, and global communities.",
+features: ["Unlimited Support Access", "Custom Bot Dev Integration", "Quarterly Redesign & Audit", "24/7 Emergency Admin Access"],
+icon: "infinity",
+color: "text-cyan-400",
+tagline: "Complete Discord Infrastructure",
+stripeLink: "https://buy.stripe.com/mock-rvo-infinity",
+tagLabel: "Ultimate Control",
+tagVariant: "premium"
+}
+];
+// --------------------------------------------------------------------------------
+// DYNAMIC CONTENT RENDERING AND PURCHASE LOGIC
+// --------------------------------------------------------------------------------
+// ---------- Simple, robust discount applicator (no colors) ----------
+const DISCOUNT_PERCENT = 20; // change this value to edit the discount
+
+function applyDiscountToServices(services) {
+services.forEach(s => {
+const p = s.price;
+
+// If price is a string that contains a dollar sign, try parse a number
+if (typeof p === "string" && p.includes("$")) {
+const num = parseFloat(p.replace(/[^0-9.]/g, ""));
+if (!isNaN(num)) {
+const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
+s.displayPrice = `
+<div class="price-stack">
+<span class="price-old">$${num.toFixed(2)}</span>
+<span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+<span class="price-new">$${discounted.toFixed(2)}</span>
+</div>
+`;
+} else {
+// preserve text like "FREE" or unexpected formats
+s.displayPrice = `<span class="price-new">${p}</span>`;
+}
+
+} else if (typeof p === "number") {
+// If someone used a number (assume dollars)
+const discounted = +(p * (1 - DISCOUNT_PERCENT / 100));
+s.displayPrice = `
+<div class="price-stack">
+<span class="price-old">$${p.toFixed(2)}</span>
+<span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+<span class="price-new">$${discounted.toFixed(2)}</span>
+</div>
+`;
+} else {
+// fallback for NOT available, null, or other types
+s.displayPrice = `<span class="price-new">${p ?? 'N/A'}</span>`;
+}
+});
+}
+
+function applyDiscountToPlans(plans) {
+plans.forEach(plan => {
+const p = plan.price;
+
+// Your plans use cents (e.g. 15000 = $150.00). Only treat numeric plan.price as cents.
+if (typeof p === "number") {
+const originalDollars = p / 100;
+const discounted = +(originalDollars * (1 - DISCOUNT_PERCENT / 100));
+plan.displayPrice = `
+<div class="price-stack">
+<span class="price-old">$${originalDollars.toFixed(2)}</span>
+<span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+<span class="price-new">$${discounted.toFixed(2)}</span>
+</div>
+`;
+} else if (typeof p === "string" && p.includes("$")) {
+// In case any plan used a dollar string instead of cents
+const num = parseFloat(p.replace(/[^0-9.]/g, ""));
+if (!isNaN(num)) {
+const discounted = +(num * (1 - DISCOUNT_PERCENT / 100));
+plan.displayPrice = `
+<div class="price-stack">
+<span class="price-old">$${num.toFixed(2)}</span>
+<span class="price-badge">${DISCOUNT_PERCENT}% Off</span>
+<span class="price-new">$${discounted.toFixed(2)}</span>
+</div>
+`;
+} else {
+plan.displayPrice = `<span class="price-new">${p}</span>`;
+}
+} else {
+plan.displayPrice = `<span class="price-new">${p ?? 'N/A'}</span>`;
+}
+});
+}
+
+// Run the functions (make sure this runs after arrays are defined)
+applyDiscountToServices(allServices);
+applyDiscountToServices(digitalDesignData);
+applyDiscountToServices(graphicDesignData);
+applyDiscountToPlans(subscriptionPlans);
+
+// Optional quick debug to confirm values (open browser console)
+console.log("example service displayPrice:", allServices[0]?.displayPrice);
+console.log("example plan displayPrice:", subscriptionPlans[0]?.displayPrice);
+
+
+/**
+* Renders the list of services based on current search and filter criteria.
+*/
+function renderServices(servicesToRender, listId = 'service-list', noResultsId = 'no-results') {
+const serviceList = document.getElementById(listId);
+const noResults = document.getElementById(noResultsId);
+serviceList.innerHTML = '';
+
+if (servicesToRender.length === 0) {
+noResults.classList.remove('hidden');
+} else {
+noResults.classList.add('hidden');
+}
+
+servicesToRender.forEach(service => {
+const priceString = typeof service.price === 'string' ? service.price.toLowerCase() : String(service.price || '').toLowerCase();
+const isFixedPrice = Boolean(service.stripeLink) && !priceString.includes('quote') && !priceString.includes('hour') && !priceString.includes('not available');
+
+const actionType = isFixedPrice ? 'purchase' : 'quote';
+const baseButtonText = isFixedPrice ? 'Buy Now' : 'Get Quote';
+const loginPrefix = isFixedPrice ? 'Buy' : 'Quote';
+
+const buttonText = isLoggedIn ? baseButtonText : `Log In to ${loginPrefix}`;
+const buttonClasses = isLoggedIn
+? (isFixedPrice
+? 'service-action-btn primary-button glow-button px-5 py-2.5 text-sm font-semibold rounded-xl transition duration-300'
+: 'service-action-btn glow-button text-white px-5 py-2.5 text-sm font-semibold rounded-xl transition duration-300')
+: 'service-action-btn card-bg px-5 py-2.5 text-sm font-semibold rounded-xl border border-gray-700 text-gray-400 cursor-not-allowed transition duration-300';
+
+const buttonAttributes = isFixedPrice
+? `data-link="${service.stripeLink}" data-service-name="${service.name}"`
+: `data-service-name="${service.name}"`;
+
+const tagsHtml = service.tags.map(tag =>
+`<span class="neon-chip text-xs uppercase tracking-wide">${tag}</span>`
+).join('');
+
+const priceDisplay = service.displayPrice || `<span class="price-new">${service.price}</span>`;
+
+const cardHtml = `
+<div class="card-bg neon-panel p-6 rounded-3xl shadow-xl relative overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-neon flex flex-col">
+<span class="neon-grid"></span>
+<div class="flex items-center mb-4 relative z-10">
+<i data-lucide="${service.icon}" class="w-8 h-8 ${service.color || 'text-cyan-300'} mr-3"></i>
+<h3 class="text-xl font-bold text-white">${service.name}</h3>
+</div>
+<p class="text-gray-400 mb-4 flex-grow relative z-10">${service.description}</p>
+<div class="flex flex-wrap gap-2 mb-4 relative z-10">
+${tagsHtml}
+</div>
+<div class="mt-auto pt-4 border-t border-gray-800 flex justify-between items-center gap-3 relative z-10 flex-wrap">
+${priceDisplay}
+<button class="${buttonClasses}"
+data-action-type="${actionType}"
+${buttonAttributes}
+${isLoggedIn ? '' : 'title="You must sign in to proceed"'}
+>
+${buttonText}
+</button>
+</div>
+</div>
+`;
+serviceList.insertAdjacentHTML('beforeend', cardHtml);
+});
+
+// Attach unified event listener for all service action buttons
+document.querySelectorAll('.service-action-btn').forEach(button => {
+// Clear old listeners before adding new ones
+button.removeEventListener('click', handleServiceActionUnified);
+button.addEventListener('click', handleServiceActionUnified);
+});
+
+// Re-initialize Lucide icons for newly added elements
+lucide.createIcons();
+}
+
+/**
+* Filters the allServices array based on search text and selected category.
+*/
+function filterServices() {
+const searchText = document.getElementById('service-search').value.toLowerCase();
+const filterCategory = document.getElementById('service-filter').value;
+
+const filteredServices = allServices.filter(service => {
+const matchesSearch = service.name.toLowerCase().includes(searchText) ||
+service.description.toLowerCase().includes(searchText) ||
+service.tags.some(tag => tag.toLowerCase().includes(searchText));
+
+const matchesCategory = filterCategory === 'all' || service.category === filterCategory;
+
+return matchesSearch && matchesCategory;
+});
+
+renderServices(filteredServices);
+}
+
+/**
+* Filters the digitalDesignData array based on search text and selected category.
+*/
+function filterDigitalDesignServices() {
+const searchText = document.getElementById('digital-design-search').value.toLowerCase();
+const filterCategory = document.getElementById('digital-design-filter').value;
+
+const filteredServices = digitalDesignData.filter(service => {
+const matchesSearch = service.name.toLowerCase().includes(searchText) ||
+service.description.toLowerCase().includes(searchText) ||
+service.tags.some(tag => tag.toLowerCase().includes(searchText));
+
+const matchesCategory = filterCategory === 'all' || service.category === filterCategory;
+
+return matchesSearch && matchesCategory;
+});
+
+renderServices(filteredServices, 'digital-design-list', 'digital-design-no-results');
+}
+
+/**
+* Filters the graphicDesignData array based on search text and selected category.
+*/
+function filterGraphicDesignServices() {
+const searchText = document.getElementById('graphic-design-search').value.toLowerCase();
+const filterCategory = document.getElementById('graphic-design-filter').value;
+
+const filteredServices = graphicDesignData.filter(service => {
+const matchesSearch = service.name.toLowerCase().includes(searchText) ||
+service.description.toLowerCase().includes(searchText) ||
+service.tags.some(tag => tag.toLowerCase().includes(searchText));
+
+const matchesCategory = filterCategory === 'all' || service.category === filterCategory;
+
+return matchesSearch && matchesCategory;
+});
+
+renderServices(filteredServices, 'graphic-design-list', 'graphic-design-no-results');
+}
+
+/**
+* Populates the filter dropdown with unique categories for digital design services.
+*/
+function populateDigitalDesignCategoryFilter() {
+const filterSelect = document.getElementById('digital-design-filter');
+const categories = [...new Set(digitalDesignData.map(service => service.category))];
+
+categories.forEach(category => {
+const option = document.createElement('option');
+option.value = category;
+option.textContent = category;
+filterSelect.appendChild(option);
+});
+
+// Add event listeners for filtering
+document.getElementById('digital-design-search').addEventListener('input', filterDigitalDesignServices);
+document.getElementById('digital-design-filter').addEventListener('change', filterDigitalDesignServices);
+}
+
+/**
+* Populates the filter dropdown with unique categories for graphic design services.
+*/
+function populateGraphicDesignCategoryFilter() {
+const filterSelect = document.getElementById('graphic-design-filter');
+const categories = [...new Set(graphicDesignData.map(service => service.category))];
+
+categories.forEach(category => {
+const option = document.createElement('option');
+option.value = category;
+option.textContent = category;
+filterSelect.appendChild(option);
+});
+
+// Add event listeners for filtering
+document.getElementById('graphic-design-search').addEventListener('input', filterGraphicDesignServices);
+document.getElementById('graphic-design-filter').addEventListener('change', filterGraphicDesignServices);
+}
+
+/**
+* Populates the filter dropdown with unique categories.
+*/
+function populateCategoryFilter() {
+const filterSelect = document.getElementById('service-filter');
+const categories = [...new Set(allServices.map(service => service.category))];
+
+categories.forEach(category => {
+const option = document.createElement('option');
+option.value = category;
+option.textContent = category;
+filterSelect.appendChild(option);
+});
+
+// Add event listeners for filtering
+document.getElementById('service-search').addEventListener('input', filterServices);
+document.getElementById('service-filter').addEventListener('change', filterServices);
+}
+
+/**
+* Renders the subscription plans grid.
+*/
+function renderSubscriptions(plans) {
+const subscriptionPlansDiv = document.getElementById('subscription-plans');
+subscriptionPlansDiv.innerHTML = '';
+
+plans.forEach(plan => {
+const isFeatured = plan.isFeatured ? 'ring-2 ring-offset-2 ring-offset-transparent ring-cyan-400/60' : '';
+const tagClass = `subscription-tag ${plan.tagVariant || ''}`.trim();
+const tagHtml = plan.tagLabel ? `<span class="${tagClass}">${plan.tagLabel}</span>` : '';
+
+const buttonText = isLoggedIn ? `Start ${plan.name} Plan` : 'Log In to Subscribe';
+const buttonClasses = isLoggedIn
+? (plan.isFeatured
+? 'purchase-btn primary-button glow-button w-full py-3 font-semibold rounded-xl transition duration-300'
+: 'purchase-btn glow-button w-full py-3 font-semibold rounded-xl transition duration-300')
+: 'purchase-btn card-bg w-full py-3 font-semibold rounded-xl border border-gray-700 text-gray-400 cursor-not-allowed transition duration-300';
+
+const featuresHtml = plan.features.map(feature =>
+`<li class="flex items-center text-gray-300 gap-2">
+<i data-lucide="check" class="w-4 h-4 text-emerald-400 flex-shrink-0"></i>
+<span>${feature}</span>
+</li>`
+).join('');
+
+const priceHtml = plan.displayPrice || `
+<div class="price-stack">
+<span class="price-new">$${(plan.price / 100).toFixed(plan.price % 100 === 0 ? 0 : 2)}</span>
+</div>
+`;
+
+const planHtml = `
+<div class="relative">
+${tagHtml}
+<div class="card-bg neon-panel p-8 rounded-3xl shadow-2xl transition duration-300 hover:-translate-y-1 hover:shadow-neon flex flex-col relative overflow-hidden ${isFeatured}">
+<span class="neon-grid"></span>
+<div class="mb-6 relative z-10">
+<p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-200/80">${plan.tagline}</p>
+<h3 class="text-3xl font-bold text-white mt-3">${plan.name}</h3>
+<p class="text-gray-400 mt-3 leading-relaxed">${plan.description}</p>
+</div>
+<div class="mb-6 relative z-10">
+${priceHtml}
+<span class="text-sm text-gray-500 block mt-1 uppercase tracking-widest">Per Month</span>
+</div>
+
+<ul class="flex-grow mb-8 relative z-10 space-y-2">
+${featuresHtml}
+</ul>
+
+<button
+class="${buttonClasses} relative z-10"
+data-link="${plan.stripeLink}"
+data-plan-name="${plan.name}"
+${isLoggedIn ? '' : 'title="You must sign in to subscribe"'}
+>
+${buttonText}
+</button>
+</div>
+</div>
+`;
+subscriptionPlansDiv.insertAdjacentHTML('beforeend', planHtml);
+});
+
+// Attach event listeners to the new buttons
+document.querySelectorAll('.purchase-btn').forEach(button => {
+button.removeEventListener('click', handleSubscriptionAttempt);
+button.addEventListener('click', handleSubscriptionAttempt);
+});
+
+lucide.createIcons();
+}
+
+// --------------------------------------------------------------------------------
+// AFFILIATE & PARTNERSHIP MODAL & DISCORD WEBHOOK FUNCTIONS
+// --------------------------------------------------------------------------------
+
+// Discord Webhook URL - Replace with your actual webhook URL
+const DISCORD_WEBHOOK_URL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
+const PARTNERSHIP_DISCORD_WEBHOOK_URL = 'YOUR_PARTNERSHIP_DISCORD_WEBHOOK_URL_HERE';
+
+const affiliateModal = document.getElementById('affiliate-modal');
+const affiliateForm = document.getElementById('affiliate-form');
+const affiliateError = document.getElementById('affiliate-error');
+const successPopup = document.getElementById('success-popup');
+
+const partnershipModal = document.getElementById('partnership-modal');
+const partnershipForm = document.getElementById('partnership-form');
+const partnershipError = document.getElementById('partnership-error');
+
+function showAffiliateModal() {
+// Check if user is logged in
+if (!isLoggedIn) {
+showAuthModal("Please sign in to join our affiliate program.");
+return;
+}
+
+affiliateModal.classList.remove('hidden');
+lucide.createIcons(); // Refresh icons for the help-circle icon
+}
+
+function hideAffiliateModal() {
+affiliateModal.classList.add('hidden');
+affiliateForm.reset();
+affiliateError.classList.add('hidden');
+}
+
+function showSuccessPopup() {
+successPopup.classList.remove('hidden');
+lucide.createIcons(); // Refresh icons for the check-circle icon
+}
+
+function hideSuccessPopup() {
+successPopup.classList.add('hidden');
+}
+
+function showAffiliateError(message) {
+affiliateError.textContent = message;
+affiliateError.classList.remove('hidden');
+}
+
+// --------------------------------------------------------------------------------
+// PARTNERSHIP MODAL FUNCTIONS
+// --------------------------------------------------------------------------------
+
+function showPartnershipModal() {
+// Check if user is logged in
+if (!isLoggedIn) {
+showAuthModal("Please sign in to apply for a business partnership.");
+return;
+}
+
+partnershipModal.classList.remove('hidden');
+partnershipError.classList.add('hidden');
+lucide.createIcons(); // Refresh icons
+}
+
+function hidePartnershipModal() {
+partnershipModal.classList.add('hidden');
+partnershipForm.reset();
+partnershipError.classList.add('hidden');
+// Hide conditional field
+document.getElementById('partner-list-container').style.display = 'none';
+}
+
+function showPartnershipError(message) {
+partnershipError.textContent = message;
+partnershipError.classList.remove('hidden');
+}
+
+function hidePartnershipSuccessPopup() {
+hideSuccessPopup(); // Reuse the same success popup
+}
+
+/**
+* Handles the conditional display of the partner list field
+*/
+function handlePreviousPartnershipsChange(event) {
+const partnerListContainer = document.getElementById('partner-list-container');
+const selectedValue = event.target.value;
+
+if (selectedValue === 'Yes') {
+partnerListContainer.style.display = 'block';
+} else {
+partnerListContainer.style.display = 'none';
+// Clear the textarea if hiding
+document.getElementById('partner-list').value = '';
+}
+}
+
+/**
+* Collects all checkbox values for a given name
+*/
+function getCheckboxValues(name) {
+const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+return Array.from(checkboxes).map(cb => cb.value);
+}
+
+/**
+* Gets the selected radio button value for a given name
+*/
+function getRadioValue(name) {
+const radio = document.querySelector(`input[name="${name}"]:checked`);
+return radio ? radio.value : '';
+}
+
+/**
+* Submits the partnership application form
+*/
+async function submitPartnershipForm(event) {
+event.preventDefault();
+partnershipError.classList.add('hidden');
+
+// Collect all form data
+const formData = {
+// Basic Information
+name: document.getElementById('partner-name').value.trim(),
+contact: document.getElementById('partner-contact').value.trim(),
+location: document.getElementById('partner-location').value.trim(),
+website: document.getElementById('partner-website').value.trim(),
+source: document.getElementById('partner-source').value,
+
+// Background & Experience
+specialization: document.getElementById('partner-specialization').value.trim(),
+duration: document.getElementById('partner-duration').value,
+audience: document.getElementById('partner-audience').value.trim(),
+previousPartnerships: getRadioValue('partner-previous'),
+partnerList: document.getElementById('partner-list').value.trim() || 'N/A',
+
+// Goals & Intentions
+goals: document.getElementById('partner-goals').value.trim(),
+expectations: document.getElementById('partner-expectations').value.trim(),
+valueOffered: getCheckboxValues('partner-value'),
+collaborationTerm: getRadioValue('partner-term'),
+partnershipType: getCheckboxValues('partner-type'),
+
+// Professionalism & Reliability
+activity: document.getElementById('partner-activity').value,
+trackRecord: getRadioValue('partner-track-record'),
+disputes: document.getElementById('partner-disputes').value.trim(),
+commPlatform: document.getElementById('partner-comm-platform').value,
+responseTime: document.getElementById('partner-response-time').value,
+
+// Marketing & Reach
+audienceSize: document.getElementById('partner-audience-size').value.trim(),
+platforms: getCheckboxValues('partner-platforms'),
+canPromote: getRadioValue('partner-promote'),
+promoFrequency: document.getElementById('partner-promo-frequency').value,
+engagement: document.getElementById('partner-engagement').value.trim() || 'Not provided',
+
+// Ethics & Brand Alignment
+mission: document.getElementById('partner-mission').value.trim(),
+topicsToAvoid: document.getElementById('partner-avoid').value.trim(),
+communityStandards: document.getElementById('partner-standards').value.trim(),
+brandAlignment: document.getElementById('partner-alignment').value.trim(),
+uniqueness: document.getElementById('partner-unique').value.trim(),
+
+// Technical / Operational (Optional)
+resources: getRadioValue('partner-resources') || 'Not provided',
+apiCapability: getRadioValue('partner-api') || 'Not provided',
+supportNeeds: document.getElementById('partner-support').value.trim() || 'Not provided',
+securityStandards: document.getElementById('partner-security').value.trim() || 'Not provided',
+
+// Future Vision
+futureVision: document.getElementById('partner-future').value.trim(),
+partnershipEvolution: document.getElementById('partner-evolution').value.trim(),
+upcomingProjects: document.getElementById('partner-projects').value.trim(),
+successDefinition: document.getElementById('partner-success').value.trim(),
+
+// Creative & Personality
+brandCharacter: document.getElementById('partner-character').value.trim(),
+motivation: document.getElementById('partner-motivation').value.trim(),
+unknownFact: document.getElementById('partner-secret').value.trim(),
+creativeDifferences: document.getElementById('partner-differences').value.trim(),
+favoriteProject: document.getElementById('partner-favorite').value.trim(),
+
+// Final Confirmation
+honestInfo: getRadioValue('partner-honest'),
+futureContact: getRadioValue('partner-contact-future')
+};
+
+// Validate required multi-select fields have at least one selection
+if (formData.valueOffered.length === 0) {
+showPartnershipError('Please select at least one value or resource you can offer.');
+return;
+}
+
+if (formData.partnershipType.length === 0) {
+showPartnershipError('Please select at least one type of partnership you are interested in.');
+return;
+}
+
+if (formData.platforms.length === 0) {
+showPartnershipError('Please select at least one primary platform you use.');
+return;
+}
+
+// Validate honest information agreement
+if (formData.honestInfo !== 'Yes, I agree') {
+showPartnershipError('You must agree to provide honest and accurate information to proceed.');
+return;
+}
+
+// Disable submit button during submission
+const submitBtn = document.getElementById('partnership-submit');
+const originalText = submitBtn.textContent;
+submitBtn.disabled = true;
+submitBtn.textContent = 'Submitting Application...';
+
+try {
+// Create comprehensive Discord embed message
+const discordPayload = {
+embeds: [{
+title: '🤝 New Business Partnership Application',
+color: 0xDC143C, // Crimson red
+fields: [
+// Basic Information
+{ name: '📋 BASIC INFORMATION', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '👤 Name/Organization', value: formData.name, inline: true },
+{ name: '📞 Contact', value: formData.contact, inline: true },
+{ name: '🌍 Location/Timezone', value: formData.location, inline: true },
+{ name: '🔗 Website', value: formData.website, inline: false },
+{ name: '📢 How They Found Us', value: formData.source, inline: true },
+
+// Background & Experience
+{ name: '🧠 BACKGROUND & EXPERIENCE', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '🎯 Specialization', value: formData.specialization.substring(0, 1024), inline: false },
+{ name: '⏱️ Operating Duration', value: formData.duration, inline: true },
+{ name: '👥 Target Audience', value: formData.audience.substring(0, 1024), inline: false },
+{ name: '🤝 Previous Partnerships', value: formData.previousPartnerships, inline: true },
+{ name: '📝 Past Partners', value: formData.partnerList.substring(0, 1024), inline: false },
+
+// Goals & Intentions
+{ name: '🎯 GOALS & INTENTIONS', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '🎁 Partnership Goals', value: formData.goals.substring(0, 1024), inline: false },
+{ name: '💭 Expectations from Us', value: formData.expectations.substring(0, 1024), inline: false },
+{ name: '💼 Value Offered', value: formData.valueOffered.join(', ') || 'None selected', inline: false },
+{ name: '📅 Collaboration Term', value: formData.collaborationTerm, inline: true },
+{ name: '🔖 Partnership Type', value: formData.partnershipType.join(', ') || 'None selected', inline: false },
+
+// Professionalism & Reliability
+{ name: '💼 PROFESSIONALISM & RELIABILITY', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '⚡ Activity Level', value: formData.activity, inline: true },
+{ name: '🏆 Track Record', value: formData.trackRecord, inline: true },
+{ name: '⚖️ Dispute Handling', value: formData.disputes.substring(0, 1024), inline: false },
+{ name: '💬 Preferred Platform', value: formData.commPlatform, inline: true },
+{ name: '⏰ Response Time', value: formData.responseTime, inline: true },
+
+// Marketing & Reach
+{ name: '📈 MARKETING & REACH', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '👥 Audience Size', value: formData.audienceSize, inline: true },
+{ name: '📱 Platforms Used', value: formData.platforms.join(', ') || 'None selected', inline: false },
+{ name: '📣 Can Promote', value: formData.canPromote, inline: true },
+{ name: '📊 Promo Frequency', value: formData.promoFrequency, inline: true },
+{ name: '💹 Engagement Rate', value: formData.engagement, inline: true },
+
+// Ethics & Brand Alignment
+{ name: '💬 ETHICS & BRAND ALIGNMENT', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '🎯 Brand Mission', value: formData.mission.substring(0, 1024), inline: false },
+{ name: '🚫 Topics to Avoid', value: formData.topicsToAvoid.substring(0, 1024), inline: false },
+{ name: '✅ Community Standards', value: formData.communityStandards.substring(0, 1024), inline: false },
+{ name: '🤝 Brand Alignment', value: formData.brandAlignment.substring(0, 1024), inline: false },
+{ name: '⭐ What Makes Them Unique', value: formData.uniqueness.substring(0, 1024), inline: false },
+
+// Technical / Operational
+{ name: '⚙️ TECHNICAL / OPERATIONAL', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '👨‍💻 Internal Resources', value: formData.resources, inline: true },
+{ name: '🔌 API Capability', value: formData.apiCapability, inline: true },
+{ name: '🆘 Support Needs', value: formData.supportNeeds.substring(0, 1024), inline: false },
+{ name: '🔒 Security Standards', value: formData.securityStandards.substring(0, 1024), inline: false },
+
+// Future Vision
+{ name: '🔮 FUTURE VISION', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '🚀 6-12 Month Vision', value: formData.futureVision.substring(0, 1024), inline: false },
+{ name: '📈 Partnership Evolution', value: formData.partnershipEvolution.substring(0, 1024), inline: false },
+{ name: '🎉 Upcoming Projects', value: formData.upcomingProjects.substring(0, 1024), inline: false },
+{ name: '🏆 Success Definition', value: formData.successDefinition.substring(0, 1024), inline: false },
+
+// Creative & Personality
+{ name: '🧩 CREATIVE & PERSONALITY', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '🎭 Brand as Character', value: formData.brandCharacter.substring(0, 1024), inline: false },
+{ name: '💪 Motivation', value: formData.motivation.substring(0, 1024), inline: false },
+{ name: '🤫 Unknown Fact', value: formData.unknownFact.substring(0, 1024), inline: false },
+{ name: '🎨 Creative Differences', value: formData.creativeDifferences.substring(0, 1024), inline: false },
+{ name: '❤️ Favorite Project', value: formData.favoriteProject.substring(0, 1024), inline: false },
+
+// Final Confirmation
+{ name: '✅ FINAL CONFIRMATION', value: '━━━━━━━━━━━━━━━━━━━━', inline: false },
+{ name: '📝 Honest Information', value: formData.honestInfo, inline: true },
+{ name: '📞 Future Contact', value: formData.futureContact, inline: true }
+],
+timestamp: new Date().toISOString(),
+footer: {
+text: 'RVO Inc. Business Partnership System'
+}
+}]
+};
+
+// Send to Discord webhook
+const response = await fetch(PARTNERSHIP_DISCORD_WEBHOOK_URL, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(discordPayload)
+});
+
+if (!response.ok) {
+throw new Error('Failed to submit partnership application');
+}
+
+// Success!
+hidePartnershipModal();
+showSuccessPopup();
+
+} catch (error) {
+console.error('Error submitting partnership form:', error);
+showPartnershipError('Failed to submit application. Please check that the Discord webhook is configured correctly, or try again later.');
+} finally {
+// Re-enable submit button
+submitBtn.disabled = false;
+submitBtn.textContent = originalText;
+}
+}
+
+function validateAffiliateCode(code) {
+// Must be lowercase alphabetical with optional hyphens, no other special chars, max 14 chars
+const regex = /^[a-z\-]{1,14}$/;
+if (!regex.test(code)) {
+return false;
+}
+// Additional check: no underscores, dots, or other special characters
+if (code.includes('_') || code.includes('.')) {
+return false;
+}
+return true;
+}
+
+async function submitAffiliateForm(event) {
+event.preventDefault();
+affiliateError.classList.add('hidden');
+
+// Collect form data
+const formData = {
+preferredName: document.getElementById('affiliate-name').value.trim(),
+discordName: document.getElementById('affiliate-discord-name').value.trim(),
+discordId: document.getElementById('affiliate-discord-id').value.trim(),
+email: document.getElementById('affiliate-email').value.trim(),
+phone: document.getElementById('affiliate-phone').value.trim() || 'Not provided',
+company: document.getElementById('affiliate-company').value.trim() || 'Not provided',
+affiliateCode: document.getElementById('affiliate-code').value.trim().toLowerCase(),
+followers: document.getElementById('affiliate-followers').value,
+platform: document.getElementById('affiliate-platform').value,
+profileLink: document.getElementById('affiliate-profile-link').value.trim(),
+expectedReferrals: document.getElementById('affiliate-referrals').value,
+notificationPreference: document.getElementById('affiliate-notification').value,
+geographic: document.getElementById('affiliate-geo').value.trim(),
+experience: document.getElementById('affiliate-experience').value,
+compliance: document.getElementById('affiliate-compliance').checked
+};
+
+// Validate affiliate code
+if (!validateAffiliateCode(formData.affiliateCode)) {
+showAffiliateError('Invalid affiliate code format. Use only lowercase letters and hyphens (-). No underscores, dots, or other special characters. Max 14 characters.');
+return;
+}
+
+// Validate Discord ID format
+if (!/^[0-9]{17,19}$/.test(formData.discordId)) {
+showAffiliateError('Invalid Discord ID format. Please enter a valid Discord ID (17-19 digits).');
+return;
+}
+
+// Disable submit button during submission
+const submitBtn = document.getElementById('affiliate-submit');
+const originalText = submitBtn.textContent;
+submitBtn.disabled = true;
+submitBtn.textContent = 'Submitting...';
+
+try {
+// Create Discord embed message
+const discordPayload = {
+embeds: [{
+title: '🎉 New Affiliate Application',
+color: 0xDC143C, // Crimson red
+fields: [
+{ name: '👤 Preferred Name', value: formData.preferredName, inline: true },
+{ name: '💬 Discord Name', value: formData.discordName, inline: true },
+{ name: '🆔 Discord ID', value: formData.discordId, inline: true },
+{ name: '📧 Email', value: formData.email, inline: true },
+{ name: '📱 Phone', value: formData.phone, inline: true },
+{ name: '🏢 Company', value: formData.company, inline: true },
+{ name: '🔖 Desired Code', value: `\`${formData.affiliateCode}\``, inline: false },
+{ name: '👥 Followers', value: formData.followers, inline: true },
+{ name: '📱 Platform', value: formData.platform, inline: true },
+{ name: '🔗 Profile Link', value: formData.profileLink, inline: false },
+{ name: '📊 Expected Referrals/Mo', value: formData.expectedReferrals, inline: true },
+{ name: '🔔 Notification Pref', value: formData.notificationPreference, inline: true },
+{ name: '🌍 Geographic Focus', value: formData.geographic, inline: true },
+{ name: '⭐ Experience Level', value: formData.experience, inline: true },
+{ name: '✅ Guidelines Accepted', value: formData.compliance ? 'Yes' : 'No', inline: true }
+],
+timestamp: new Date().toISOString(),
+footer: {
+text: 'RVO Inc. Affiliate System'
+}
+}]
+};
+
+// Send to Discord webhook
+const response = await fetch(DISCORD_WEBHOOK_URL, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(discordPayload)
+});
+
+if (!response.ok) {
+throw new Error('Failed to submit application');
+}
+
+// Success!
+hideAffiliateModal();
+showSuccessPopup();
+
+} catch (error) {
+console.error('Error submitting affiliate form:', error);
+showAffiliateError('Failed to submit application. Please check that the Discord webhook is configured correctly, or try again later.');
+} finally {
+// Re-enable submit button
+submitBtn.disabled = false;
+submitBtn.textContent = originalText;
+}
+}
+
+
+// --------------------------------------------------------------------------------
+// EVENT LISTENERS AND INITIALIZATION
+// --------------------------------------------------------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+setupFirebase();
+
+// Respect section configuration before any navigation occurs
+applySectionConfiguration();
+
+// Set initial active nav link
+navigateTo('home');
+
+// Populate filter options
+populateCategoryFilter();
+populateDigitalDesignCategoryFilter();
+populateGraphicDesignCategoryFilter();
+
+// Initial render of services
+renderServices(allServices);
+renderServices(digitalDesignData, 'digital-design-list', 'digital-design-no-results');
+renderServices(graphicDesignData, 'graphic-design-list', 'graphic-design-no-results');
+
+// Navigation event listeners (for both desktop and mobile menu)
+document.querySelectorAll('.nav-link, .navigate-link').forEach(button => {
+button.addEventListener('click', (event) => {
+const target = event.currentTarget.getAttribute('data-target');
+if (target) {
+if (isSectionEnabled(target)) {
+navigateTo(target);
+} else {
+navigateTo('not-found');
+}
+}
+});
+});
+
+// Mobile menu toggle
+document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+
+// Auth modal actions
+document.getElementById('close-modal').addEventListener('click', hideAuthModal);
+authSubmitBtn.addEventListener('click', handleAuthAction);
+logoutBtn.addEventListener('click', handleSignOut);
+
+// Toggle between Sign In and Sign Up modes
+authToggleBtn.addEventListener('click', () => {
+isSigningUp = !isSigningUp;
+updateAuthModalUI();
+authErrorDiv.classList.add('hidden');
+});
+
+// Google Sign In
+document.getElementById('google-signin').addEventListener('click', handleGoogleSignIn);
+
+// Affiliate modal event listeners
+document.getElementById('open-affiliate-modal').addEventListener('click', showAffiliateModal);
+document.getElementById('close-affiliate-modal').addEventListener('click', hideAffiliateModal);
+affiliateForm.addEventListener('submit', submitAffiliateForm);
+document.getElementById('close-success-popup').addEventListener('click', hideSuccessPopup);
+
+// Partnership modal event listeners
+document.getElementById('open-partnership-modal').addEventListener('click', showPartnershipModal);
+document.getElementById('close-partnership-modal').addEventListener('click', hidePartnershipModal);
+partnershipForm.addEventListener('submit', submitPartnershipForm);
+document.getElementById('close-partnership-success-popup').addEventListener('click', hidePartnershipSuccessPopup);
+
+// Handle previous partnerships radio buttons
+document.querySelectorAll('input[name="previous-partnerships"]').forEach(radio => {
+radio.addEventListener('change', handlePreviousPartnershipsChange);
+});
+});
+
+// Re-initialize Lucide on window load to catch static elements
+window.onload = function() {
+lucide.createIcons();
+};
+
+
+</script>
+<script>
+// Force same-tab navigation for all internal links
+document.querySelectorAll('a[href^="/"]').forEach(a=>a.setAttribute('target','_self'));
+// Remove any section-toggling logic if present (each page is standalone)
+document.querySelectorAll('[data-route]').forEach(el=>el.removeAttribute('data-route'));
+// Map any legacy hash links to clean URLs
+document.querySelectorAll('a[href="/"]').forEach(a=>a.href="/");
+document.querySelectorAll('a[href="/services"]').forEach(a=>a.href="/services");
+document.querySelectorAll('a[href="/subscriptions"]').forEach(a=>a.href="/subscriptions");
+document.querySelectorAll('a[href="/affiliates"]').forEach(a=>a.href="/affiliates");
+</script>
+</body>
+</html>
