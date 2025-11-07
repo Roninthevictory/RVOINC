@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RVO Inc. | Elite Development and Coding Services</title>
 <link rel="icon" href="https://i.ibb.co/8DL3dhZf/Gemini-Generated-Image-79s1r479s1r479s1.png">
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <!-- Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- Lucide Icons -->
@@ -43,15 +47,17 @@ linear-gradient(160deg, var(--bg-primary), var(--bg-secondary));
 }
 
 body {
-font-family: 'Inter', sans-serif;
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 min-height: 100vh;
 background: var(--gradient-bg);
 color: var(--text-primary);
 position: relative;
 overflow-x: hidden;
-line-height: 1.6;
+line-height: 1.7;
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
+font-size: 16px;
+letter-spacing: -0.01em;
 }
 
 body::before {
@@ -262,30 +268,30 @@ color: var(--accent-primary);
 }
 
 .subscription-tag {
-	position: absolute;
-	top: -20px;
-	left: 50%;
-	transform: translateX(-50%);
-	padding: 0.45rem 0.9rem;
-	border-radius: 999px;
-	background: linear-gradient(120deg, rgba(255, 0, 0, 1), rgba(255, 78, 78, 1));
-	color: #040013;
-	font-size: 0.7rem;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	font-weight: 700;
-	box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
-	z-index: 100;
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.45rem 0.9rem;
+        border-radius: 999px;
+        background: linear-gradient(120deg, rgba(255, 0, 0, 1), rgba(255, 78, 78, 1));
+        color: #040013;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 700;
+        box-shadow: 0 10px 30px rgba(255, 0, 0, 0.35);
+        z-index: 100;
 }
 
 .subscription-tag.secondary {
-	background: linear-gradient(120deg, rgba(255, 78, 78, 1), rgba(255, 107, 107, 1));
-	color: #08041c;
+        background: linear-gradient(120deg, rgba(255, 78, 78, 1), rgba(255, 107, 107, 1));
+        color: #08041c;
 }
 
 .subscription-tag.tertiary {
-	background: linear-gradient(120deg, rgba(255, 0, 0, 1), rgba(255, 107, 107, 1));
-	color: #08041c;
+        background: linear-gradient(120deg, rgba(255, 0, 0, 1), rgba(255, 107, 107, 1));
+        color: #08041c;
 }
 
 .pulse-glow {
@@ -348,6 +354,111 @@ text-transform: uppercase;
 letter-spacing: 0.14em;
 color: var(--text-primary);
 border: 1px solid rgba(255, 0, 0, 0.35);
+}
+
+h1, h2, h3, h4, h5, h6 {
+font-weight: 800;
+letter-spacing: -0.02em;
+line-height: 1.2;
+}
+
+h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+
+p {
+line-height: 1.8;
+color: var(--text-secondary);
+}
+
+.card-bg {
+transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-bg:hover {
+transform: translateY(-4px);
+}
+
+button {
+cursor: pointer;
+font-weight: 600;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-section {
+padding: 5rem 4rem;
+margin-bottom: 6rem;
+}
+
+@media (max-width: 768px) {
+.content-section {
+padding: 3rem 2rem;
+margin-bottom: 4rem;
+}
+}
+
+.badge-label {
+font-weight: 700;
+padding: 0.5rem 1.2rem;
+backdrop-filter: blur(12px);
+}
+
+input, select, textarea {
+border-radius: 0.75rem;
+padding: 1rem 1.25rem;
+font-size: 0.95rem;
+font-weight: 500;
+}
+
+input:focus, select:focus, textarea:focus {
+box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+border-color: var(--accent-primary);
+}
+
+.glow-button {
+font-weight: 700;
+letter-spacing: 0.02em;
+backdrop-filter: blur(8px);
+}
+
+.primary-button {
+font-weight: 800;
+letter-spacing: 0.03em;
+position: relative;
+overflow: hidden;
+}
+
+.primary-button::before {
+content: '';
+position: absolute;
+top: 50%;
+left: 50%;
+width: 0;
+height: 0;
+border-radius: 50%;
+background: rgba(255, 255, 255, 0.3);
+transform: translate(-50%, -50%);
+transition: width 0.6s, height 0.6s;
+}
+
+.primary-button:hover::before {
+width: 300px;
+height: 300px;
+}
+
+nav {
+backdrop-filter: blur(24px);
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+}
+
+.nav-link {
+font-weight: 700;
+padding: 0.75rem 1rem;
+}
+
+.text-gradient {
+background-image: linear-gradient(120deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%);
+font-weight: 900;
 }
 </style>
 </head>
